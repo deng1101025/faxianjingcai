@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>云API</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/style.css"/>
+    <style>
+        .empty{ text-align: center; padding: 120px 0; }
+        .header{ margin: 20px 30px;}
+        .btn-item{ width: 80px; height: 35px; border: 1px solid #e8e8e8;border-radius: 0.5em}
+        .btn-active{ background-color: #e8e8e8 }
+        .btn-item-play{ float: right;}
+    </style>
+</head>
+<body>
+  <div class="container">
+      <div class="header">
+        <button class="btn-item btn-item-return" onclick="btnCLicked_return()">返回</button>
+        <button class="btn-item btn-item-shouye" onclick="btnCLicked_return_shouye();">返回首页</button>
+        <button class="btn-item btn-item-play"  onclick="btnClicked_play();">播放</button>
+      </div>
+  </div>
+</body>
+</html>
+<script type="text/javascript" src="./../script/api.js"></script>
+<script type="text/javascript" src="./../script/util.js"></script>
+<script type="text/javascript" src="./../script/common.js"></script>
+<script type="text/javascript" src="./../script/APICloud-rest.js"></script>
+<script type="text/javascript">
+  var playAddress = null;
+  var accessToken = null;
+  var pageList = [
+    "https://m.v.qq.com/", //腾讯
+    "https://www.iqiyi.com/", //爱奇艺
+    "https://www.youku.com/", //优酷
+    "https://m.bilibili.com/", //哔哩哔哩
+    "https://m.mgtv.com/channel/home/", //芒果tv
+    "http://m.miguvideo.com/", // 咪咕
+    "https://m.hanjutv.com/", //韩剧
+    "https://m.tv.sohu.com/" //搜狐
+  ]
+  var analysisUrlList = null;
+  apiready = function () {
+    api.getPrefs({
+        key: 'accessToken'
+    }, function(ret, err) {
+        accessToken = ret.value;
+    });
+    getAnalysisUrlList(); //获取解析视频地址的url列表
+    // console.log(pageList[api.pageParam.index]);
+    api.openFrame({
+        name: 'frame0_yingshi_win_frame',
+        url: pageList[api.pageParam.index], //https://m.v.qq.com
+        rect: {
+            x: 0,
+            y: 56,
+            w: 'auto',
+            h: 'auto'
+        },
+        bounces: true,
+        useWKWebView: true,
+        historyGestureEnabled: true,
+        pageParam: {
+            name: 'test'
+        }
+    });
+
+    api.setFrameClient({
+        frameName: 'frame0_yingshi_win_frame'
+    }, function(ret, err) {
+        switch (ret.state) {
+            case 0:
+              // alert("0###" + ret.url)
+                break;
+            case 1:
+            // alert("1###" + ret.url)
+                break;
+            case 2:
+              playAddress = ret.url;
+            // alert("2###" + ret.url)
+                break;
+            case 3:
+            // alert("3###" + ret.url)
+                break;
+            case 4:
+            // alert("4###" + ret.url)
+                break;
+            default:
+                break;
+        }
+    });
+  }
+
+  function btnClicked_play() {
+    console.log("进入方法btnClicked_play");
+    // 获取用户vip状态
+    getUserVipType({
+      callback: function(ret) {
+        console.log("进入方法回调");
+        if(ret.expireDate && ret.expireDate != '' && ret.expireDate != null) { //该用户有会员状态
+            var userExpireDateTemp = new Date(ret.expireDate); //用户充值会员的过期时间
+            var currentSysDate = new Date(ret.updatedAt); //用户充值会员的过期时间
+            if(currentSysDate < userExpireDateTemp) { //会员状态还在 您还不是vip
+              jumpPlayPgae();
+            } else { //会员过期
+              api.toast({
+                  msg: '亲！您的vip已过期',
+                  duration: 2000,
+                  location: 'top'
+              });
+            }
+        } else { // 该用户还不是会员
+          api.toast({
+              msg: '亲！您还不是vip',
+              duration: 2000,
+              location: 'top'
+          });
+        }
+      }
+    });
+  }
+
+  function jumpPlayPgae() {
+    console.log(pageList.toString());
+    console.log(pageList.toString().indexOf(playAddress));
+    if(playAddress && playAddress != ""&& pageList.toString().indexOf(playAddress) <0) {
+        console.log('http://api.5sys.cn/jx/?v=' + playAddress)
+        // alert('http://api.5sys.cn/jx/?v=' + playAddress)
+        api.openWin({
+          name: 'playWin',
+          url: 'http://api.5sys.cn/jx/?v=' + playAddress,
+          pageParam: {
+              name: 'test'
+          }
+        });
+    } else {
+      api.toast({
+          msg: '亲！没有可播放的视频',
+          duration: 2000,
+          location: 'center'
+      });
+    }
+  }
+
+  function btnCLicked_return() {
+    api.historyBack({
+        frameName: 'frame0_yingshi_win'
+    }, function(ret, err) {
+      if (!ret.status) {
+          api.closeWin();
+      }
+    });
+  }
+  function btnCLicked_return_shouye() {
+    // var windows = api.windows();
+    // console.log(JSON.stringify(windows))
+    api.closeToWin({
+      name: 'root'
+    });
+  }
+
+  //获取解析视频地址的url列表
+  function getAnalysisUrlList() {
+    getModel("config").query({
+        filter:{
+            "where":{"attrKey": 'analysisUrl'}
+        }
+    }, function(ret,err){
+      console.log("config对象：" + $api.jsonToStr(ret))
+      console.log("config对象：" + $api.jsonToStr(err))
+      if(ret && ret[0]&& ret[0].id){// 存在此充值码
+      
+      } else {
+        api.toast({
+            msg: '获取线路失败',
+            duration: 2000,
+            location: 'top'
+        });
+      }
+    })
+  }
+
+</script>

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>会员中心</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/style.css"/>
+    <style>
+          body{ background-color: #efefef}
+          .empty{ text-align: center; padding: 120px 0; }
+	        .container{ margin: auto 15px;}
+          .header{height: 100px;text-align: center;padding-top: 100px;}
+
+          .content .btn-item{ width: 275px; height: 35px; border: 1px solid #e8e8e8;border-radius: 0.5em}
+          .content .btn-active{ background-color: #e8e8e8 }
+		      .content ul{text-align: center;}
+          .content input{font-size: 25px;}
+          .content ul li{border:1px solid #e5e5e5; padding: 10px 15px;}
+
+    </style>
+</head>
+<body>
+    <div class="container">
+      <div class="header">
+        会员充值
+      </div>
+      <div class="content">
+        <ul>
+          <li><input id="username" type="text" placeholder="手机号" name="username" value=""></li>
+          <li><input id="secret" type="text" name="password" placeholder="充值码" value=""></li>
+          <li><button class="btn-item" type="button" name="button" onclick="btnScrete();">确认充值</button></li>
+          <li><button class="btn-item" type="button" name="button" onclick="btnReturn();">返回</button></li>
+        </ul>
+      </div>
+    </div>
+</body>
+</html>
+<script type="text/javascript" src="./../script/api.js"></script>
+<script type="text/javascript" src="./../script/util.js"></script>
+<script type="text/javascript" src="./../script/APICloud-rest.js"></script>
+<script type="text/javascript">
+
+  apiready = function () {
+    api.addEventListener({
+        name:'navitembtn'
+    },function(ret, err){
+        console.log($api.jsonToStr(ret))
+        api.closeWin();
+    });
+  }
+
+  function btnScrete() {
+    var username = $api.val($api.byId('username'));
+    var secret = $api.val($api.byId('secret'));
+    if(!username) {
+      api.toast({
+          msg: '亲，请输入账号/手机号',
+          duration: 2000,
+          location: 'center'
+      });
+      return;
+    }
+    if(!secret) {
+      api.toast({
+          msg: '亲，请输入充值码',
+          duration: 2000,
+          location: 'center'
+      });
+      return;
+    }
+    getModel("secret").query({
+        filter:{
+            "where":{"secret":secret}
+        }
+    }, function(ret,err){
+      console.log("secret对象：" + $api.jsonToStr(ret))
+      console.log("secret对象：" + $api.jsonToStr(err))
+      if(ret && ret[0]&& ret[0].id){// 存在此充值码
+        if(ret[0].userId && ret[0].userId !="" && ret[0].userId != null) {
+          api.toast({
+              msg: '亲，此充值码已使用',
+              duration: 2000,
+              location: 'top'
+          });
+        } else {
+          //使用此充值码，更新此充值码已使用
+          updateDposit(ret[0].id, username, ret[0].day);
+        }
+      } else { //不存在此充值码
+        api.toast({
+            msg: '亲，请输入正确的充值码',
+            duration: 2000,
+            location: 'top'
+        });
+      }
+    })
+  }
+
+  //使用此充值码，更新此充值码已使用
+  function updateDposit(id, username, day) {
+    getModel("user").query({
+        filter:{
+            "where":{"username":username}
+        }
+    }, function(ret1, err1){
+      console.log("用户对象：" + $api.jsonToStr(ret1))
+      console.log("用户对象：" + $api.jsonToStr(err1))
+      if(ret1 && ret1[0] && ret1[0].id){ //输入的账户存在，更新账户状态，获得vip
+        getModel("secret").save({"_id": id},{"userId": ret1[0].id}, function(ret2,err2){ // 更新用户状态
+          console.log("保存后secret对象：" + $api.jsonToStr(ret2))
+          console.log("保存后secret对象：" + $api.jsonToStr(err2))
+            if(ret2 && ret2.id){
+              //更改此会员的状态
+              updateUserType(ret1[0].id, username, day, ret2.updatedAt, ret1[0].expireDate);
+              // api.toast({
+              //     msg: '亲，！充值成功',
+              //     duration: 2000,
+              //     location: 'top'
+              // });
+            } else{
+              api.toast({
+                  msg: '亲，充值码状态更新失败！',
+                  duration: 2000,
+                  location: 'top'
+              });
+            }
+        })
+      } else { // 输入账户不存在
+        api.toast({
+            msg: '亲，请输入正确的手机号',
+            duration: 2000,
+            location: 'top'
+        });
+      }
+    });
+  }
+  //更改此会员的状态 expireDate (过期时间)
+  function updateUserType(id, username, day, updatedAt, userExpireDate) {
+    var currentSysDate = new Date(updatedAt); //当前服务器时间
+    if(userExpireDate) { //判断用户是否充值过会员的时间
+      console.log("userExpireDate: " + userExpireDate)
+      var userExpireDateTemp = new Date(userExpireDate); //用户充值会员的过期时间
+      console.log("userExpireDateTemp: " + userExpireDateTemp)
+      if(currentSysDate < userExpireDateTemp) {// 判断用户会员是否过期
+        //未过期
+        userExpireDateTemp.setDate(userExpireDateTemp.getDate() + parseInt(day));
+        console.log("userExpireDateTemp: " + userExpireDateTemp)
+        updateUserTypePost(id, userExpireDateTemp)
+      } else {
+        //过期
+        console.log("updateDate: " + currentSysDate)
+        currentSysDate.setDate(currentSysDate.getDate() + parseInt(day));
+        console.log("updateDate: " + currentSysDate)
+        updateUserTypePost(id, currentSysDate)
+      }
+    }
+  }
+
+  function updateUserTypePost(id, expireDate) {
+    getModel("user").save({"_id":id},{"expireDate": expireDate}, function(ret,err){
+        console.log("更新后用户对象：" + $api.jsonToStr(ret))
+        console.log("更新后用户对象：" + $api.jsonToStr(err))
+        if(ret && ret.id){ //输入的账户存在，更新账户状态，获得vip
+          api.toast({
+              msg: '亲，！充值成功',
+              duration: 2000,
+              location: 'top'
+          });
+          api.closeWin();
+          api.execScript({
+              name: 'root',
+              frameName: 'frame2',
+              script: 'reloadFrame();'
+          });
+        }else{
+          api.toast({
+              msg: '亲，！充值失败，请重试',
+              duration: 2000,
+              location: 'top'
+          });
+        }
+    })
+  }
+
+  function btnReturn() {
+    api.closeWin();
+  }
+</script>

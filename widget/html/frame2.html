@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>会员中心</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/style.css"/>
+    <style>
+          body{ background-color: #efefef}
+          .empty{ text-align: center; padding: 120px 0; }
+		      .container{ margin: auto 15px;}
+          .header ul.flex-wrap li{ padding-top: 40px; padding-bottom: 23px; background: url() no-repeat center 31px; background-size: auto 44px; text-align: center; }
+          .header ul.flex-wrap li:nth-child(1){width: 20%;background-image: url(./../image/mangguo.png);}
+          .header ul.flex-wrap li .flex-item-div{ text-align: left; }
+          .header ul.flex-wrap li .flex-vip-con{ padding-left: 30px;background: url() no-repeat left -8px; background-image: url(./../image/vipx.png);background-size: 26px 26px;}
+          .header .no-loged{padding: 30px 12px;height: 37px}
+
+          .content ul.flex-wrap-list li{padding: 20px 15px; border-bottom: 1px solid #e5e5e5}
+          .content ul.flex-wrap-list li:nth-child(6){border-bottom:0px}
+          .content {background-color: #f9f9f9; border-radius: 1em; -moz-box-shadow: 4px 6px 15px #bcbcbc; /* 老的 Firefox */box-shadow: 4px 6px 15px #bcbcbc;}
+          /*ul.flex-wrap-list li:nth-child(5){ border-bottom: 1px solid #f5f5f5;}*/
+          .item-hide{display: none;}
+    </style>
+</head>
+<body>
+    <div class="container">
+      <div class="header">
+        <div class="has-loged">
+          <ul class="flex-wrap">
+            <li class="flex-item"></li>
+            <li class="flex-item"><div id="divUsername" class="flex-item-div">未知</div><div id="divExpireDate" class="flex-con-div flex-vip-con">您还不是vip</div></li>
+          </ul>
+        </div>
+        <div class="no-loged item-hide">
+          您还未登录
+        </div>
+      </div>
+      <div class="content">
+        <ul class="flex-wrap-list">
+          <li id="quiteSelect" class="flex-item has-loged" onclick="quit()">安全退出</li>
+          <li class="flex-item" onclick="deposit()">会员充值</li>
+          <li class="flex-item" onclick="registe()">用户注册</li>
+          <li class="flex-item" onclick="modifyMM()">修改密码</li>
+          <li class="flex-item" onclick="contactMe()">联系客服</li>
+          <li class="flex-item" onclick="aboutMe()">关于我们</li>
+        </ul>
+      </div>
+    </div>
+</body>
+</html>
+<script type="text/javascript" src="./../script/api.js"></script>
+<script type="text/javascript" src="./../script/util.js"></script>
+<script type="text/javascript" src="./../script/common.js"></script>
+<script type="text/javascript" src="./../script/APICloud-rest.js"></script>
+<script type="text/javascript">
+console.log("token: ###  ");
+  var dialogBox = null;
+  apiready = function () {
+    console.log("winName: " +api.winName)
+    console.log("frameName: " +api.frameName)
+    dialogBox = api.require('dialogBox');
+
+    //同步返回结果：
+    var accessToken = api.getPrefs({
+        sync: true,
+        key: 'accessToken'
+    });
+    // 获取用户vip状态
+    getUserVipType({
+      callback: function(ret) {
+        $api.text($api.dom('#divUsername'), ret.username); //显示用户名
+        if(ret.expireDate && ret.expireDate != '' && ret.expireDate != null) { //该用户有会员状态
+            var userExpireDateTemp = new Date(ret.expireDate); //用户充值会员的过期时间
+            var currentSysDate = new Date(ret.updatedAt); //用户充值会员的过期时间
+            if(currentSysDate < userExpireDateTemp) { //会员状态还在 您还不是vip
+              $api.text($api.dom('#divExpireDate'), "截止" + formatTimeYMD(userExpireDateTemp));
+            } else { //会员过期
+              $api.text($api.dom('#divExpireDate'), '亲！您的vip已过期');
+            }
+        } else { // 该用户还不是会员
+          $api.text($api.dom('#divExpireDate'), '亲！您还不是vip');
+        }
+      }
+    });
+
+    console.log("token: ###  " + accessToken);
+    if(accessToken && accessToken != "" && accessToken != null) {
+      $api.addCls($api.dom('#quiteSelect'), 'has-loged') // 给登录按钮添加已经登录的标识
+      $api.text($api.dom('#quiteSelect'), '安全退出'); // 改变按钮文字为“安全退出”
+      $api.addCls($api.dom('#quiteSelect'), 'has-loged')
+    } else {
+      $api.addCls($api.dom('.has-loged'), 'item-hide')
+      $api.removeCls($api.dom('.no-loged'), 'item-hide');
+      $api.removeCls($api.dom('#quiteSelect'), 'has-loged');
+      $api.text($api.dom('#quiteSelect'), '立即登录');
+    }
+  }
+  //会员充值
+  function deposit() {
+    api.getPrefs({
+        key: 'accessToken'
+    }, function(ret, err) {
+        accessToken = ret.value;
+        if(accessToken && accessToken != "" && accessToken != null) {
+          // 打开只有navigationBar的页面：
+          api.openTabLayout({
+              name: 'navDeposit',
+              url: 'widget://html/frame2_deposit.html',
+              title: '会员充值',
+              hideNavigationBar: false,
+              navigationBar: {
+                  background: '#5082c2',
+                  color: '#fff',
+                  leftButtons: [{
+                      iconPath: 'widget://image/back.png'
+                  }]
+              }
+          });
+        } else { //未登录处理逻辑
+          api.toast({
+              msg: '亲，会员充值需要先登录哦!',
+              duration: 2000,
+              location: 'top'
+          });
+        }
+    });
+
+  }
+  function registe() {
+    dialogBox.list({
+      tapClose: true,
+      texts: {
+          title: '注册',
+          enter: '提交'
+      },
+      listTitles: ['手机：', '密码：'],
+      styles: {
+          bg: '#fff',
+          corner: 10,
+          w: 300,
+          h: 260,
+          title: {
+              h: 44,
+              size: 14,
+              color: '#000'
+          },
+          list: {
+              h: 128,
+              row: 2,
+              title: {
+                  marginL: 10,
+                  size: 14,
+                  color: '#696969'
+              },
+              content: {
+                  marginL: 10,
+                  size: 14,
+                  color: '#000'
+              }
+          },
+          dividingLine: {
+              width: 0.5,
+              color: '#696969'
+          },
+          enter: {
+              w: 135,
+              h: 55,
+              bg: '#e5e5e5',
+              color: '#007FFF',
+              size: 12,
+              corner:10
+          }
+      }
+  }, function(ret) {
+      registePost(ret, function(ret, err) {
+        console.log("####: " + ret.eventType == 'enter');
+        // if(ret.eventType == 'enter') {
+          // var dialogBox = api.require('dialogBox');
+          dialogBox.close({
+              dialogName: 'list'
+          });
+        // }
+      });
+  });
+
+  }
+  function quit() {
+    if($api.hasCls($api.dom('#quiteSelect'), 'has-loged')) {
+      $api.addCls($api.dom('.has-loged'), 'item-hide')
+      $api.removeCls($api.dom('.no-loged'), 'item-hide');
+      $api.removeCls($api.dom('#quiteSelect'), 'has-loged');
+      $api.text($api.dom('#quiteSelect'), '立即登录');
+      //移除本地用户缓存
+      api.removePrefs({
+          key: 'accessToken'
+      });
+      api.removePrefs({
+          key: 'userId'
+      });
+    } else {
+      // 打开只有navigationBar的页面：
+      api.openTabLayout({
+          name: 'navLogin',
+          url: 'widget://html/frame2_login.html',
+          title: '会员登陆',
+          hideNavigationBar: false,
+          navigationBar: {
+              background: '#5082c2',
+              color: '#fff',
+              leftButtons: [{
+                  iconPath: 'widget://image/back.png'
+              }]
+          }
+      });
+    }
+  }
+  function modifyMM() {}
+  function contactMe() {}
+  function aboutMe() {}
+
+  function registePost(data, success, fail) {
+    console.log("注册的数据： " + JSON.stringify(data));
+    if(!data.amounts[0] || data.amounts[0].length != 11) {
+      api.toast({
+          msg: '亲，请填写正确的手机号码!',
+          duration: 2000,
+          location: 'center'
+      });
+      return;
+    }
+    if(!data.amounts[1] || data.amounts[1].length <= 0) {
+      api.toast({
+          msg: '请填写密码',
+          duration: 2000,
+          location: 'center'
+      });
+      return;
+    }
+    getModel("user").save({
+        "username": data.amounts[0],
+        "password": data.amounts[1]
+    }, function(ret,err){
+        console.log($api.jsonToStr(ret));
+        console.log($api.jsonToStr(err));
+        if(ret.error){
+            //处理错误 err
+            fail && fail(ret, err)
+            api.toast({
+                msg: ret.error.name == "uniqueness" ? "用户已存在" : $api.jsonToStr(ret.error),
+                duration: 2000,
+                location: 'center'
+            });
+        }else if(ret.id){
+            //处理数据 ret
+            success && success(ret, err)
+            var initExpireDateTemp = new Date(ret.createdAt);
+            initExpireDateTemp.setDate(initExpireDateTemp.getDate() + 1);
+            console.log("haha");  console.log(initExpireDateTemp);
+            getModel("user").save({"_id":ret.id},{"expireDate": initExpireDateTemp}, function(ret1,err1){
+              console.log("激活1天会员user对象：" + $api.jsonToStr(ret1))
+              console.log("激活1天会员user对象：" + $api.jsonToStr(err1))
+                if(ret1 && ret1.id){
+                  api.toast({
+                      msg: '超级会员体验充值成功，请尽情享受吧',
+                      duration: 2000,
+                      location: 'top'
+                  });
+                } else{
+                  api.toast({
+                      msg: '超级会员体验充值失败，请联系管理员',
+                      duration: 2000,
+                      location: 'top'
+                  });
+                }
+            })
+            api.toast({
+                msg: '注册成功',
+                duration: 2000,
+                location: 'center'
+            });
+        }
+    })
+  }
+
+
+
+
+  function reloadFrame() {
+    console.log("哈哈")
+    api.setFrameGroupIndex({
+        name: 'group',
+        index: 2,
+        reload: true
+    });
+  }
+
+</script>
