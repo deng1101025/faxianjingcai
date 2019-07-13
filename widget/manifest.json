@@ -32,14 +32,14 @@
 			"description": "应用扩展事件"
 		},
 		"UI": {},
-		
+
 		"OAuth": {},
-		
+
 		"Maps": {},
 		"Speech": {},
-		
+
 		"Contacts": {},
-		
+
 		"Messaging": {},"Webview":{},"NativeUI":{},"Navigator":{}
 	},
 	"plus": {
@@ -81,8 +81,8 @@
 						"spotlight-retina": "unpackage/res/icons/58x58.png", /*iPhone高分屏Spotlight搜索程序图标，分辨率：58x58*/
 						/*iPhone iOS7高分屏Spotlight搜索程序图标，分辨率：80x80*/
 						"settings-normal": "unpackage/res/icons/29x29.png", /*iPhone设置页面程序图标，分辨率：29x29*/
-						
-						
+
+
 						"app@2x":"unpackage/res/icons/120x120.png","app@3x":"unpackage/res/icons/180x180.png","settings@3x":"unpackage/res/icons/87x87.png","settings@2x":"unpackage/res/icons/58x58.png","spotlight@2x":"unpackage/res/icons/80x80.png","spotlight@3x":"unpackage/res/icons/120x120.png","notification@3x":"unpackage/res/icons/60x60.png","notification@2x":"unpackage/res/icons/40x40.png"
 					},
 					"ipad": {
@@ -261,7 +261,6 @@
 	      "image/souhu.jpg",
 	      "image/youku.jpg",
 	      "html/frame0_yingshi_win_playframe.html",
-	      "html/10294.wav",
 	      "icon/icon150x150.png",
 	      "html/frame3.html",
 	      "html/frame0.html",

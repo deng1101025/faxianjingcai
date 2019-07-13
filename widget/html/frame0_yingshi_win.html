@@ -31,6 +31,7 @@
 <script type="text/javascript" src="./../script/APICloud-rest.js"></script>
 <script type="text/javascript">
   var playAddress = null;
+  var addrHistory = [];
   var accessToken = null;
   var pageList = [
     "https://m.v.qq.com/", //腾讯
@@ -79,6 +80,7 @@
             // alert("1###" + ret.url)
                 break;
             case 2:
+              addrHistory.push(ret.url);
               playAddress = ret.url;
             // alert("2###" + ret.url)
                 break;
@@ -146,13 +148,38 @@
   }
 
   function btnCLicked_return() {
-    api.historyBack({
-        frameName: 'frame0_yingshi_win'
-    }, function(ret, err) {
-      if (!ret.status) {
-          api.closeWin();
-      }
-    });
+    if(addrHistory.pop()) {
+      api.openFrame({
+          name: 'frame0_yingshi_win_frame',
+          url: addrHistory.pop(), //https://m.v.qq.com
+          rect: {
+              x: 0,
+              y: 56,
+              w: 'auto',
+              h: 'auto'
+          },
+          bounces: true,
+          useWKWebView: true,
+          historyGestureEnabled: true,
+          pageParam: {
+              name: 'test'
+          }
+      });
+    } else {
+      api.closeToWin({
+        name: 'root'
+      });
+    }
+
+    // api.historyBack({
+    //     frameName: 'frame0_yingshi_win'
+    // }, function(ret, err) {
+    //   console.log($api.jsonToStr(ret))
+    //   console.log($api.jsonToStr(err))
+    //   if (!ret.status) {
+    //       // api.closeWin();
+    //   }
+    // });
   }
   function btnCLicked_return_shouye() {
     // var windows = api.windows();
@@ -172,7 +199,7 @@
       console.log("config对象：" + $api.jsonToStr(ret))
       console.log("config对象：" + $api.jsonToStr(err))
       if(ret && ret[0]&& ret[0].id){// 存在此充值码
-      
+
       } else {
         api.toast({
             msg: '获取线路失败',
