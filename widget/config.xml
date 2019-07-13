@@ -1,13 +1,11 @@
- <widget id="A6017865729333"  version="0.0.2">
-    <name>发现精彩瞬间</name>
+ <widget id="A6017476383128"  version="0.0.2">
+    <name>发现精彩</name>
     <description>
         Example For APICloud.
     </description>
     <author email="developer@apicloud.com" href="http://www.apicloud.com">
         Developer
     </author>    <content src="index.html" />    <access origin="*" />
-    <content src="app.json" />
-
     <preference name="pageBounce" value="false"/>
 	<preference name="appBackground" value="rgba(0,0,0,0.0)"/>
 	<preference name="windowBackground" value="rgba(0,0,0,0.0)"/>

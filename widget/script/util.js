@@ -203,8 +203,8 @@ function SHA1(msg) {
 }
 
 function getModel(tableName) {
-  var appId = "A6017865729333";
-  var appKey = "4484648E-0535-3ADD-2DED-69E9C1EB83E8";
+  var appId = "A6017476383128"; //"A6017865729333";
+  var appKey = "60014238-4978-3038-8A04-10CA8BB4E662"; //"4484648E-0535-3ADD-2DED-69E9C1EB83E8";
   var client = new Resource(appId, appKey);
   var Model = client.Factory(tableName);
   return Model;
@@ -212,8 +212,8 @@ function getModel(tableName) {
 
 function wxRequestData(params) {
   var now = Date.now();
-  var appId = "A6083516923808";
-  var appKey = "5B73EE0E-59C0-563A-A131-CAE360C9DF59";
+  var appId = "A6017476383128";
+  var appKey = "60014238-4978-3038-8A04-10CA8BB4E662";
   var appCode = SHA1(appId + "UZ" + appKey + "UZ" + now) + "." + now;
   var id = params.id ? "/" + params.id : "";
   var filter = params.filter || {
