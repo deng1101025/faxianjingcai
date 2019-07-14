@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
     <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
-    <title>云API</title>
+    <title>首页</title>
     <link rel="stylesheet" type="text/css" href="../css/api.css" />
     <link rel="stylesheet" type="text/css" href="../css/style.css" />
     <style>
@@ -24,7 +24,6 @@
         .container {
             margin-top: 150px;
         }
-        /*#footer{  background-color: #f2f2f2; }*/
 
         .vedio-list ul li {
             border: 1px solid #f5f5f5;
@@ -79,11 +78,6 @@
         .list-iten2 ul li:nth-child(4) {
             background-image: url(./../image/souhu.jpg);
         }
-        /*#footer ul li:nth-child(1).active{ background-image: url(./../image/bottombtn0102.png); }
-        #footer ul li:nth-child(2).active{ background-image: url(./../image/bottombtn0202.png); }
-        #footer ul li:nth-child(3).active{ background-image: url(./../image/bottombtn0302.png); }
-        #footer ul li:nth-child(4).active{ background-image: url(./../image/bottombtn0402.png); }*/
-
         .flex-con {
             overflow: auto
         }
@@ -91,22 +85,6 @@
 </head>
 
 <body>
-    <!-- <div id="box">
-        <ul>
-            <li style="background:green">3</li>
-            <li style="background:orange">1</li>
-            <li style="background:yellow">2</li>
-            <li style="background:green">3</li>
-            <li style="background:orange">1</li>
-        </ul>
-    </div> -->
-
-    <!-- <div class="empty">云API</div>
-    <button class="btn-item" onclick="btnCLicked(0)">腾讯</button>
-    <button class="btn-item" onclick="btnCLicked(1)">爱奇艺</button>
-    <button class="btn-item" onclick="btnCLicked(2)">优酷</button>
-    <button class="btn-item" onclick="btnCLicked(3)">哔哩哔哩</button>
-    <button class="btn-item" onclick="btnCLicked(4)">芒果tv</button> -->
     <div class="container">
         <div class="vedio-list list-iten1">
             <ul class="flex-wrap">
@@ -130,36 +108,11 @@
 </html>
 <script type="text/javascript" src="./../script/api.js"></script>
 <script type="text/javascript">
-//window.onload = function() {
-//initLunbo();
-//
-//}
     apiready = function() {
-        // initLunbo();
     }
 
     function btnCLicked(num) {
         openWindow(num)
-            // switch (num) {
-            //     case 0:
-            //       openWindow(0)
-            //         break;
-            //     case 1:
-            //       openWindow(1)
-            //         break;
-            //     case 2:
-            //       openWindow(2)
-            //         break;
-            //     case 3:
-            //       openWindow(3)
-            //         break;
-            //     case 4:
-            //       openWindow(4)
-            //         break;
-            //     default:
-            //         break;
-            // }
-
     }
 
     function openWindow(num) {
@@ -177,72 +130,4 @@
             }
         });
     }
-
-//  function initLunbo() {
-//      var box = document.getElementById('box');
-//      var oUl = document.getElementsByTagName('ul')[0];
-//      var aLi = oUl.children; //这样就可以把所有li标签获取到了
-//      var iNow = 1;
-//      var x = -iNow * aLi[0].offsetWidth; //li标签的位置
-//      var bReady = true;
-//      oUl.addEventListener('touchstart', function(ev) {
-//
-//          //当手指触摸屏幕的时候触发事件，让li的位置随手指滑动而改变
-//          if (bReady == false) {
-//              return;
-//          }
-//          bReady = false;
-//
-//          var downX = ev.targetTouches[0].pageX; //记录触摸位置
-//          var disX = downX - x; //下一个li要移动到的位置
-//          function fnMove(ev) {
-//              x = downX - disX;
-//              oUl.style.transform = 'translate3d(' + x + 'px,0,0)';
-//          }
-//
-//          function fnEnd(ev) {
-//              var upX = ev.changedTouches[0].pageX; //离开的位置
-//              if (Math.abs(upX - downX) > 50) {
-//                  //左边移动
-//                  if (upX - downX < 0) {
-//                      iNow++;
-//                      if (iNow == aLi.length) {
-//                          iNow = aLi.length - 1;
-//                      }
-//                  } else {
-//                      //右边移动
-//                      iNow--;
-//                      if (iNow == -1) {
-//                          iNow = 0;
-//                      }
-//                  }
-//              }
-//              x = -iNow * aLi[0].offsetWidth;
-//              oUl.style.transform = 'translate3d(' + x + 'px,0,0)';
-//              oUl.style.transition = '200ms all ease';
-//
-//              function tEnd() {
-//                  if (iNow == 4) {
-//                      iNow = 1;
-//                  }
-//                  if (iNow == 0) {
-//                      iNow = 3;
-//                  }
-//                  oUl.style.transition = 'none'
-//                  x = -iNow * aLi[0].offsetWidth;
-//                  oUl.style.transform = 'translate3d(' + x + 'px,0,0)';
-//                  bReady = true;
-//              }
-//              oUl.addEventListener('transitionend', tEnd, false);
-//              //释放内存
-//              document.removeEventListener('touchend', fnEnd, false);
-//              document.removeEventListener('touchmove', fnMove, false);
-//
-//          }
-//          document.addEventListener('touchmove', fnMove, false);
-//          document.addEventListener('touchend', fnEnd, false);
-//          //阻止默认事件
-//          ev.preventDefault();
-//      }, false);
-//  }
 </script>

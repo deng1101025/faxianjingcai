@@ -20,7 +20,6 @@
           .content ul.flex-wrap-list li{padding: 20px 15px; border-bottom: 1px solid #e5e5e5}
           .content ul.flex-wrap-list li:nth-child(6){border-bottom:0px}
           .content {background-color: #f9f9f9; border-radius: 1em; -moz-box-shadow: 4px 6px 15px #bcbcbc; /* 老的 Firefox */box-shadow: 4px 6px 15px #bcbcbc;}
-          /*ul.flex-wrap-list li:nth-child(5){ border-bottom: 1px solid #f5f5f5;}*/
           .item-hide{display: none;}
     </style>
 </head>
@@ -55,15 +54,13 @@
 <script type="text/javascript" src="./../script/common.js"></script>
 <script type="text/javascript" src="./../script/APICloud-rest.js"></script>
 <script type="text/javascript">
-console.log("token: ###  ");
-  // var dialogBox = null;
+  var accessToken = "";
   apiready = function () {
     console.log("winName: " +api.winName)
     console.log("frameName: " +api.frameName)
-    // dialogBox = api.require('dialogBox');
 
     //同步返回结果：
-    var accessToken = api.getPrefs({
+    accessToken = api.getPrefs({
         sync: true,
         key: 'accessToken'
     });
@@ -97,7 +94,7 @@ console.log("token: ###  ");
       $api.text($api.dom('#quiteSelect'), '立即登录');
     }
   }
-  //会员充值
+  //会员充值按钮点击事件
   function deposit() {
     api.getPrefs({
         key: 'accessToken'
@@ -112,7 +109,6 @@ console.log("token: ###  ");
               hideNavigationBar: false,
               navigationBar: {
                   background: '#f2f2f2',
-                  // color: '#fff',
                   leftButtons: [{
                       iconPath: 'widget://image/left.png'
                   }]
@@ -128,6 +124,7 @@ console.log("token: ###  ");
     });
 
   }
+  //注册按钮点击事件
   function registe() {
     // 打开只有navigationBar的页面：
     api.openTabLayout({
@@ -137,72 +134,14 @@ console.log("token: ###  ");
         hideNavigationBar: false,
         navigationBar: {
             background: '#f2f2f2',
-            // color: '#fff',
             leftButtons: [{
                 iconPath: 'widget://image/left.png'
             }]
         }
     });
   }
-  // function registe() {
-  //   dialogBox.list({
-  //     tapClose: true,
-  //     texts: {
-  //         title: '注册',
-  //         enter: '提交'
-  //     },
-  //     listTitles: ['手机：', '密码：'],
-  //     styles: {
-  //         bg: '#fff',
-  //         corner: 10,
-  //         w: 300,
-  //         h: 260,
-  //         title: {
-  //             h: 44,
-  //             size: 14,
-  //             color: '#000'
-  //         },
-  //         list: {
-  //             h: 128,
-  //             row: 2,
-  //             title: {
-  //                 marginL: 10,
-  //                 size: 14,
-  //                 color: '#696969'
-  //             },
-  //             content: {
-  //                 marginL: 10,
-  //                 size: 14,
-  //                 color: '#000'
-  //             }
-  //         },
-  //         dividingLine: {
-  //             width: 0.5,
-  //             color: '#696969'
-  //         },
-  //         enter: {
-  //             w: 135,
-  //             h: 55,
-  //             bg: '#e5e5e5',
-  //             color: '#007FFF',
-  //             size: 12,
-  //             corner:10
-  //         }
-  //     }
-  // }, function(ret) {
-  //     registePost(ret, function(ret, err) {
-  //       console.log("####: " + ret.eventType == 'enter');
-  //       // if(ret.eventType == 'enter') {
-  //         // var dialogBox = api.require('dialogBox');
-  //         dialogBox.close({
-  //             dialogName: 'list'
-  //         });
-  //       // }
-  //     });
-  // });
-  //
-  // }
 
+  //安全退出按钮点击事件
   function quit() {
     if($api.hasCls($api.dom('#quiteSelect'), 'has-loged')) {
       $api.addCls($api.dom('.has-loged'), 'item-hide')
@@ -225,7 +164,6 @@ console.log("token: ###  ");
           hideNavigationBar: false,
           navigationBar: {
               background: '#f2f2f2',
-              // color: '#fff',
               leftButtons: [{
                   iconPath: 'widget://image/left.png',
                   fontSize: '14'
@@ -234,9 +172,41 @@ console.log("token: ###  ");
       });
     }
   }
-  function modifyMM() {}
-  function contactMe() {}
+  //修改密码按钮点击事件
+  function modifyMM() {
+    if(!accessToken) {
+      api.toast({
+				msg: '亲，您还未登录，请先登录',
+				duration: 2000,
+				location: 'top'
+			});
+      return;
+    }
+    api.openTabLayout({
+        name: 'navModifyMM',
+        url: 'widget://html/frame2_modify_pass.html',
+        title: '修改密码',
+        hideNavigationBar: false,
+        navigationBar: {
+            background: '#f2f2f2',
+            leftButtons: [{
+                iconPath: 'widget://image/left.png',
+                fontSize: '14'
+            }]
+        }
+    });
+  }
+  //联系我们按钮点击事件
+  function contactMe() {
+    api.alert({
+        title: '联系客服',
+        msg: '客服微信：13717866249',
+    }, function(ret, err) {
 
+    });
+  }
+
+  //关于我们按钮点击事件
   function aboutMe() {
     api.openTabLayout({
         name: 'navAboutMe',
@@ -245,7 +215,6 @@ console.log("token: ###  ");
         hideNavigationBar: false,
         navigationBar: {
             background: '#f2f2f2',
-            // color: '#fff',
             leftButtons: [{
                 iconPath: 'widget://image/left.png',
                 fontSize: '14'
@@ -255,7 +224,7 @@ console.log("token: ###  ");
   }
 
   function reloadFrame() {
-    console.log("哈哈")
+    // console.log("哈哈")
     api.setFrameGroupIndex({
         name: 'group',
         index: 2,

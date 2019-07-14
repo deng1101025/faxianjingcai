@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
     <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
-    <title>云API</title>
+    <title>影视播放</title>
     <link rel="stylesheet" type="text/css" href="../css/api.css"/>
     <link rel="stylesheet" type="text/css" href="../css/style.css"/>
     <style>
@@ -51,7 +51,6 @@
         accessToken = ret.value;
     });
     getAnalysisUrlList(); //获取解析视频地址的url列表
-    // console.log(pageList[api.pageParam.index]);
     api.openFrame({
         name: 'frame0_yingshi_win_frame',
         url: pageList[api.pageParam.index], //https://m.v.qq.com
@@ -170,20 +169,8 @@
         name: 'root'
       });
     }
-
-    // api.historyBack({
-    //     frameName: 'frame0_yingshi_win'
-    // }, function(ret, err) {
-    //   console.log($api.jsonToStr(ret))
-    //   console.log($api.jsonToStr(err))
-    //   if (!ret.status) {
-    //       // api.closeWin();
-    //   }
-    // });
   }
   function btnCLicked_return_shouye() {
-    // var windows = api.windows();
-    // console.log(JSON.stringify(windows))
     api.closeToWin({
       name: 'root'
     });

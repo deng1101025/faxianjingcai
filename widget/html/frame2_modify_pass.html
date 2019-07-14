@@ -5,7 +5,7 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
 	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
-	<title>会员注册</title>
+	<title>修改密码</title>
 	<link rel="stylesheet" type="text/css" href="../css/api.css" />
 	<link rel="stylesheet" type="text/css" href="../css/style.css" />
 	<style>
@@ -245,29 +245,10 @@
 <body>
 	<div class="container">
 		<div class="header">
-			会员注册
+			修改密码
 		</div>
 		<div class="weui-cells weui-cells_form">
-			<div class="weui-cell weui-cell_vcode">
-				<div class="weui-cell__hd">
-					<label class="weui-label">手机号：</label>
-				</div>
-				<div class="weui-cell__bd">
-					<input id="username" class="weui-input" type="number" name="username" onBlur="phoneModify();" value="" placeholder="请输入手机号" />
-				</div>
-				<div class="weui-cell__ft">
-					<button class="weui-vcode-btn" type="button" name="button" onclick="btnGetCode();">获取验证码</button>
-				</div>
-			</div>
-			<div class="weui-cell">
-				<div class="weui-cell__hd">
-					<label class="weui-label">验证码：</label>
-				</div>
-				<div class="weui-cell__bd">
-					<input id="vcode" class="weui-input" type="text" name="vcode" onBlur="verifyCode();" value="" placeholder="请输入验证码" />
-				</div>
-			</div>
-			<div class="weui-cell" style="border-bottom: 1px solid rgba(0, 0, 0, 0.1);">
+      <div class="weui-cell" style="border-bottom: 1px solid rgba(0, 0, 0, 0.1);">
 				<div class="weui-cell__hd">
 					<label class="weui-label">密码：</label>
 				</div>
@@ -275,8 +256,16 @@
 					<input id="password" class="weui-input" type="password" name="password" value="" placeholder="请输入密码" />
 				</div>
 			</div>
+			<div class="weui-cell" style="border-bottom: 1px solid rgba(0, 0, 0, 0.1);">
+				<div class="weui-cell__hd">
+					<label class="weui-label">重复密码：</label>
+				</div>
+				<div class="weui-cell__bd">
+					<input id="password1" class="weui-input" type="password" name="password1" value="" placeholder="请再次输入密码" />
+				</div>
+			</div>
 			<div class="weui-btn-area">
-				<button class="weui-btn weui-btn_primary" type="button" name="button" onclick="btnRegiste();">注册</button>
+				<button class="weui-btn weui-btn_primary" type="button" name="button" onclick="btnModify();">确定修改</button>
 			</div>
 			<div class="weui-btn-area">
 				<button class="weui-btn weui-btn_default" type="button" name="button" onclick="btnReturn();">返回</button>
@@ -290,8 +279,7 @@
 <script type="text/javascript" src="./../script/util.js"></script>
 <script type="text/javascript" src="./../script/APICloud-rest.js"></script>
 <script type="text/javascript">
-	var verifyPhone = false;
-	var moduleSMSSDK = null;
+  var userId = "";
 	apiready = function() {
 		api.addEventListener({
 			name: 'navitembtn'
@@ -299,118 +287,74 @@
 			console.log($api.jsonToStr(ret))
 			api.closeWin();
 		});
-		//初始化短信验证模块
-		moduleSMSSDK = api.require('smssdk');
+    //同步返回结果：
+    userId = api.getPrefs({
+        sync: true,
+        key: 'userId'
+    });
+
+
 	}
 
-	function phoneModify() {
-		verifyPhone = false;
-	}
+  function btnModify() {
+    var password = $api.val($api.byId('password'));
+    var password1 = $api.val($api.byId('password1'));
+    if(!password || password.length < 6) {
+        api.toast({
+  				msg: '亲，请填写正确的密码格式，最低6位!',
+  				duration: 2000,
+  				location: 'top'
+  			});
+        return;
+    }
+    if(password1 != password) {
+      api.toast({
+        msg: '亲，两次密码输入不匹配，请重新输入',
+        duration: 2000,
+        location: 'top'
+      });
+      return;
+    }
+    if(!userId) {
+      api.toast({
+        msg: '亲，获取当前用户信息失败，请重新登录',
+        duration: 2000,
+        location: 'top'
+      });
+      return;
+    }
+    getModel("user").save({
+      "_id": userId
+    }, {
+      "password": password
+    }, function(ret, err) {
+      console.log("修改密码对象：" + $api.jsonToStr(ret))
+      console.log("修改密码对象：" + $api.jsonToStr(err))
+      if (ret && ret.id) {
+        api.toast({
+          msg: '亲，密码修改成功！',
+          duration: 2000,
+          location: 'top'
+        });
+        api.closeWin();
+        api.execScript({
+          name: 'root',
+          frameName: 'frame2',
+          script: 'reloadFrame();'
+        });
+      } else {
+        api.toast({
+          msg: '亲，修改密码失败，请重试或联系管理人员',
+          duration: 2000,
+          location: 'top'
+        });
+      }
+    })
 
-	//验证手机号按钮点击事件
-	function btnGetCode() {
-		var phone = $api.val($api.byId('username'));
-
-		if (phone && phone.length == 11) {
-			var param = {
-				zone: "86",
-				phoneNumber: phone,
-				tempCode: ""
-			};
-			console.log("param对象：" + $api.jsonToStr(param))
-			moduleSMSSDK.getTextCode(param, function(ret, err) {
-				if (err !== null && err !== undefined && err !== '') {
-				} else {
-					api.toast({
-						msg: '短信已发送，请查收',
-						duration: 2000,
-						location: 'top'
-					});
-				}
-			});
-		} else {
-			api.toast({
-				msg: '请输入正确的手机号',
-				duration: 2000,
-				location: 'top'
-			});
-		}
-	}
-
-	function verifyCode() {
-		var phone = $api.val($api.byId('username'));
-		var code = $api.val($api.byId('vcode'));
-		if (!phone || phone.length != 11) {
-			api.toast({
-				msg: '请输入正确的手机号',
-				duration: 2000,
-				location: 'top'
-			});
-			return;
-		}
-		if(code.length == 4) {
-			// param中的key命名不能改变
-			var objParam = {
-				zone: '86',
-				phoneNumber: phone,
-				code: code
-			};
-			moduleSMSSDK.commitCode(objParam, function(ret, err) {
-				if (err !== null && err !== undefined && err !== '') {
-					// 错误消息示例：{"msg":"Template not exist.","code":484}
-					api.toast({
-						msg: '短信验证码验证失败，请重试或咨询管理人员',
-						duration: 2000,
-						location: 'top'
-					});
-				} else {
-					verifyPhone = true;
-				}
-			});
-		} else {
-			api.toast({
-				msg: '请输入正确的验证码',
-				duration: 2000,
-				location: 'top'
-			});
-		}
-	}
-
-
-	//注册按钮点击事件
-	function btnRegiste() {
-		if (verifyPhone) {
-				registePost({
-					amounts: [$api.val($api.byId('username')), $api.val($api.byId('password'))]
-				});
-		} else {
-			api.toast({
-				msg: '请先验证手机号',
-				duration: 2000,
-				location: 'top'
-			});
-		}
-	}
+  }
 
 	// 发送请求注册用户，并充值一天体验会员
 	function registePost(data, success, fail) {
-		console.log("注册的数据： " + JSON.stringify(data));
-		if (!data.amounts[0] || data.amounts[0].length != 11) {
-			api.toast({
-				msg: '亲，请填写正确的手机号码!',
-				duration: 2000,
-				location: 'center'
-			});
-			return;
-		}
-		if (!data.amounts[1] || data.amounts[1].length <= 0) {
-			api.toast({
-				msg: '请填写密码',
-				duration: 2000,
-				location: 'center'
-			});
-			return;
-		}
 		getModel("user").save({
 			"username": data.amounts[0],
 			"password": data.amounts[1]
@@ -419,12 +363,7 @@
 			console.log($api.jsonToStr(err));
 			if (ret.error) {
 				//处理错误 err
-				fail && fail(ret, err)
-				api.toast({
-					msg: ret.error.name == "uniqueness" ? "用户已存在" : $api.jsonToStr(ret.error),
-					duration: 2000,
-					location: 'center'
-				});
+
 			} else if (ret.id) {
 				verifyPhone = false;
 				//处理数据 ret
