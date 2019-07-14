@@ -61,6 +61,11 @@
             color: '#6ab494'
         });
         funIniGroup();
+
+        //初始化短信验证模块
+        var sendsms = api.require('sendSms');
+    		var param = { appkey: "2bb47af4b76ec", appsecret: "31a950fec5fed611b6927aa07313d455" };
+    		sendsms.regSms(param);
     }
 
     function funIniGroup(){

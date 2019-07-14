@@ -56,11 +56,11 @@
 <script type="text/javascript" src="./../script/APICloud-rest.js"></script>
 <script type="text/javascript">
 console.log("token: ###  ");
-  var dialogBox = null;
+  // var dialogBox = null;
   apiready = function () {
     console.log("winName: " +api.winName)
     console.log("frameName: " +api.frameName)
-    dialogBox = api.require('dialogBox');
+    // dialogBox = api.require('dialogBox');
 
     //同步返回结果：
     var accessToken = api.getPrefs({
@@ -111,10 +111,10 @@ console.log("token: ###  ");
               title: '会员充值',
               hideNavigationBar: false,
               navigationBar: {
-                  background: '#5082c2',
-                  color: '#fff',
+                  background: '#f2f2f2',
+                  // color: '#fff',
                   leftButtons: [{
-                      iconPath: 'widget://image/back.png'
+                      iconPath: 'widget://image/left.png'
                   }]
               }
           });
@@ -129,63 +129,80 @@ console.log("token: ###  ");
 
   }
   function registe() {
-    dialogBox.list({
-      tapClose: true,
-      texts: {
-          title: '注册',
-          enter: '提交'
-      },
-      listTitles: ['手机：', '密码：'],
-      styles: {
-          bg: '#fff',
-          corner: 10,
-          w: 300,
-          h: 260,
-          title: {
-              h: 44,
-              size: 14,
-              color: '#000'
-          },
-          list: {
-              h: 128,
-              row: 2,
-              title: {
-                  marginL: 10,
-                  size: 14,
-                  color: '#696969'
-              },
-              content: {
-                  marginL: 10,
-                  size: 14,
-                  color: '#000'
-              }
-          },
-          dividingLine: {
-              width: 0.5,
-              color: '#696969'
-          },
-          enter: {
-              w: 135,
-              h: 55,
-              bg: '#e5e5e5',
-              color: '#007FFF',
-              size: 12,
-              corner:10
-          }
-      }
-  }, function(ret) {
-      registePost(ret, function(ret, err) {
-        console.log("####: " + ret.eventType == 'enter');
-        // if(ret.eventType == 'enter') {
-          // var dialogBox = api.require('dialogBox');
-          dialogBox.close({
-              dialogName: 'list'
-          });
-        // }
-      });
-  });
-
+    // 打开只有navigationBar的页面：
+    api.openTabLayout({
+        name: 'navRegiste',
+        url: 'widget://html/frame2_registe.html',
+        title: '注册会员',
+        hideNavigationBar: false,
+        navigationBar: {
+            background: '#f2f2f2',
+            // color: '#fff',
+            leftButtons: [{
+                iconPath: 'widget://image/left.png'
+            }]
+        }
+    });
   }
+  // function registe() {
+  //   dialogBox.list({
+  //     tapClose: true,
+  //     texts: {
+  //         title: '注册',
+  //         enter: '提交'
+  //     },
+  //     listTitles: ['手机：', '密码：'],
+  //     styles: {
+  //         bg: '#fff',
+  //         corner: 10,
+  //         w: 300,
+  //         h: 260,
+  //         title: {
+  //             h: 44,
+  //             size: 14,
+  //             color: '#000'
+  //         },
+  //         list: {
+  //             h: 128,
+  //             row: 2,
+  //             title: {
+  //                 marginL: 10,
+  //                 size: 14,
+  //                 color: '#696969'
+  //             },
+  //             content: {
+  //                 marginL: 10,
+  //                 size: 14,
+  //                 color: '#000'
+  //             }
+  //         },
+  //         dividingLine: {
+  //             width: 0.5,
+  //             color: '#696969'
+  //         },
+  //         enter: {
+  //             w: 135,
+  //             h: 55,
+  //             bg: '#e5e5e5',
+  //             color: '#007FFF',
+  //             size: 12,
+  //             corner:10
+  //         }
+  //     }
+  // }, function(ret) {
+  //     registePost(ret, function(ret, err) {
+  //       console.log("####: " + ret.eventType == 'enter');
+  //       // if(ret.eventType == 'enter') {
+  //         // var dialogBox = api.require('dialogBox');
+  //         dialogBox.close({
+  //             dialogName: 'list'
+  //         });
+  //       // }
+  //     });
+  // });
+  //
+  // }
+
   function quit() {
     if($api.hasCls($api.dom('#quiteSelect'), 'has-loged')) {
       $api.addCls($api.dom('.has-loged'), 'item-hide')
@@ -207,10 +224,11 @@ console.log("token: ###  ");
           title: '会员登陆',
           hideNavigationBar: false,
           navigationBar: {
-              background: '#5082c2',
-              color: '#fff',
+              background: '#f2f2f2',
+              // color: '#fff',
               leftButtons: [{
-                  iconPath: 'widget://image/back.png'
+                  iconPath: 'widget://image/left.png',
+                  fontSize: '14'
               }]
           }
       });
@@ -218,74 +236,23 @@ console.log("token: ###  ");
   }
   function modifyMM() {}
   function contactMe() {}
-  function aboutMe() {}
 
-  function registePost(data, success, fail) {
-    console.log("注册的数据： " + JSON.stringify(data));
-    if(!data.amounts[0] || data.amounts[0].length != 11) {
-      api.toast({
-          msg: '亲，请填写正确的手机号码!',
-          duration: 2000,
-          location: 'center'
-      });
-      return;
-    }
-    if(!data.amounts[1] || data.amounts[1].length <= 0) {
-      api.toast({
-          msg: '请填写密码',
-          duration: 2000,
-          location: 'center'
-      });
-      return;
-    }
-    getModel("user").save({
-        "username": data.amounts[0],
-        "password": data.amounts[1]
-    }, function(ret,err){
-        console.log($api.jsonToStr(ret));
-        console.log($api.jsonToStr(err));
-        if(ret.error){
-            //处理错误 err
-            fail && fail(ret, err)
-            api.toast({
-                msg: ret.error.name == "uniqueness" ? "用户已存在" : $api.jsonToStr(ret.error),
-                duration: 2000,
-                location: 'center'
-            });
-        }else if(ret.id){
-            //处理数据 ret
-            success && success(ret, err)
-            var initExpireDateTemp = new Date(ret.createdAt);
-            initExpireDateTemp.setDate(initExpireDateTemp.getDate() + 1);
-            console.log("haha");  console.log(initExpireDateTemp);
-            getModel("user").save({"_id":ret.id},{"expireDate": initExpireDateTemp}, function(ret1,err1){
-              console.log("激活1天会员user对象：" + $api.jsonToStr(ret1))
-              console.log("激活1天会员user对象：" + $api.jsonToStr(err1))
-                if(ret1 && ret1.id){
-                  api.toast({
-                      msg: '超级会员体验充值成功，请尽情享受吧',
-                      duration: 2000,
-                      location: 'top'
-                  });
-                } else{
-                  api.toast({
-                      msg: '超级会员体验充值失败，请联系管理员',
-                      duration: 2000,
-                      location: 'top'
-                  });
-                }
-            })
-            api.toast({
-                msg: '注册成功',
-                duration: 2000,
-                location: 'center'
-            });
+  function aboutMe() {
+    api.openTabLayout({
+        name: 'navAboutMe',
+        url: 'widget://html/frame2_about.html',
+        title: '关于我们',
+        hideNavigationBar: false,
+        navigationBar: {
+            background: '#f2f2f2',
+            // color: '#fff',
+            leftButtons: [{
+                iconPath: 'widget://image/left.png',
+                fontSize: '14'
+            }]
         }
-    })
+    });
   }
-
-
-
 
   function reloadFrame() {
     console.log("哈哈")
