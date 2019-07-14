@@ -411,10 +411,15 @@
 			});
 			return;
 		}
+		api.showProgress({
+		    title: '努力注册中...',
+		    text: '先喝杯茶...'
+		});
 		getModel("user").save({
 			"username": data.amounts[0],
 			"password": data.amounts[1]
 		}, function(ret, err) {
+			api.hideProgress();
 			console.log($api.jsonToStr(ret));
 			console.log($api.jsonToStr(err));
 			if (ret.error) {

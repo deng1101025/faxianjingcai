@@ -323,11 +323,16 @@
       });
       return;
     }
+		api.showProgress({
+		    title: '努力修改中...',
+		    text: '先喝杯茶...'
+		});
     getModel("user").save({
       "_id": userId
     }, {
       "password": password
     }, function(ret, err) {
+			api.hideProgress();
       console.log("修改密码对象：" + $api.jsonToStr(ret))
       console.log("修改密码对象：" + $api.jsonToStr(err))
       if (ret && ret.id) {
@@ -352,61 +357,6 @@
     })
 
   }
-
-	// 发送请求注册用户，并充值一天体验会员
-	function registePost(data, success, fail) {
-		getModel("user").save({
-			"username": data.amounts[0],
-			"password": data.amounts[1]
-		}, function(ret, err) {
-			console.log($api.jsonToStr(ret));
-			console.log($api.jsonToStr(err));
-			if (ret.error) {
-				//处理错误 err
-
-			} else if (ret.id) {
-				verifyPhone = false;
-				//处理数据 ret
-				success && success(ret, err)
-				var initExpireDateTemp = new Date(ret.createdAt);
-				initExpireDateTemp.setDate(initExpireDateTemp.getDate() + 1);
-				console.log("haha");
-				console.log(initExpireDateTemp);
-				getModel("user").save({
-					"_id": ret.id
-				}, {
-					"expireDate": initExpireDateTemp
-				}, function(ret1, err1) {
-					console.log("激活1天会员user对象：" + $api.jsonToStr(ret1))
-					console.log("激活1天会员user对象：" + $api.jsonToStr(err1))
-					if (ret1 && ret1.id) {
-						api.toast({
-							msg: '超级会员体验充值成功，请尽情享受吧',
-							duration: 2000,
-							location: 'top'
-						});
-						api.closeWin();
-						api.execScript({
-							name: 'root',
-							frameName: 'frame2',
-							script: 'reloadFrame();'
-						});
-					} else {
-						api.toast({
-							msg: '超级会员体验充值失败，请联系管理员',
-							duration: 2000,
-							location: 'top'
-						});
-					}
-				})
-				api.toast({
-					msg: '注册成功',
-					duration: 2000,
-					location: 'center'
-				});
-			}
-		})
-	}
 
 	function btnReturn() {
 		api.closeWin();

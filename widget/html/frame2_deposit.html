@@ -243,11 +243,16 @@
       });
       return;
     }
+    api.showProgress({
+		    title: '努力充值中...',
+		    text: '先喝杯茶...'
+		});
     getModel("secret").query({
         filter:{
             "where":{"secret":secret}
         }
     }, function(ret,err){
+      api.hideProgress();
       console.log("secret对象：" + $api.jsonToStr(ret))
       console.log("secret对象：" + $api.jsonToStr(err))
       if(ret && ret[0]&& ret[0].id){// 存在此充值码
@@ -273,15 +278,25 @@
 
   //使用此充值码，更新此充值码已使用
   function updateDposit(id, username, day) {
+    api.showProgress({
+        title: '努力充值中...',
+        text: '先喝杯茶...'
+    });
     getModel("user").query({
         filter:{
             "where":{"username":username}
         }
     }, function(ret1, err1){
+      api.hideProgress();
       console.log("用户对象：" + $api.jsonToStr(ret1))
       console.log("用户对象：" + $api.jsonToStr(err1))
       if(ret1 && ret1[0] && ret1[0].id){ //输入的账户存在，更新账户状态，获得vip
+        api.showProgress({
+            title: '努力充值中...',
+            text: '先喝杯茶...'
+        });
         getModel("secret").save({"_id": id},{"userId": ret1[0].id}, function(ret2,err2){ // 更新用户状态
+          api.hideProgress();
           console.log("保存后secret对象：" + $api.jsonToStr(ret2))
           console.log("保存后secret对象：" + $api.jsonToStr(err2))
             if(ret2 && ret2.id){

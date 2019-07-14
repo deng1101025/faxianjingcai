@@ -13,7 +13,17 @@ html,body {  font-size:14px; height:100%;  }
 
 #wrap{ height: 100%; }
 
-
+a,input,button{outline: none; -webkit-tap-highlight-color: rgba(255, 255, 255, 0); -webkit-focus-ring-color: rgba(0, 0, 0, 0);}
+/*.weui-btn:hover,*/
+.weui-btn_primary:active{
+    background-color: #06AD56;
+}
+.weui-btn_default:active{
+    background-color: #D9D9D9;
+}
+.btn-item:active,.weui-vcode-btn:active{
+    background-color: #f2f2f2;
+}
 
     /** {
    margin: 0;

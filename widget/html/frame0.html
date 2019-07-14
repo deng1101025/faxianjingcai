@@ -22,7 +22,7 @@
         }
 
         .container {
-            margin-top: 150px;
+            margin-top: 240px;
         }
 
         .vedio-list ul li {
@@ -78,14 +78,25 @@
         .list-iten2 ul li:nth-child(4) {
             background-image: url(./../image/souhu.jpg);
         }
+
         .flex-con {
             overflow: auto
+        }
+
+        .notice {
+          text-align: center;
+          color: red;
+          padding-bottom: 5px;
         }
     </style>
 </head>
 
 <body>
+
     <div class="container">
+        <div class="notice">
+          公告： 限时特惠出售充值码，加微信：13717866249
+        </div>
         <div class="vedio-list list-iten1">
             <ul class="flex-wrap">
                 <li tapmode="hover" onclick="btnCLicked(0);" class="flex-con">腾讯</li>
@@ -107,8 +118,91 @@
 
 </html>
 <script type="text/javascript" src="./../script/api.js"></script>
+<script type="text/javascript" src="./../script/util.js"></script>
+<script type="text/javascript" src="./../script/APICloud-rest.js"></script>
 <script type="text/javascript">
     apiready = function() {
+      getModel("config").query({
+          filter:{
+              "where":{"attrParam4": 'common'},
+              "order": "attrParam2 ASC"
+          }
+      }, function(ret,err){
+        console.log("config对象：" + $api.jsonToStr(ret))
+        // console.log("config对象：" + $api.jsonToStr(err))
+        if(ret && ret.length > 0) {
+          var picPaths = [];
+          var picPathsTitle = [];
+          var picUrl = [];
+          var analysisUrl = [];
+          for(var i = 0; i < ret.length; i++) {
+            if(ret[i].attrKey == 'lunbo') {
+              picPaths.push(ret[i].attrVal);
+              picPathsTitle.push(ret[i].attrParam1);
+              picUrl.push(ret[i].attrParam3);
+            } else if (ret[i].attrKey == 'analysisUrl') {
+              analysisUrl.push(ret[i].attrVal);
+            }
+          }
+          initLunbo(picPaths, picPathsTitle, picUrl, analysisUrl);
+        }
+      });
+    }
+
+    function initLunbo(picPaths, picPathsTitle, picUrl, analysisUrl) {
+      var UIScrollPicture = api.require('UIScrollPicture');
+      UIScrollPicture.open({
+          rect: {
+              x: 0,
+              y: 0,
+              w: api.winWidth,
+              h: api.winHeight / 3
+          },
+          data: {
+              paths: picPaths,
+              captions: picPathsTitle
+          },
+          styles: {
+              caption: {
+                  height: 35,
+                  color: '#000',
+                  size: 13,
+                  bgColor: '#f2f2f2',
+                  position: 'bottom',
+                  alignment: 'center'
+              },
+              indicator: {
+                  dot: {
+                      w: 20,
+                      h: 10,
+                      r: 5,
+                      margin: 20
+                  },
+                  align: 'center',
+                  color: '#FFFFFF',
+                  activeColor: '#DA70D6'
+              }
+          },
+          placeholderImg: 'widget://image/heyiweijia.jpg',
+          contentMode: 'scaleToFill',
+          interval: 3,
+          fixedOn: api.frameName,
+          loop: true,
+          fixed: false
+      }, function(ret, err) {
+          if (ret && ret.status) {
+            if(ret.eventType == 'click') {
+              console.log("点击的url：" + picUrl[ret.index])
+              api.openWin({
+                name: 'playWin',
+                url: analysisUrl[0] + picUrl[ret.index]
+              });
+            }
+            console.log("succes对象：" + $api.jsonToStr(ret))
+          } else {
+            console.log("fail对象：" + $api.jsonToStr(err))
+          }
+      });
     }
 
     function btnCLicked(num) {

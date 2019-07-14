@@ -258,10 +258,15 @@
 			});
 			return;
 		}
+		api.showProgress({
+		    title: '努力登录中...',
+		    text: '先喝杯茶...'
+		});
 		getModel("user").login({
 			"username": username,
 			"password": password
 		}, function(ret, err) {
+			api.hideProgress();
 			if(ret && ret.id) {
 				//处理数据 ret,说明可以登录
 				//讲数据缓存放到本地缓存
