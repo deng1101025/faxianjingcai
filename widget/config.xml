@@ -1,10 +1,10 @@
  <widget id="A6017476383128"  version="0.0.2">
-    <name>发现精彩</name>
+    <name>看播</name>
     <description>
-        Example For APICloud.
+        看尽天下所有的电影
     </description>
     <author email="developer@apicloud.com" href="http://www.apicloud.com">
-        Developer
+        clyde
     </author>    <content src="index.html" />    <access origin="*" />
     <preference name="pageBounce" value="false"/>
 	<preference name="appBackground" value="rgba(0,0,0,0.0)"/>
@@ -16,7 +16,7 @@
 	<preference name="fullScreen" value="false"/>
 	<preference name="autoUpdate" value="true" />
 	<preference name="smartUpdate" value="true" />
-	<preference name="debug" value="false"/>
+	<preference name="debug" value="false"/>		<preference name="appCertificateVerify" value="false"/>
 	<!-- <preference name="statusBarAppearance" value="true"/> -->
 	<permission name="readPhoneState" />
 	<permission name="camera" />
