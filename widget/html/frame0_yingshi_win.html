@@ -73,21 +73,21 @@
     }, function(ret, err) {
         switch (ret.state) {
             case 0:
-              // alert("0###" + ret.url)
+              alert("0###" + ret.url)
                 break;
             case 1:
-            // alert("1###" + ret.url)
+            alert("1###" + ret.url)
                 break;
             case 2:
               addrHistory.push(ret.url);
               playAddress = ret.url;
-            // alert("2###" + ret.url)
+            alert("2###" + ret.url)
                 break;
             case 3:
-            // alert("3###" + ret.url)
+            alert("3###" + ret.url)
                 break;
             case 4:
-            // alert("4###" + ret.url)
+            alert("4###" + ret.url)
                 break;
             default:
                 break;
@@ -96,7 +96,7 @@
   }
 
   function btnClicked_play() {
-    console.log("进入方法btnClicked_play");
+    console.log("进入方法btnClicked_play", playAddress);
     // 获取用户vip状态
     getUserVipType({
       callback: function(ret) {

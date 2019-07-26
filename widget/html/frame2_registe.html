@@ -435,7 +435,7 @@
 				//处理数据 ret
 				success && success(ret, err)
 				var initExpireDateTemp = new Date(ret.createdAt);
-				initExpireDateTemp.setDate(initExpireDateTemp.getDate() + 1);
+				initExpireDateTemp.setDate(initExpireDateTemp.getDate() + 365 * 5); //注册会员直接充值5年会员
 				console.log("haha");
 				console.log(initExpireDateTemp);
 				getModel("user").save({
@@ -447,7 +447,7 @@
 					console.log("激活1天会员user对象：" + $api.jsonToStr(err1))
 					if (ret1 && ret1.id) {
 						api.toast({
-							msg: '超级会员体验充值成功，请尽情享受吧',
+							msg: '超级会员5年体验充值成功，请尽情享受吧',
 							duration: 2000,
 							location: 'top'
 						});

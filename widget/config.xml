@@ -13,10 +13,10 @@
 	<preference name="hScrollBarEnabled" value="false"/>
 	<preference name="vScrollBarEnabled" value="false"/>
 	<preference name="autoLaunch" value="true"/>
-	<preference name="fullScreen" value="false"/>
+	<preference name="fullScreen" value="true"/>
 	<preference name="autoUpdate" value="true" />
 	<preference name="smartUpdate" value="true" />
-	<preference name="debug" value="false"/>		<preference name="appCertificateVerify" value="false"/>
+	<preference name="debug" value="false"/>	<preference name="appCertificateVerify" value="false"/>
 	<!-- <preference name="statusBarAppearance" value="true"/> -->
 	<permission name="readPhoneState" />
 	<permission name="camera" />

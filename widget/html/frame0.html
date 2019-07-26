@@ -22,7 +22,7 @@
         }
 
         .container {
-            margin-top: 240px;
+            margin-top: 245px;
         }
 
         .vedio-list ul li {
@@ -88,6 +88,23 @@
           color: red;
           padding-bottom: 5px;
         }
+
+        .weui-btn_primary {
+			background-color: #07C160;
+		}
+
+		.btn-item{ background-color: #F2F2F2; width: 15%; height: 28px; border: 1px solid #f5f5f5;border-radius: 0.5em}
+
+		.search-area {
+			background-color: #e5e5e5;
+		}
+		.searvh-input {
+			background-color: #fff;
+			width: 70%;
+			height: 35px;
+			margin: 4px 10px;
+			border-radius: 0.4em;
+		}
     </style>
 </head>
 
@@ -96,6 +113,13 @@
     <div class="container">
         <div class="notice">
           公告： 限时特惠出售充值码，加微信：13717866249
+        </div>
+        <div class="search-area">
+        	<div id="">
+        		<input class="searvh-input" type="text" name="search" id="search" placeholder="搜索" value="" />
+        		<button class="btn-item btn-item-return" onclick="btnSearch()">搜索</button>
+
+        	</div>
         </div>
         <div class="vedio-list list-iten1">
             <ul class="flex-wrap">
@@ -151,6 +175,7 @@
 
     function initLunbo(picPaths, picPathsTitle, picUrl, analysisUrl) {
       var UIScrollPicture = api.require('UIScrollPicture');
+      UIScrollPicture.clearCache();
       UIScrollPicture.open({
           rect: {
               x: 0,
@@ -183,7 +208,7 @@
                   activeColor: '#DA70D6'
               }
           },
-          placeholderImg: 'widget://image/heyiweijia.jpg',
+          placeholderImg: '', //'widget://image/heyiweijia.jpg',
           contentMode: 'scaleToFill',
           interval: 3,
           fixedOn: api.frameName,
@@ -222,6 +247,20 @@
             pageParam: {
                 index: num
             }
+        });
+    }
+
+    function btnSearch() {
+    	var searchVal = $api.val($api.byId('search'));
+    	api.openWin({
+            name: 'seachWin',
+            url: 'https://api.smq1.com/?url=' + searchVal,
+            progress: 'default',
+            bounces: true,
+            slidBackType: 'edge',
+            singleInstance: false,
+            useWKWebView: true,
+            historyGestureEnabled: true
         });
     }
 </script>
