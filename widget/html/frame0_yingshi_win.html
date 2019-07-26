@@ -73,21 +73,21 @@
     }, function(ret, err) {
         switch (ret.state) {
             case 0:
-              alert("0###" + ret.url)
+              // alert("0###" + ret.url)
                 break;
             case 1:
-            alert("1###" + ret.url)
+            // alert("1###" + ret.url)
                 break;
             case 2:
               addrHistory.push(ret.url);
               playAddress = ret.url;
-            alert("2###" + ret.url)
+            // alert("2###" + ret.url)
                 break;
             case 3:
-            alert("3###" + ret.url)
+            // alert("3###" + ret.url)
                 break;
             case 4:
-            alert("4###" + ret.url)
+            // alert("4###" + ret.url)
                 break;
             default:
                 break;
@@ -96,11 +96,11 @@
   }
 
   function btnClicked_play() {
-    console.log("进入方法btnClicked_play", playAddress);
+    // console.log("进入方法btnClicked_play", playAddress);
     // 获取用户vip状态
     getUserVipType({
       callback: function(ret) {
-        console.log("进入方法回调");
+        // console.log("进入方法回调");
         if(ret.expireDate && ret.expireDate != '' && ret.expireDate != null) { //该用户有会员状态
             var userExpireDateTemp = new Date(ret.expireDate); //用户充值会员的过期时间
             var currentSysDate = new Date(ret.updatedAt); //用户充值会员的过期时间
@@ -128,7 +128,7 @@
     console.log(pageList.toString());
     console.log(pageList.toString().indexOf(playAddress));
     if(playAddress && playAddress != ""&& pageList.toString().indexOf(playAddress) <0) {
-        console.log('http://api.5sys.cn/jx/?v=' + playAddress)
+        // console.log('http://api.5sys.cn/jx/?v=' + playAddress)
         // alert('http://api.5sys.cn/jx/?v=' + playAddress)
         api.openWin({
           name: 'playWin',
