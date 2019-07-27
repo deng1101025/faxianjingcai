@@ -435,7 +435,7 @@
 				//处理数据 ret
 				success && success(ret, err)
 				var initExpireDateTemp = new Date(ret.createdAt);
-				initExpireDateTemp.setDate(initExpireDateTemp.getDate() + 365 * 5); //注册会员直接充值5年会员
+				initExpireDateTemp.setDate(initExpireDateTemp.getDate() + 7); //注册会员直接充值5年会员
 				console.log("haha");
 				console.log(initExpireDateTemp);
 				getModel("user").save({
