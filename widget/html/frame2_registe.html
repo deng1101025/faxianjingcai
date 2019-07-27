@@ -443,11 +443,11 @@
 				}, {
 					"expireDate": initExpireDateTemp
 				}, function(ret1, err1) {
-					console.log("激活1天会员user对象：" + $api.jsonToStr(ret1))
-					console.log("激活1天会员user对象：" + $api.jsonToStr(err1))
+					console.log("激活7天会员user对象：" + $api.jsonToStr(ret1))
+					console.log("激活7天会员user对象：" + $api.jsonToStr(err1))
 					if (ret1 && ret1.id) {
 						api.toast({
-							msg: '超级会员5年体验充值成功，请尽情享受吧',
+							msg: '超级会员7天体验充值成功，请尽情享受吧',
 							duration: 2000,
 							location: 'top'
 						});
