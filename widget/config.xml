@@ -13,7 +13,7 @@
 	<preference name="hScrollBarEnabled" value="false"/>
 	<preference name="vScrollBarEnabled" value="false"/>
 	<preference name="autoLaunch" value="true"/>
-	<preference name="fullScreen" value="true"/>
+	<preference name="fullScreen" value="false"/>
 	<preference name="autoUpdate" value="true" />
 	<preference name="smartUpdate" value="true" />
 	<preference name="debug" value="false"/>	<preference name="appCertificateVerify" value="false"/>
@@ -25,5 +25,5 @@
 	<permission name="fileSystem" />
 	<permission name="internet" />
 	<permission name="bootCompleted" />
-	<permission name="hardware" />	<!-- For Android -->    <meta-data name="Mob-AppKey" value="2bb47af4b76ec"/>    <meta-data name="Mob-AppSecret" value="31a950fec5fed611b6927aa07313d455"/>
+	<permission name="hardware" />  <!-- // 禁止所有 -->  <preference name="forbiddenSchemes" value="*" />	<!-- For Android -->    <meta-data name="Mob-AppKey" value="2bb47af4b76ec"/>    <meta-data name="Mob-AppSecret" value="31a950fec5fed611b6927aa07313d455"/>
 </widget>
