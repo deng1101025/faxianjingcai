@@ -4,14 +4,424 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
     <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
-    <title>文档</title>
+    <title>会员中心</title>
     <link rel="stylesheet" type="text/css" href="../css/api.css"/>
     <link rel="stylesheet" type="text/css" href="../css/style.css"/>
     <style>
-        .empty{ text-align: center; padding: 120px 0; }
+          body{ background-color: #efefef}
+          .empty{ text-align: center; padding: 120px 0; }
+		      .container{ margin: auto 15px;}
+          .header ul.flex-wrap li{ padding-top: 40px; padding-bottom: 23px; background: url() no-repeat center 31px; background-size: auto 44px; text-align: center; }
+          .header ul.flex-wrap li:nth-child(1){width: 20%;background-image: url(./../image/mangguo.png);}
+          .header ul.flex-wrap li .flex-item-div{ text-align: left; }
+          .header ul.flex-wrap li .flex-vip-con{ padding-left: 30px;background: url() no-repeat left -8px; background-image: url(./../image/vipx.png);background-size: 26px 26px;}
+          .header .no-loged{padding: 30px 12px;height: 37px}
+
+          .content ul.flex-wrap-list li{padding: 20px 15px; border-bottom: 1px solid #e5e5e5}
+          .content ul.flex-wrap-list li:nth-child(6){border-bottom:0px}
+          .content {background-color: #f9f9f9; border-radius: 1em; -moz-box-shadow: 4px 6px 15px #bcbcbc; /* 老的 Firefox */box-shadow: 4px 6px 15px #bcbcbc;}
+          .item-hide{display: none;}
     </style>
 </head>
 <body>
-    <div class="empty">文档</div>
+    <div class="container">
+      <div class="header">
+        <div class="has-loged">
+          <ul class="flex-wrap">
+            <li id="iconTouxiang" class="flex-item"></li>
+            <li class="flex-item"><div id="divUsername" class="flex-item-div">未知</div><div id="divExpireDate" class="flex-con-div flex-vip-con">您还不是vip</div></li>
+          </ul>
+        </div>
+        <div class="no-loged item-hide">
+          您还未登录
+        </div>
+      </div>
+      <div class="content">
+        <ul class="flex-wrap-list">
+          <li class="flex-item" onclick="login()">QQ一键登录</li>
+          <!-- <li id="quiteSelect" class="flex-item has-loged" onclick="quit()">安全退出</li> -->
+          <li class="flex-item" onclick="deposit()">会员充值</li>
+          <!-- <li class="flex-item" onclick="registe()">用户注册</li>
+          <li class="flex-item" onclick="modifyMM()">修改密码</li> -->
+          <li class="flex-item" onclick="contactMe()">联系客服</li>
+          <li class="flex-item" onclick="aboutMe()">关于我们</li>
+          <li class="flex-item" onclick="pay()">测试微信支付</li>
+        </ul>
+      </div>
+    </div>
 </body>
 </html>
+<script type="text/javascript" src="./../script/api.js"></script>
+<script type="text/javascript" src="./../script/util.js"></script>
+<script type="text/javascript" src="./../script/common.js"></script>
+<script type="text/javascript" src="./../script/APICloud-rest.js"></script>
+<script type="text/javascript" src="./../script/md5.js"></script>
+<script type="text/javascript">
+  var accessToken = "";
+  var qq;
+  apiready = function () {
+    qq = api.require('QQPlus');
+    console.log("winName: " +api.winName)
+    console.log("frameName: " +api.frameName)
+
+    //同步返回结果：
+    accessToken = api.getPrefs({
+        sync: true,
+        key: 'accessToken'
+    });
+    // 获取用户vip状态 common公共方法
+    getUserVipType({
+      callback: function(ret) {
+        userStatus(ret)
+      }
+    });
+
+    // console.log("token: ###  " + accessToken);
+    // if(accessToken && accessToken != "" && accessToken != null) {
+    //   $api.addCls($api.dom('#quiteSelect'), 'has-loged') // 给登录按钮添加已经登录的标识
+    //   $api.text($api.dom('#quiteSelect'), '安全退出'); // 改变按钮文字为“安全退出”
+    //   $api.addCls($api.dom('#quiteSelect'), 'has-loged')
+    // } else {
+    //   $api.addCls($api.dom('.has-loged'), 'item-hide')
+    //   $api.removeCls($api.dom('.no-loged'), 'item-hide');
+    //   $api.removeCls($api.dom('#quiteSelect'), 'has-loged');
+    //   $api.text($api.dom('#quiteSelect'), '立即登录');
+    // }
+  }
+
+  // 用户信息展示
+  function userStatus(ret) {
+    $api.text($api.dom('#divUsername'), ret.nickname); //显示用户名
+    $api.css($api.dom('#iconTouxiang'),'background-image: url('+ ret.figureurl_qq_1 +')');
+    if(ret.expireDate && ret.expireDate != '' && ret.expireDate != null) { //该用户有会员状态
+        var userExpireDateTemp = new Date(ret.expireDate); //用户充值会员的过期时间
+        var currentSysDate = new Date(ret.updatedAt); //用户充值会员的过期时间
+        if(currentSysDate < userExpireDateTemp) { //会员状态还在 您还不是vip
+          $api.text($api.dom('#divExpireDate'), "截止" + formatTimeYMD(userExpireDateTemp));
+        } else { //会员过期
+          $api.text($api.dom('#divExpireDate'), '亲！您的vip已过期');
+        }
+    } else { // 该用户还不是会员
+      $api.text($api.dom('#divExpireDate'), '亲！您还不是vip');
+    }
+  }
+
+  //会员充值按钮点击事件
+  function deposit() {
+    api.getPrefs({
+        key: 'accessToken'
+    }, function(ret, err) {
+        accessToken = ret.value;
+        if(accessToken && accessToken != "" && accessToken != null) {
+          // 打开只有navigationBar的页面：
+          api.openTabLayout({
+              name: 'navDeposit',
+              url: 'widget://html/frame3_deposit.html',
+              title: '会员充值',
+              hideNavigationBar: false,
+              navigationBar: {
+                  background: '#f2f2f2',
+                  leftButtons: [{
+                      iconPath: 'widget://image/left.png'
+                  }]
+              }
+          });
+        } else { //未登录处理逻辑
+          api.toast({
+              msg: '亲，会员充值需要先登录哦!',
+              duration: 2000,
+              location: 'top'
+          });
+        }
+    });
+
+  }
+  //注册按钮点击事件
+  function registe() {
+    // 打开只有navigationBar的页面：
+    api.openTabLayout({
+        name: 'navRegiste',
+        url: 'widget://html/frame3_registe.html',
+        title: '注册会员',
+        hideNavigationBar: false,
+        navigationBar: {
+            background: '#f2f2f2',
+            leftButtons: [{
+                iconPath: 'widget://image/left.png'
+            }]
+        }
+    });
+  }
+
+  //安全退出按钮点击事件
+  function quit() {
+    if($api.hasCls($api.dom('#quiteSelect'), 'has-loged')) {
+      $api.addCls($api.dom('.has-loged'), 'item-hide')
+      $api.removeCls($api.dom('.no-loged'), 'item-hide');
+      $api.removeCls($api.dom('#quiteSelect'), 'has-loged');
+      $api.text($api.dom('#quiteSelect'), '立即登录');
+      //移除本地用户缓存
+      api.removePrefs({
+          key: 'accessToken'
+      });
+      api.removePrefs({
+          key: 'userId'
+      });
+    } else {
+      // 打开只有navigationBar的页面：
+      api.openTabLayout({
+          name: 'navLogin',
+          url: 'widget://html/frame3_login.html',
+          title: '会员登陆',
+          hideNavigationBar: false,
+          navigationBar: {
+              background: '#f2f2f2',
+              leftButtons: [{
+                  iconPath: 'widget://image/left.png',
+                  fontSize: '14'
+              }]
+          }
+      });
+    }
+  }
+  //修改密码按钮点击事件
+  function modifyMM() {
+    if(!accessToken) {
+      api.toast({
+				msg: '亲，您还未登录，请先登录',
+				duration: 2000,
+				location: 'top'
+			});
+      return;
+    }
+    api.openTabLayout({
+        name: 'navModifyMM',
+        url: 'widget://html/frame3_modify_pass.html',
+        title: '修改密码',
+        hideNavigationBar: false,
+        navigationBar: {
+            background: '#f2f2f2',
+            leftButtons: [{
+                iconPath: 'widget://image/left.png',
+                fontSize: '14'
+            }]
+        }
+    });
+  }
+  //联系我们按钮点击事件
+  function contactMe() {
+    api.alert({
+        title: '联系客服',
+        msg: '客服微信：13717866249',
+    }, function(ret, err) {
+
+    });
+  }
+
+  //关于我们按钮点击事件
+  function aboutMe() {
+    api.openTabLayout({
+        name: 'navAboutMe',
+        url: 'widget://html/frame3_about.html',
+        title: '关于我们',
+        hideNavigationBar: false,
+        navigationBar: {
+            background: '#f2f2f2',
+            leftButtons: [{
+                iconPath: 'widget://image/left.png',
+                fontSize: '14'
+            }]
+        }
+    });
+  }
+
+  function login () {
+    qq.login(function(retLogin, errLogin) {
+      if (retLogin.status) {
+        // alert("retLogin ##:" + JSON.stringify(retLogin))
+
+        api.showProgress({
+    		    title: '努力登录中...',
+    		    text: '先喝杯茶...'
+    		});
+    		getModel("user").login({
+    			"username": retLogin.openId,
+    			"password": "123456"
+    		}, function(ret, err) {
+          // console.log("login对象：" + $api.jsonToStr(ret))
+          // console.log("login对象：" + $api.jsonToStr(err))
+    			api.hideProgress();
+    			if(ret && ret.id) {
+    				//处理数据 ret,说明可以登录
+    				//讲数据缓存放到本地缓存
+    				// console.log("login对象：" + $api.jsonToStr(ret))
+    				// console.log("login对象：" + $api.jsonToStr(err))
+    				api.setPrefs({
+    					key: 'accessToken',
+    					value: ret.id
+    				});
+    				api.setPrefs({
+    					key: 'userId',
+    					value: ret.userId
+    				});
+    				api.toast({
+    					msg: '登陆成功',
+    					duration: 2000,
+    					location: 'center'
+    				});
+            reloadFrame();
+    			} else {
+    				// 数据未检测到此qq
+            qq.getUserInfo(function(retQQUserInfo, errInfo) {
+              // console.log("进入获取用户信息逻辑retQQUserInfo: " + $api.jsonToStr(retQQUserInfo))
+              // console.log("进入获取用户信息逻辑retQQUserInfo: " + $api.jsonToStr(retQQUserInfo.info))
+              if (retQQUserInfo.status) {
+                loginPost(retLogin, $api.strToJson(retQQUserInfo.info))
+              } else {
+                api.toast({
+                  msg: '获取用户信息失败',
+                  duration: 2000,
+                  location: 'center'
+                });
+              }
+            });
+            // loginPost(retLogin)
+    				// api.toast({
+    				// 	msg: '亲，请输入正确的账号和密码',
+    				// 	duration: 2000,
+    				// 	location: 'top'
+    				// });
+    			}
+    		})
+      } else {
+        api.toast({
+          msg: errLogin.msg,
+          duration: 2000,
+          location: 'center'
+        });
+      }
+    });
+  }
+
+  //qq一键登录数据添加
+  function loginPost(retLogin, userInfo) {
+    // api.showProgress({
+		//     title: '一键登陆中...',
+		//     text: '先喝杯茶...'
+		// });
+    // console.log("userInfo#####################: " + $api.jsonToStr(userInfo))
+    getModel("user").save({
+			"username": retLogin.openId,
+			"password": "123456",
+      "nickname": userInfo.nickname,
+      "gender": userInfo.gender,
+      "figureurl_qq_1": userInfo.figureurl_qq_1,
+      "figureurl_qq_2": userInfo.figureurl_qq_2,
+      "province": userInfo.province,
+      "city": userInfo.city,
+      "is_yellow_vip": userInfo.is_yellow_vip,
+      "level": userInfo.level,
+      "yellow_vip_level": userInfo.yellow_vip_level
+		}, function(ret, err) {
+			// api.hideProgress();
+			console.log($api.jsonToStr(ret));
+			console.log($api.jsonToStr(err));
+			if (ret.error) {
+				//处理错误 err
+				api.toast({
+					msg: "登录失败！请重试或联系管理员",
+					duration: 2000,
+					location: 'center'
+				});
+			} else if (ret.id) {
+				//处理数据 ret
+				var initExpireDateTemp = new Date(ret.createdAt);
+				initExpireDateTemp.setDate(initExpireDateTemp.getDate() + 7); //注册会员直接充值7年会员
+				getModel("user").save({
+					"_id": ret.id
+				}, {
+					"expireDate": initExpireDateTemp
+				}, function(ret1, err1) {
+					console.log("激活7天会员user对象：" + $api.jsonToStr(ret1))
+					console.log("激活7天会员user对象：" + $api.jsonToStr(err1))
+					if (ret1 && ret1.id) {
+						api.toast({
+							msg: '超级会员7天体验充值成功，请尽情享受吧',
+							duration: 2000,
+							location: 'top'
+						});
+            userStatus(ret1)
+					} else {
+						api.toast({
+							msg: '超级会员体验充值失败，请联系管理员',
+							duration: 2000,
+							location: 'top'
+						});
+					}
+				})
+				api.toast({
+					msg: '注册成功',
+					duration: 2000,
+					location: 'center'
+				});
+			}
+		})
+  }
+
+  function pay() { //https://deng1101025.github.io/download/
+    // var str21 = 'appKey=8735713425031173&backPara=1a&body=1个月会员&channel=xiaomi&clientVersion=3.3.0&dateTime=2019-07-31 15:19:50&openId=E0ARX4kUT&orderId=abc123&payType=1&price=1&subject=会员充值&userId=123abc&uuid=1c0c5be8535e04531a0f3c48999e953b9'
+    //
+    // var sign111 =  md5(str21)//'1dffb0f41a013aca6c9f2eaf445531c0';
+    // api.openTabLayout({
+    //     name: 'navPay',
+    //     url: 'https://www.payelves.com/api/v1/pay/wap?appKey=8735713425031173&backPara=1a&body=1个月会员&channel=xiaomi&clientVersion=3.3.0&dateTime=2019-07-31 15:19:50&openId=E0ARX4kUT&orderId=abc123&payType=1&price=1&subject=会员充值&userId=123abc&uuid=1&sign=' + sign111,
+    //     title: '支付',
+    //     hideNavigationBar: false,
+    //     navigationBar: {
+    //         background: '#f2f2f2',
+    //         leftButtons: [{
+    //             iconPath: 'widget://image/left.png',
+    //             fontSize: '14'
+    //         }]
+    //     }
+    // });
+
+
+    // var str = 'money=0.01&name=haha&notify_url=https://deng1101025.github.io/download/&out_trade_no=20190731192043350&pid=830348&return_url=https://deng1101025.github.io/download/&sitename=heihei&type=alipayA8F4FF60DF8AD17F9C623658A2CE79BE';//&830348=A8F4FF60DF8AD17F9C623658A2CE79BE'; //name  money  notify_url  out_trade_no  return_url  sitename  type
+    // // var str = '0.01hahahttps://deng1101025.github.io/download/20190730151343349pid830348https://deng1101025.github.io/download/heiheialipayA8F4FF60DF8AD17F9C623658A2CE79BE'; //name  money  notify_url  out_trade_no  return_url  sitename  type
+    // var sign = md5(str);//.toUpperCase();
+    // console.log("########################################sign")
+    // console.log(sign)
+    // console.log("########################################sign")
+    // var httpStr = 'http://pay.azfpay.com/submit.php?pid=830348&type=alipay&out_trade_no=20190731192043350&notify_url=https://deng1101025.github.io/download/&return_url=https://deng1101025.github.io/download/&name=haha&money=0.01&sitename=heihei&sign='+ sign +'&sign_type=MD5';
+    // // var httpStr = 'http://pay.azfpay.com/submit.php?' + str + '&api_id=830348&out_trade_no=20190731151343349&return_url=https://deng1101025.github.io/download/&notify_url=https://deng1101025.github.io/download/&title=测试&money=0.01&sign=' + sign +'&sign_type=MD5';
+    // // var httpStr = 'http://pay.azfpay.com/submit.php?' + str + '&sign=' + sign +'&sign_type=MD5';
+    // console.log("########################################sign")
+    // console.log(httpStr)
+    // console.log("########################################sign")
+    //
+    // api.openTabLayout({
+    //     name: 'navPay',
+    //     url: httpStr,
+    //     title: '支付',
+    //     hideNavigationBar: false,
+    //     navigationBar: {
+    //         background: '#f2f2f2',
+    //         leftButtons: [{
+    //             iconPath: 'widget://image/left.png',
+    //             fontSize: '14'
+    //         }]
+    //     }
+    // });
+
+  }
+
+  function reloadFrame() {
+    api.setFrameGroupIndex({
+        name: 'group',
+        index: 3,
+        reload: true
+    });
+  }
+
+</script>

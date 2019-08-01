@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>会员中心</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/style.css"/>
+    <style>
+          body{ background-color: #efefef}
+          .empty{ text-align: center; padding: 120px 0; }
+		      .container{ margin: auto 15px;}
+          .header ul.flex-wrap li{ padding-top: 40px; padding-bottom: 23px; background: url() no-repeat center 31px; background-size: auto 44px; text-align: center; }
+          .header ul.flex-wrap li:nth-child(1){width: 20%;background-image: url(./../image/mangguo.png);}
+          .header ul.flex-wrap li .flex-item-div{ text-align: left; }
+          .header ul.flex-wrap li .flex-vip-con{ padding-left: 30px;background: url() no-repeat left -8px; background-image: url(./../image/vipx.png);background-size: 26px 26px;}
+          .header .no-loged{padding: 30px 12px;height: 37px}
+
+          .content ul.flex-wrap-list li{padding: 20px 15px; border-bottom: 1px solid #e5e5e5}
+          .content ul.flex-wrap-list li:nth-child(6){border-bottom:0px}
+          .content {background-color: #f9f9f9; border-radius: 1em; -moz-box-shadow: 4px 6px 15px #bcbcbc; /* 老的 Firefox */box-shadow: 4px 6px 15px #bcbcbc;}
+          .item-hide{display: none;}
+    </style>
+</head>
+<body>
+    <div class="container">
+      <div class="header">
+        支付
+      </div>
+      <div class="content">
+        <form id="form" action="网关地址" method="post">
+            <input type="hidden" name="openId" value="E0ARX4kUT" />
+            <input type="hidden" name="appKey" value="8735713425031173" />
+            <input type="hidden" name="sign" id='sign' value="9f6e47d28d750782ee246abe21276e8f" />  <!--TODO -->
+            <input type="hidden" name="dateTime" value="2019-07-31 15:19:50" />
+            <input type="hidden" name="clientVersion" value="3.3.0" />
+            <input type="hidden" name="channel" value="xiaomi" />
+            <input type="hidden" name="userId" value="" />
+            <input type="hidden" name="price" value="1" />
+            <input type="hidden" name="payType" id='payType' value="1" />
+            <input type="hidden" name="subject" value="会员" />
+            <input type="hidden" name="body" value="会员充值" />
+            <input type="hidden" name="orderId" value="" />
+            <input type="hidden" name="backPara" value="" />
+            <input type="hidden" name="uuid" value="1" />
+          </form>
+      </div>
+    </div>
+</body>
+</html>
+<script type="text/javascript" src="./../script/api.js"></script>
+<script type="text/javascript" src="./../script/util.js"></script>
+<script type="text/javascript" src="./../script/common.js"></script>
+<script type="text/javascript" src="./../script/APICloud-rest.js"></script>
+<script type="text/javascript" src="./../script/md5.js"></script>
+<script type="text/javascript">
+  var accessToken = "";
+  apiready = function () {
+
+    //同步返回结果：
+    accessToken = api.getPrefs({
+        sync: true,
+        key: 'accessToken'
+    });
+
+  }
+
+
+
+  function pay() { //https://deng1101025.github.io/download/
+  //https://www.payelves.com/api/v1/pay/wap
+    api.openTabLayout({
+        name: 'navPay',
+        url: 'https://www.payelves.com/api/v1/pay/wap',
+        title: '支付',
+        hideNavigationBar: false,
+        navigationBar: {
+            background: '#f2f2f2',
+            leftButtons: [{
+                iconPath: 'widget://image/left.png',
+                fontSize: '14'
+            }]
+        }
+    });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // http://pay.azfpay.com/submit.php?pid=830348&type=wxpay&out_trade_no=20190730151343349&notify_url=https://deng1101025.github.io/download/&return_url=https://deng1101025.github.io/download/&name=会员充值&money=0.01&sitename=看你想看&sign=sign&sign_type=MD5
+
+    var str = 'money=0.01&name=haha&notify_url=https://deng1101025.github.io/download/&out_trade_no=20190731192043350&pid=830348&return_url=https://deng1101025.github.io/download/&sitename=heihei&type=alipaydxijpsvyj969cfhqp4v76inmkh1t2x67';//&830348=A8F4FF60DF8AD17F9C623658A2CE79BE'; //name  money  notify_url  out_trade_no  return_url  sitename  type
+    // var str = '0.01hahahttps://deng1101025.github.io/download/20190730151343349pid830348https://deng1101025.github.io/download/heiheialipayA8F4FF60DF8AD17F9C623658A2CE79BE'; //name  money  notify_url  out_trade_no  return_url  sitename  type
+    var sign = hexMD5(str);//.toUpperCase();
+    console.log("########################################sign")
+    console.log(sign)
+    console.log("########################################sign")
+    var httpStr = 'http://pay.azfpay.com/submit.php?pid=830348&type=alipay&out_trade_no=20190731192043350&notify_url=https://deng1101025.github.io/download/&return_url=https://deng1101025.github.io/download/&name=haha&money=0.01&sitename=heihei&sign='+ sign +'&sign_type=MD5';
+    // var httpStr = 'http://pay.azfpay.com/submit.php?' + str + '&api_id=830348&out_trade_no=20190731151343349&return_url=https://deng1101025.github.io/download/&notify_url=https://deng1101025.github.io/download/&title=测试&money=0.01&sign=' + sign +'&sign_type=MD5';
+    // var httpStr = 'http://pay.azfpay.com/submit.php?' + str + '&sign=' + sign +'&sign_type=MD5';
+    console.log("########################################sign")
+    console.log(httpStr)
+    console.log("########################################sign")
+
+    // http://mapi.alipay.com/gateway.do?body=testjsdzbody&subject=testjsdz&sign_type=MD5&notify_url=http://www.test.com/create_direct_pay_by_user-JAVA-UTF-8/notify_url.jsp&out_trade_no=9890879868657&return_url=http://www.baidu.com&sign=***&_input_charset=utf-8&total_fee=0.01&service=create_direct_pay_by_user&partner=2088000000000000&seller_id=2088000000000000&payment_type=1
+
+    api.openTabLayout({
+        name: 'navPay',
+        url: httpStr,
+        title: '支付',
+        hideNavigationBar: false,
+        navigationBar: {
+            background: '#f2f2f2',
+            leftButtons: [{
+                iconPath: 'widget://image/left.png',
+                fontSize: '14'
+            }]
+        }
+    });
+    // window.location = 'https://bufpay.com/api/pay/97975?name=haha&pay_type=alipay&price=1&order_id=20190731192043349&order_uid=332877552%40qq.com&notify_url=https%3A%2F%2Fdeng1101025.github.io%2Fdownload%2F&return_url=https%3A%2F%2Fdeng1101025.github.io%2Fdownload%2F&feedback_url=&sign=1F14032B6F2414522938A5798341A55D'
+    // 提交JSON数据
+    // api.ajax({
+    //     url: 'https://bufpay.com/api/pay/97975?format=json&name=haha&pay_type=alipay&price=1&order_id=20190731192043311&order_uid=332877552@qq.com&notify_url=https://deng1101025.github.io/download/&return_url=https://deng1101025.github.io/download/&feedback_url=&sign=09676C4185DC35B093CC98AA50397801',
+    //     method: 'post',
+    //     headers: {
+    //         'Content-Type': 'application/x-www-form-urlencoded'
+    //     },
+    //     data: {
+    //         // body: {
+    //             name: 'haha',
+    //             pay_type: 'alipay',
+    //             price: '0.01',
+    //             order_id: '20190731192043349',
+    //             order_uid: '332877552@qq.com',
+    //             notify_url: 'https://deng1101025.github.io/download/',
+    //             return_url: 'https://deng1101025.github.io/download/',
+    //             feedback_url: 'https://deng1101025.github.io/download/',
+    //             sign: '189E7F47440854E82117A0B68B7563A2'
+    //         // }
+    //     }
+    // }, function(ret, err) {
+    //     if (ret) {
+    //         api.alert({ msg: JSON.stringify(ret) });
+    //     } else {
+    //         api.alert({ msg: JSON.stringify(err) });
+    //     }
+    // });
+
+
+
+
+
+
+
+
+
+
+
+
+    //
+    // var signStr = 'shid=10542&bb=2.0&zftd=alipay&ddh=20190731192043349&je=1.00&ddmc=haha&ddbz=haha&ybtz=https://deng1101025.github.io/download/&tbtz=https://deng1101025.github.io/download/&商户KEY密匙'
+    // var httpsss = '  http://www.payxinyi.com/pay/api.php?bb=2.0&shid=10542&ddh=20190731192043349&je=1.00&zftd=alipay&ybtz=https://deng1101025.github.io/download/&tbtz=https://deng1101025.github.io/download/&ddmc=haha&ddbz=haha&sign=';
+    // api.openTabLayout({
+    //     name: 'navPay',
+    //     url: httpsss,
+    //     title: '支付',
+    //     hideNavigationBar: false,
+    //     navigationBar: {
+    //         background: '#f2f2f2',
+    //         leftButtons: [{
+    //             iconPath: 'widget://image/left.png',
+    //             fontSize: '14'
+    //         }]
+    //     }
+    // });
+  }
+
+  function reloadFrame() {
+    api.setFrameGroupIndex({
+        name: 'group',
+        index: 2,
+        reload: true
+    });
+  }
+
+</script>

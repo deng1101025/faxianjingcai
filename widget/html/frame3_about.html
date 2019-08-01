@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>关于我们</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/style.css"/>
+    <style>
+        .empty{ text-align: center; padding: 120px 0; }
+        .header{ margin: 20px 30px;}
+        .btn-item{ width: 80px; height: 35px; border: 1px solid #e8e8e8;border-radius: 0.5em}
+        .btn-active{ background-color: #e8e8e8 }
+        .btn-item-play{ float: right;}
+    </style>
+</head>
+<body>
+  <div class="empty">
+    <ul>
+      <li><label for="">appName：</label><span id="appName"></li>
+      <li><label for="">appVersion：</label><span id="appVersion"></li>
+    </ul>
+  </div>
+</body>
+</html>
+<script type="text/javascript" src="./../script/api.js"></script>
+<script type="text/javascript">
+  apiready = function () {
+    var appId = api.appId;
+    var appName = api.appName;
+    var appVersion = api.appVersion;
+    $api.text($api.dom('#appName'), appName);
+    $api.text($api.dom('#appVersion'), appVersion);
+  }
+</script>

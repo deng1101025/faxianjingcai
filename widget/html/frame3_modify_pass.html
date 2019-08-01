@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+	<meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+	<title>修改密码</title>
+	<link rel="stylesheet" type="text/css" href="../css/api.css" />
+	<link rel="stylesheet" type="text/css" href="../css/style.css" />
+	<style>
+		body {
+			background-color: #efefef
+		}
+
+		.empty {
+			text-align: center;
+			padding: 120px 0;
+		}
+
+		.container {
+			margin: auto 15px;
+		}
+
+		.header {
+			height: 60px;
+			text-align: center;
+			padding-top: 60px;
+		}
+
+		.weui-cells__title+.weui-cells {
+			margin-top: 0;
+		}
+
+		.weui-cells {
+			margin-top: 8px;
+			background-color: #FFFFFF;
+			line-height: 1.41176471;
+			font-size: 17px;
+			overflow: hidden;
+			position: relative;
+		}
+
+		.weui-cells:before {
+			content: " ";
+			position: absolute;
+			left: 0;
+			top: 0;
+			right: 0;
+			height: 1px;
+			border-top: 1px solid rgba(0, 0, 0, 0.1);
+			color: rgba(0, 0, 0, 0.1);
+			-webkit-transform-origin: 0 0;
+			transform-origin: 0 0;
+			-webkit-transform: scaleY(0.5);
+			transform: scaleY(0.5);
+			z-index: 2;
+		}
+
+		.weui-cells:after {
+			content: " ";
+			position: absolute;
+			left: 0;
+			bottom: 0;
+			right: 0;
+			height: 1px;
+			border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+			color: rgba(0, 0, 0, 0.1);
+			-webkit-transform-origin: 0 100%;
+			transform-origin: 0 100%;
+			-webkit-transform: scaleY(0.5);
+			transform: scaleY(0.5);
+			z-index: 2;
+		}
+
+		.weui-cell {
+			padding: 16px;
+			position: relative;
+			display: -webkit-box;
+			display: -webkit-flex;
+			display: flex;
+			-webkit-box-align: center;
+			-webkit-align-items: center;
+			align-items: center;
+		}
+
+		.weui-cell:before {
+			content: " ";
+			position: absolute;
+			left: 0;
+			top: 0;
+			right: 0;
+			height: 1px;
+			border-top: 1px solid rgba(0, 0, 0, 0.1);
+			color: rgba(0, 0, 0, 0.1);
+			-webkit-transform-origin: 0 0;
+			transform-origin: 0 0;
+			-webkit-transform: scaleY(0.5);
+			transform: scaleY(0.5);
+			left: 16px;
+			z-index: 2;
+		}
+
+		.weui-label {
+			display: block;
+			width: 105px;
+			word-wrap: break-word;
+			word-break: break-all;
+		}
+
+		.weui-cells_form input,
+		.weui-cells_form textarea,
+		.weui-cells_form label[for] {
+			-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+		}
+
+		.weui-input {
+			width: 100%;
+			border: 0;
+			outline: 0;
+			-webkit-appearance: none;
+			background-color: transparent;
+			font-size: inherit;
+			color: inherit;
+			height: 1.41176471em;
+			line-height: 1.41176471;
+		}
+
+		input {
+			-webkit-appearance: textfield;
+			background-color: white;
+			-webkit-rtl-ordering: logical;
+			cursor: text;
+			padding: 1px;
+			border-width: 2px;
+			border-style: inset;
+			border-color: initial;
+			border-image: initial;
+		}
+
+		input,
+		textarea,
+		select,
+		button {
+			text-rendering: auto;
+			color: initial;
+			letter-spacing: normal;
+			word-spacing: normal;
+			text-transform: none;
+			text-indent: 0px;
+			text-shadow: none;
+			display: inline-block;
+			text-align: start;
+			margin: 0em;
+			font: 400 13.3333px Arial;
+		}
+
+		.weui-btn-area {
+			margin: 20px 16px 8px;
+		}
+
+		.weui-btn_primary {
+			background-color: #07C160;
+		}
+
+		.weui-btn {
+			position: relative;
+			display: block;
+			width: 184px;
+			margin-left: auto;
+			margin-right: auto;
+			padding: 8px 24px;
+			box-sizing: border-box;
+			font-weight: 700;
+			font-size: 17px;
+			text-align: center;
+			text-decoration: none;
+			color: #FFFFFF;
+			line-height: 1.41176471;
+			border-radius: 4px;
+			-webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+			overflow: hidden;
+		}
+
+		.weui-btn_primary:not(.weui-btn_disabled):visited {
+			color: #FFFFFF;
+		}
+
+		.weui-btn_default {
+			background-color: #f2f2f2;
+			color: #000;
+		}
+
+		.weui-cell_vcode {
+			padding-top: 0;
+			padding-right: 0;
+			padding-bottom: 0;
+		}
+
+		.weui-cells_form .weui-cell__ft {
+			font-size: 0;
+		}
+
+		.weui-cell__ft {
+			text-align: right;
+			color: rgba(0, 0, 0, 0.5);
+			width: 100px;
+		}
+
+		button.weui-vcode-btn {
+			background-color: transparent;
+			border: 0;
+			outline: 0;
+		}
+
+		.weui-vcode-btn {
+			/*display: inline-block;*/
+			height: 56px;
+			/*margin-left: 5px;*/
+			padding: 0 0.6em 0 0.7em;
+			line-height: 56px;
+			vertical-align: middle;
+			font-size: 10px;
+			color: #576B95;
+			position: relative;
+		}
+
+		.weui-vcode-btn:before {
+			content: " ";
+			position: absolute;
+			left: 0;
+			top: 0;
+			width: 1px;
+			bottom: 0;
+			border-left: 1px solid rgba(0, 0, 0, 0.1);
+			color: rgba(0, 0, 0, 0.1);
+			-webkit-transform-origin: 0 0;
+			transform-origin: 0 0;
+			-webkit-transform: scaleX(0.5);
+			transform: scaleX(0.5);
+		}
+	</style>
+</head>
+
+<body>
+	<div class="container">
+		<div class="header">
+			修改密码
+		</div>
+		<div class="weui-cells weui-cells_form">
+      <div class="weui-cell" style="border-bottom: 1px solid rgba(0, 0, 0, 0.1);">
+				<div class="weui-cell__hd">
+					<label class="weui-label">密码：</label>
+				</div>
+				<div class="weui-cell__bd">
+					<input id="password" class="weui-input" type="password" name="password" value="" placeholder="请输入密码" />
+				</div>
+			</div>
+			<div class="weui-cell" style="border-bottom: 1px solid rgba(0, 0, 0, 0.1);">
+				<div class="weui-cell__hd">
+					<label class="weui-label">重复密码：</label>
+				</div>
+				<div class="weui-cell__bd">
+					<input id="password1" class="weui-input" type="password" name="password1" value="" placeholder="请再次输入密码" />
+				</div>
+			</div>
+			<div class="weui-btn-area">
+				<button class="weui-btn weui-btn_primary" type="button" name="button" onclick="btnModify();">确定修改</button>
+			</div>
+			<div class="weui-btn-area">
+				<button class="weui-btn weui-btn_default" type="button" name="button" onclick="btnReturn();">返回</button>
+			</div>
+		</div>
+	</div>
+</body>
+
+</html>
+<script type="text/javascript" src="./../script/api.js"></script>
+<script type="text/javascript" src="./../script/util.js"></script>
+<script type="text/javascript" src="./../script/APICloud-rest.js"></script>
+<script type="text/javascript">
+  var userId = "";
+	apiready = function() {
+		api.addEventListener({
+			name: 'navitembtn'
+		}, function(ret, err) {
+			console.log($api.jsonToStr(ret))
+			api.closeWin();
+		});
+    //同步返回结果：
+    userId = api.getPrefs({
+        sync: true,
+        key: 'userId'
+    });
+
+
+	}
+
+  function btnModify() {
+    var password = $api.val($api.byId('password'));
+    var password1 = $api.val($api.byId('password1'));
+    if(!password || password.length < 6) {
+        api.toast({
+  				msg: '亲，请填写正确的密码格式，最低6位!',
+  				duration: 2000,
+  				location: 'top'
+  			});
+        return;
+    }
+    if(password1 != password) {
+      api.toast({
+        msg: '亲，两次密码输入不匹配，请重新输入',
+        duration: 2000,
+        location: 'top'
+      });
+      return;
+    }
+    if(!userId) {
+      api.toast({
+        msg: '亲，获取当前用户信息失败，请重新登录',
+        duration: 2000,
+        location: 'top'
+      });
+      return;
+    }
+		api.showProgress({
+		    title: '努力修改中...',
+		    text: '先喝杯茶...'
+		});
+    getModel("user").save({
+      "_id": userId
+    }, {
+      "password": password
+    }, function(ret, err) {
+			api.hideProgress();
+      console.log("修改密码对象：" + $api.jsonToStr(ret))
+      console.log("修改密码对象：" + $api.jsonToStr(err))
+      if (ret && ret.id) {
+        api.toast({
+          msg: '亲，密码修改成功！',
+          duration: 2000,
+          location: 'top'
+        });
+        api.closeWin();
+        api.execScript({
+          name: 'root',
+          frameName: 'frame2',
+          script: 'reloadFrame();'
+        });
+      } else {
+        api.toast({
+          msg: '亲，修改密码失败，请重试或联系管理人员',
+          duration: 2000,
+          location: 'top'
+        });
+      }
+    })
+
+  }
+
+	function btnReturn() {
+		api.closeWin();
+	}
+</script>

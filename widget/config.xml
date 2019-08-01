@@ -25,5 +25,11 @@
 	<permission name="fileSystem" />
 	<permission name="internet" />
 	<permission name="bootCompleted" />
-	<permission name="hardware" />  <!-- // 禁止所有 -->  <preference name="forbiddenSchemes" value="*" />	<!-- For Android -->    <meta-data name="Mob-AppKey" value="2bb47af4b76ec"/>    <meta-data name="Mob-AppSecret" value="31a950fec5fed611b6927aa07313d455"/>
+	<permission name="hardware" />  <!-- // 禁止所有弹出 -->  <!-- <preference name="forbiddenSchemes" value="*" /> -->  <access origin="*"/>  <preference name="querySchemes" value="mqq,mqqapi"/>	<!-- For Android -->  <meta-data name="Mob-AppKey" value="2bb47af4b76ec"/>  <meta-data name="Mob-AppSecret" value="31a950fec5fed611b6927aa07313d455"/>
+
+  <feature name="QQPlus">
+     <param name="urlScheme" value="tencent1108903770" />
+     <param name="apiKey" value="1108903770" />
+  </feature>
+  <!-- <preference name="querySchemes" value="weixin,wechat,mqq,alipay,alipays,cmbmobilebank" /> -->
 </widget>
