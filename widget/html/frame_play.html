@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>播放</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../css/weui.css" />
+    <style>
+        .empty {
+            text-align: center;
+            padding: 120px 0;
+        }
+        .container .play-nav-bar {
+          margin-top: 230px
+        }
+        .container .play-nav-bar .placeholder {
+            margin: 5px;
+            padding: 0 10px;
+            background-color: #f7f7f7;
+            height: 2.3em;
+            line-height: 2.3em;
+            text-align: center;
+            color: rgba(0,0,0,.3);
+        }
+        /*
+        .container .play-nav-bar ul li {
+          float: left;
+          border: 1px solid #e5e5e5;
+        }*/
+    </style>
+</head>
+
+<body>
+    <div id="container" class="container">
+      <div class="weui-flex play-nav-bar">
+          <div class="weui-flex__item"><div class="placeholder" onclick="">弹幕</div></div>
+          <div class="weui-flex__item"><div class="placeholder" onclick="">投屏</div></div>
+          <div class="weui-flex__item"><div class="placeholder" onclick="playFull()">全屏</div></div>
+      </div>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="./../script/api.js"></script>
+<script type="text/javascript" src="./../script/util.js"></script>
+<script type="text/javascript" src="./../script/APICloud-rest.js"></script>
+<script type="text/javascript" src="./../script/lib/weui.min.js"></script>
+<script type="text/javascript">
+    var addrHistory = [];
+    var pageParam = null;
+    apiready = function() {
+        pageParam = api.pageParam;
+        if(pageParam.type == "yingshi") {
+          //加载视频
+          playFull();
+        } else {
+            //加载直播
+            loadSmallVideo(api.winWidth, 225, 'ui_window')
+        }
+    }
+    function playFull() {
+      // api.openFrame({
+      //   name: 'zhiboPlayWin',
+      //   url: pageParam.url,
+      //   rect: {
+      //       x: 0,
+      //       y: 0,
+      //       w: 'auto',
+      //       h: 'auto'
+      //   }
+      // });
+      loadSmallVideo('auto','auto');
+      full();
+      if(pageParam.type != "yingshi") {
+          addrHistory.push('widget://html/frame_play.html');
+      }
+      api.addEventListener({
+          name: 'keyback'
+      }, function(ret, err) {
+          var addr = addrHistory.pop();
+          if(addr) {
+            api.closeFrame({
+                name: 'zhiboPlayWin'
+            });
+            //返回之后刷新播放进度
+            loadSmallVideo(api.winWidth, 225, 'ui_window');
+          } else {
+            api.closeWin({
+                name: 'navZhiboPlay'
+            });
+          }
+          noFull();
+      });
+    }
+
+    function loadSmallVideo(w, h, fixedOn) {
+      api.openFrame({
+          name: 'playPage',
+          url: pageParam.url,
+          rect: {
+              x: 0,
+              y: 0,
+              w: w,
+              h: h
+          },
+          fixedOn: fixedOn
+      });
+    }
+
+    // 强制切换横屏
+    function full() {
+        api.setFullScreen({
+            fullScreen: true,
+            optNav: true
+        });
+        api.setScreenOrientation({
+            orientation: 'landscape_left'
+        });
+    }
+
+    // 取消强制切换横屏
+    function noFull() {
+        api.setFullScreen({
+            fullScreen: false,
+            optNav: true
+        });
+        api.setScreenOrientation({
+            orientation: 'portrait_down'
+        });
+    }
+</script>

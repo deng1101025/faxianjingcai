@@ -51,6 +51,7 @@
         accessToken = ret.value;
     });
     getAnalysisUrlList(); //获取解析视频地址的url列表
+
     api.openFrame({
         name: 'frame0_yingshi_win_frame',
         url: pageList[api.pageParam.index], //https://m.v.qq.com
@@ -130,20 +131,40 @@
     if(playAddress && playAddress != ""&& pageList.toString().indexOf(playAddress) <0) {
         console.log('http://api.5sys.cn/jx/?v=' + playAddress)
         // alert('http://api.5sys.cn/jx/?v=' + playAddress)
-        api.openWin({
-          name: 'playWin',
-          url: 'http://api.5sys.cn/jx/?v=' + playAddress,
-          pageParam: {
-              name: 'test'
-          }
+        api.openTabLayout({
+            name: 'navZhiboPlay',
+            url: 'widget://html/frame_play.html',
+            title: '直播中...',
+            hideNavigationBar: false,
+            pageParam: {
+                url: 'http://www.sls6.top/VIP/gb.php?url=' + playAddress,
+                type: 'yingshi'
+            },
+            navigationBar: {
+                background: '#f2f2f2',
+                leftButtons: [{
+                    iconPath: 'widget://image/left.png',
+                    fontSize: '14'
+                }]
+            }
         });
-        api.setFullScreen({
-            fullScreen: true,
-            optNav: true
-        });
-        api.setScreenOrientation({
-            orientation: 'auto'
-        });
+        // api.openWin({
+        //   name: 'playWin',
+        //   url: 'http://www.sls6.top/VIP/gb.php?url=' + playAddress,
+        //   rect: {
+        //       x: 0,
+        //       y: 0,
+        //       w: 'auto',
+        //       h: 'auto'
+        //   }
+        // });
+        // full();
+        // api.addEventListener({
+        //     name: 'keyback'
+        // }, function(ret, err) {
+        //     noFull();
+        //     // btnCLicked_return();
+        // });
     } else {
       api.toast({
           msg: '亲！没有可播放的视频',
@@ -176,11 +197,18 @@
         name: 'root'
       });
     }
+    noFull()
   }
+
   function btnCLicked_return_shouye() {
     api.closeToWin({
       name: 'root'
     });
+    api.setFullScreen({
+        fullScreen: false,
+        optNav: false
+    });
+    noFull()
   }
 
   //获取解析视频地址的url列表
@@ -191,7 +219,7 @@
         }
     }, function(ret,err){
       console.log("config对象：" + $api.jsonToStr(ret))
-      console.log("config对象：" + $api.jsonToStr(err))
+      // console.log("config对象：" + $api.jsonToStr(err))
       if(ret && ret[0]&& ret[0].id){// 存在此充值码
 
       } else {
@@ -202,6 +230,28 @@
         });
       }
     })
+  }
+
+  // 强制切换横屏
+  function full() {
+      api.setFullScreen({
+          fullScreen: true,
+          optNav: true
+      });
+      api.setScreenOrientation({
+          orientation: 'landscape_left'
+      });
+  }
+
+  // 取消强制切换横屏
+  function noFull() {
+      api.setFullScreen({
+          fullScreen: false,
+          optNav: true
+      });
+      api.setScreenOrientation({
+          orientation: 'portrait_down'
+      });
   }
 
 </script>

@@ -1,30 +1,169 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
     <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
     <title>大厅</title>
-    <link rel="stylesheet" type="text/css" href="../css/api.css"/>
-    <link rel="stylesheet" type="text/css" href="../css/style.css"/>
-    <link rel="stylesheet" type="text/css" href="../css/weui.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../css/weui.css" />
     <style>
-        .empty{ text-align: center; padding: 120px 0; }
+        .empty {
+            text-align: center;
+            padding: 120px 0;
+        }
+
+      	.container .weui-flex__item .item-bg{
+      		background-image: url(../image/zhanwei.jpg);
+          background-repeat: no-repeat;
+          background-size: 100% 100%;
+          -moz-background-size: 100% 100%;
+      	}
+        .item-bg {
+            margin: 5px;
+            padding: 35px 10px;
+            background-color: #f7f7f7;
+            height: 2.3em;
+            line-height: 2.3em;
+            text-align: center;
+            color: rgba(0, 0, 0, .3);
+        }
+        .item-title {
+          text-align: center;
+        }
     </style>
 </head>
-<body>
-    <div class="empty">更多内容请等待程序员大哥拼死码字中。。。</div>
 
+<body>
+
+  	<div id="container" class="container">
+
+      <!-- <div class="weui-flex">
+          <div class="weui-flex__item" onclick="zhiboItenClick( this );">
+              <div class="item-bg">weui</div>
+              <div class="item-title">
+                电影直播
+              </div>
+          </div>
+          <div class="weui-flex__item" onclick="zhiboItenClick( this );">
+              <div class="item-bg">weui</div>
+              <div class="item-title">
+                电影直播
+              </div>
+          </div>
+      </div> -->
+
+    </div>
 
 </body>
+
 </html>
 <script type="text/javascript" src="./../script/api.js"></script>
 <script type="text/javascript" src="./../script/util.js"></script>
 <script type="text/javascript" src="./../script/APICloud-rest.js"></script>
-<script type="text/javascript" src="./../script/weui.min.js"></script>
+<script type="text/javascript" src="./../script/lib/weui.min.js"></script>
 <script type="text/javascript">
-  apiready = function() {
-  
+    var zhiboDataList = [];
+    apiready = function() {
 
-  }
+      loadZhiboList();
+    }
+
+    function loadZhiboList() {
+      // api.showProgress({
+      //     title: '加载中...',
+      //     text: '先喝杯茶...'
+      // });
+      getModel("zhibo").query({
+          filter:{
+              "order": "hot DESC", // ASC DESC
+              "limit": 100
+          }
+      }, function(ret, err){
+        // api.hideProgress();
+        // console.log("直播列表对象：" + $api.jsonToStr(ret))
+        // console.log("直播列表对象：" + $api.jsonToStr(err))
+        if(ret && ret[0] && ret[0].id){
+            zhiboDataList = ret;
+            displayZhiboList(ret);
+        }
+      });
+    }
+
+    function displayZhiboList(data) {
+      var htmlStr = '';
+      var rootDiv = $api.dom('#container')
+      var weuiFlexDiv = '<div class="weui-flex">';
+      var footDiv = '</div>'
+      var onehangStr = '';
+      var indexTemp = 1;
+      data.forEach(function (element, index) {
+        var flexItem = '<div class="weui-flex__item" onclick="zhiboItenClick( '+ index +' );">';
+        var itemBg = '<div class="item-bg" style="background-image: url('+ element.img +');"></div>';
+        var itemTitle = '<div class="item-title">';
+        //拼接一行
+        onehangStr = onehangStr + flexItem + itemBg + itemTitle + element.name + footDiv + footDiv;
+          indexTemp++;
+        if(indexTemp > 2 || index == data.length - 1) {
+          var itemHtml = weuiFlexDiv + onehangStr + footDiv;
+          htmlStr = htmlStr + itemHtml;
+          indexTemp = 1;
+          onehangStr = '';
+        }
+
+      });
+      // console.log("*************:::::"+htmlStr)
+      $api.html(rootDiv, htmlStr);
+    }
+
+    function zhiboItenClick(tab) {
+      // http://api.5sys.cn/jx/player/?url=LytLNBc2FC0UNg8SPyhPMRM9BQchSUAWPxYQGz4IBAQqMU8VFSsOIQA5WgQAMg4SKydMIiE5BS4QMg49AiANIjEyHzghFBUTBSgKMRQ2XQU+QQ4SKydMMRMfBSwqMQo5AiMKISEcAAIVQRIRNAoQNxA5BQcqDxAUXicOMRMAWygXOgopNA0VGxA5WigXOQATL1ASGz4IBAQuLgA5BRYQISEmXANKOgopNAoQNxA5FCgQDxATKxkRHS4mFTlLKgkVPyhPMRA6VS06MhESKxYQNxcDBTghLkkSXhkJGhQlBS4XCxASXjsUMRMfBSw6MQo5AjsRGjo5WgQAMgkTOw1MGSpFBgNLSBA/BSsTGUoyHzghFBUTAgYQNDo6Xi0XPgE8AS8PGio5WigUKg4SKydMIiE5BQchSAo5AQkVIS4iXAAuSRU5BhEMHC4IHy06MhUSATNJGS5BACgTCAwUOxkKNDo6XjshMRA/BSgBMRAHBQI9Mg4RO1QUGgA5WigTPRA8LysDIi4mHgU+FA0qPyhPMRM1BS06MgoSXgUPIEtJATsQMU85BiAQNDo6HwNLHA8oXy9JHS4IACgTFxApBwUuGi4iKQNKHBMjKwJKKywYPwUUNjwSFic3Kzw5XDUDMQERKzc9NS0+BDdIMQ4pOTMPHTxBKTAXHBUiJDNJLy8YAgU+PjEmAiMYNRQXGzVLCD8UXFAwKRMhBS06MhIpO1QNIS4EXSgTFxA9LytAHioHBTguAAo5BhFOMRI2GwI8TRESOzQQNxA6WAQhNg8qAjNBHTEcGwM+PkwqNCgQNDo6XjshMRA/BSsaHC0lFC8TEBoUODsTNS02DwUtH0wqOC8aHC0pXy4tORA8LysQHSo5WigVAEg+OCRLNz8IXS8UNQE9OhlINz0cACxIAEg+BgJMNT8IXS8TNhI9KhlINj4pWTgVAEg+BihNNT8IXS8TGwAqABlINhMlFTsVAEg+BiwONSo5HygUFAwqAVkQNxA6DwUtLUw/KCsaHC0pXy4uNhoU
+      // api.openTabLayout({
+      //     name: 'navZhiboPlay',
+      //     url: zhiboDataList[tab].addr,
+      //     title: '直播中...',
+      //     hideNavigationBar: false,
+      //     navigationBar: {
+      //         background: '#f2f2f2',
+      //         leftButtons: [{
+      //             iconPath: 'widget://image/left.png',
+      //             fontSize: '14'
+      //         }]
+      //     }
+      // });
+      // api.openWin({
+      //   name: 'navZhiboPlay',
+      //   url: 'widget://html/frame_play.html'
+      // });
+      api.openTabLayout({
+          name: 'navZhiboPlay',
+          url: 'widget://html/frame_play.html',
+          title: '直播中...',
+          hideNavigationBar: false,
+          pageParam: {
+              url: zhiboDataList[tab].addr
+          },
+          navigationBar: {
+              background: '#f2f2f2',
+              leftButtons: [{
+                  iconPath: 'widget://image/left.png',
+                  fontSize: '14'
+              }]
+          }
+      });
+      hotAdd(tab);
+    }
+
+    function hotAdd(tab) {
+      var zhiboId = zhiboDataList[tab].id;
+      getModel("zhibo").save({"_id": zhiboId},{"hot": parseInt(zhiboDataList[tab].hot) + 1}, function(ret,err){ // 更新用户状态
+        console.log("保存后zhibo对象：" + $api.jsonToStr(ret))
+        if(ret && ret.id){
+        } else{
+        }
+      });
+    }
+
 </script>

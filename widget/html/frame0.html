@@ -152,7 +152,7 @@
               "order": "attrParam2 ASC"
           }
       }, function(ret,err){
-        console.log("config对象：" + $api.jsonToStr(ret))
+        // console.log("config对象：" + $api.jsonToStr(ret))
         // console.log("config对象：" + $api.jsonToStr(err))
         if(ret && ret.length > 0) {
           var picPaths = [];
@@ -217,15 +217,15 @@
       }, function(ret, err) {
           if (ret && ret.status) {
             if(ret.eventType == 'click') {
-              console.log("点击的url：" + picUrl[ret.index])
+              // console.log("点击的url：" + picUrl[ret.index])
               api.openWin({
                 name: 'playWin',
                 url: analysisUrl[0] + picUrl[ret.index]
               });
             }
-            console.log("succes对象：" + $api.jsonToStr(ret))
+            // console.log("succes对象：" + $api.jsonToStr(ret))
           } else {
-            console.log("fail对象：" + $api.jsonToStr(err))
+            // console.log("fail对象：" + $api.jsonToStr(err))
           }
       });
     }

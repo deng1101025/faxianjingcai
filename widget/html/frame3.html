@@ -45,7 +45,7 @@
           <li class="flex-item" onclick="modifyMM()">修改密码</li> -->
           <li class="flex-item" onclick="contactMe()">联系客服</li>
           <li class="flex-item" onclick="aboutMe()">关于我们</li>
-          <li class="flex-item" onclick="pay()">测试微信支付</li>
+          <li class="flex-item" onclick="pay()">捐赠1毛钱</li>
         </ul>
       </div>
     </div>
@@ -61,8 +61,8 @@
   var qq;
   apiready = function () {
     qq = api.require('QQPlus');
-    console.log("winName: " +api.winName)
-    console.log("frameName: " +api.frameName)
+    // console.log("winName: " +api.winName)
+    // console.log("frameName: " +api.frameName)
 
     //同步返回结果：
     accessToken = api.getPrefs({
@@ -236,8 +236,12 @@
   }
 
   function login () {
+    console.log("#####")
+    console.log(qq)
     qq.login(function(retLogin, errLogin) {
+      console.log("#####")
       if (retLogin.status) {
+        console.log("#####")
         // alert("retLogin ##:" + JSON.stringify(retLogin))
 
         api.showProgress({
@@ -324,8 +328,8 @@
       "yellow_vip_level": userInfo.yellow_vip_level
 		}, function(ret, err) {
 			// api.hideProgress();
-			console.log($api.jsonToStr(ret));
-			console.log($api.jsonToStr(err));
+			// console.log($api.jsonToStr(ret));
+			// console.log($api.jsonToStr(err));
 			if (ret.error) {
 				//处理错误 err
 				api.toast({
@@ -342,8 +346,8 @@
 				}, {
 					"expireDate": initExpireDateTemp
 				}, function(ret1, err1) {
-					console.log("激活7天会员user对象：" + $api.jsonToStr(ret1))
-					console.log("激活7天会员user对象：" + $api.jsonToStr(err1))
+					// console.log("激活7天会员user对象：" + $api.jsonToStr(ret1))
+					// console.log("激活7天会员user对象：" + $api.jsonToStr(err1))
 					if (ret1 && ret1.id) {
 						api.toast({
 							msg: '超级会员7天体验充值成功，请尽情享受吧',
@@ -387,32 +391,32 @@
     // });
 
 
-    // var str = 'money=0.01&name=haha&notify_url=https://deng1101025.github.io/download/&out_trade_no=20190731192043350&pid=830348&return_url=https://deng1101025.github.io/download/&sitename=heihei&type=alipayA8F4FF60DF8AD17F9C623658A2CE79BE';//&830348=A8F4FF60DF8AD17F9C623658A2CE79BE'; //name  money  notify_url  out_trade_no  return_url  sitename  type
-    // // var str = '0.01hahahttps://deng1101025.github.io/download/20190730151343349pid830348https://deng1101025.github.io/download/heiheialipayA8F4FF60DF8AD17F9C623658A2CE79BE'; //name  money  notify_url  out_trade_no  return_url  sitename  type
-    // var sign = md5(str);//.toUpperCase();
-    // console.log("########################################sign")
-    // console.log(sign)
-    // console.log("########################################sign")
-    // var httpStr = 'http://pay.azfpay.com/submit.php?pid=830348&type=alipay&out_trade_no=20190731192043350&notify_url=https://deng1101025.github.io/download/&return_url=https://deng1101025.github.io/download/&name=haha&money=0.01&sitename=heihei&sign='+ sign +'&sign_type=MD5';
-    // // var httpStr = 'http://pay.azfpay.com/submit.php?' + str + '&api_id=830348&out_trade_no=20190731151343349&return_url=https://deng1101025.github.io/download/&notify_url=https://deng1101025.github.io/download/&title=测试&money=0.01&sign=' + sign +'&sign_type=MD5';
-    // // var httpStr = 'http://pay.azfpay.com/submit.php?' + str + '&sign=' + sign +'&sign_type=MD5';
-    // console.log("########################################sign")
-    // console.log(httpStr)
-    // console.log("########################################sign")
-    //
-    // api.openTabLayout({
-    //     name: 'navPay',
-    //     url: httpStr,
-    //     title: '支付',
-    //     hideNavigationBar: false,
-    //     navigationBar: {
-    //         background: '#f2f2f2',
-    //         leftButtons: [{
-    //             iconPath: 'widget://image/left.png',
-    //             fontSize: '14'
-    //         }]
-    //     }
-    // });
+    var str = 'money=0.1&name=haha&notify_url=https://deng1101025.github.io/download/&out_trade_no=20190731192043350&pid=830348&return_url=https://deng1101025.github.io/download/&sitename=heihei&type=alipayA8F4FF60DF8AD17F9C623658A2CE79BE';//&830348=A8F4FF60DF8AD17F9C623658A2CE79BE'; //name  money  notify_url  out_trade_no  return_url  sitename  type
+    // var str = '0.01hahahttps://deng1101025.github.io/download/20190730151343349pid830348https://deng1101025.github.io/download/heiheialipayA8F4FF60DF8AD17F9C623658A2CE79BE'; //name  money  notify_url  out_trade_no  return_url  sitename  type
+    var sign = md5(str);//.toUpperCase();
+    console.log("########################################sign")
+    console.log(sign)
+    console.log("########################################sign")
+    var httpStr = 'http://pay.azfpay.com/submit.php?pid=830348&type=alipay&out_trade_no=20190731192043350&notify_url=https://deng1101025.github.io/download/&return_url=https://deng1101025.github.io/download/&name=haha&money=0.1&sitename=heihei&sign='+ sign +'&sign_type=MD5';
+    // var httpStr = 'http://pay.azfpay.com/submit.php?' + str + '&api_id=830348&out_trade_no=20190731151343349&return_url=https://deng1101025.github.io/download/&notify_url=https://deng1101025.github.io/download/&title=测试&money=0.01&sign=' + sign +'&sign_type=MD5';
+    // var httpStr = 'http://pay.azfpay.com/submit.php?' + str + '&sign=' + sign +'&sign_type=MD5';
+    console.log("########################################sign")
+    console.log(httpStr)
+    console.log("########################################sign")
+
+    api.openTabLayout({
+        name: 'navPay',
+        url: httpStr,
+        title: '支付',
+        hideNavigationBar: false,
+        navigationBar: {
+            background: '#f2f2f2',
+            leftButtons: [{
+                iconPath: 'widget://image/left.png',
+                fontSize: '14'
+            }]
+        }
+    });
 
   }
 

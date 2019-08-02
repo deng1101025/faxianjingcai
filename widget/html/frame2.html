@@ -9,9 +9,77 @@
     <link rel="stylesheet" type="text/css" href="../css/style.css"/>
     <style>
         .empty{ text-align: center; padding: 120px 0; }
+        .item-bg {
+            margin: 5px;
+            padding: 35px 10px;
+            background-color: #f7f7f7;
+            height: 2.3em;
+            line-height: 2.3em;
+            text-align: center;
+            color: rgba(0, 0, 0, .3);
+        }
     </style>
 </head>
 <body>
     <div class="empty">文档</div>
+    <div class="weui-flex">
+        <div class="weui-flex__item"><div class="item-bg" onclick="full()">全屏</div></div>
+        <div class="weui-flex__item"><div class="item-bg" onclick="noFull()">取消全屏</div></div>
+    </div>
 </body>
 </html>
+<script type="text/javascript" src="./../script/api.js"></script>
+<script type="text/javascript" src="./../script/util.js"></script>
+<script type="text/javascript" src="./../script/APICloud-rest.js"></script>
+<script type="text/javascript">
+    apiready = function() {
+      // var module = api.require('easyVideoPlayer');
+      //  var param = {
+      //      msg : 'http://api.5sys.cn/jx/?v=https://v.qq.com/x/cover/og0eputlxwet1cn.html?ptag=qqbrowser'
+      //  };
+      //  module.playVideo(param);
+
+//https://youku.cdn2-youku.com/20180710/12991_efbabf56/index.m3u8
+
+    //   var obj = api.require('playModule');
+    //     obj.play({
+    //         rect:
+    //         {    x: 0,
+    //             y : 0,
+    //             w : 320,
+    //             h: 250
+    //         },
+    //         fixedOn: api.frameName,
+    //         title: 'test',
+    //         url: 'http://api.5sys.cn/jx/player/?url=cDJwLWRwbGF5ZXIvP2xpdmU9MSZhdXRvcGxheT0xJnVybD1odHRwcyUzQSUyRiUyRnR4Lmhscy5odXlhLmNvbSUyRmh1eWFsaXZlJTJGOTQ1MjUyMjQtMjQ2MDY4NTMxMy0xMDU2ODU2Mjk0NTA4MjUyMzY0OC0yNzg5Mjc0NTI0LTEwMDU3LUEtMC0xLm0zdTgmbG9nb19vZmY9MCZsb2dvX3N0eWxlPWJHVm1kRG93Y0hnN0lIUnZjRG8xTUhCNE8yMWhlQzEzYVdSMGFEb3hNREJ3ZUR0dFlYZ3RhR1ZwWjJoME9qRXdNSEI0JnZlcj14JnAycGluZm89MSZwb3N0ZXJyPTEmc2Vla3RpbWU9MSZkYW5tYWt1PTA=',
+    //         defaultBtn: true,
+    //         enableFull : false,
+    //          isTopView : false
+    //     }, function(ret, err) {
+    //
+    //     });
+
+
+
+    }
+
+    function full() {
+      api.setFullScreen({
+          fullScreen: true,
+          optNav: true
+      });
+      api.setScreenOrientation({
+          orientation: 'landscape_left'
+      });
+    }
+
+    function noFull() {
+      api.setFullScreen({
+          fullScreen: false,
+          optNav: true
+      });
+      api.setScreenOrientation({
+          orientation: 'portrait_down'
+      });
+    }
+</script>
