@@ -218,10 +218,28 @@
           if (ret && ret.status) {
             if(ret.eventType == 'click') {
               // console.log("点击的url：" + picUrl[ret.index])
-              api.openWin({
-                name: 'playWin',
-                url: analysisUrl[0] + picUrl[ret.index]
+              console.log("当前解析服务器——————————————————————————————：" + analysisUrl[0])
+              api.openTabLayout({
+                  name: 'navZhiboPlay',
+                  url: 'widget://html/frame_play.html',
+                  title: '直播中...',
+                  hideNavigationBar: false,
+                  pageParam: {
+                      url: analysisUrl[0] + picUrl[ret.index],
+                      type: 'yingshi'
+                  },
+                  navigationBar: {
+                      background: '#f2f2f2',
+                      leftButtons: [{
+                          iconPath: 'widget://image/left.png',
+                          fontSize: '14'
+                      }]
+                  }
               });
+              // api.openWin({
+              //   name: 'playWin',
+              //   url: analysisUrl[0] + picUrl[ret.index]
+              // });
             }
             // console.log("succes对象：" + $api.jsonToStr(ret))
           } else {
