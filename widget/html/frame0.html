@@ -144,6 +144,7 @@
 <script type="text/javascript" src="./../script/api.js"></script>
 <script type="text/javascript" src="./../script/util.js"></script>
 <script type="text/javascript" src="./../script/APICloud-rest.js"></script>
+<script type="text/javascript" src="./../script/common.js"></script>
 <script type="text/javascript">
     apiready = function() {
       getModel("config").query({
@@ -163,12 +164,20 @@
             if(ret[i].attrKey == 'lunbo') {
               picPaths.push(ret[i].attrVal);
               picPathsTitle.push(ret[i].attrParam1);
-              picUrl.push(ret[i].attrParam3);
+              picUrl.push({
+                  url: ret[i].attrParam3,
+                  title: ret[i].attrParam1,
+              });
             } else if (ret[i].attrKey == 'analysisUrl') {
               analysisUrl.push(ret[i].attrVal);
             }
           }
           initLunbo(picPaths, picPathsTitle, picUrl, analysisUrl);
+          //将 解析器放入缓存
+          // api.setPrefs({
+  				// 	key: 'userId',
+  				// 	value: ret.userId
+  				// });
         }
       });
     }
@@ -219,23 +228,37 @@
             if(ret.eventType == 'click') {
               // console.log("点击的url：" + picUrl[ret.index])
               console.log("当前解析服务器——————————————————————————————：" + analysisUrl[0])
-              api.openTabLayout({
-                  name: 'navZhiboPlay',
-                  url: 'widget://html/frame_play.html',
-                  title: '直播中...',
-                  hideNavigationBar: false,
-                  pageParam: {
-                      url: analysisUrl[0] + picUrl[ret.index],
-                      type: 'yingshi'
-                  },
-                  navigationBar: {
-                      background: '#f2f2f2',
-                      leftButtons: [{
-                          iconPath: 'widget://image/left.png',
-                          fontSize: '14'
-                      }]
-                  }
-              });
+              ajaxLoadm3u8(picUrl[ret.index].url, function(resData) {
+                  resData.type = 'yingshi';
+                  api.openWin({
+                    name: 'frame_play',
+                    url: 'widget://html/frame_play.html',
+                    rect: {
+                        x: 0,
+                        y: 0,
+                        w: 'auto',
+                        h: 'auto'
+                    },
+                    pageParam: resData
+                  });
+              })
+              // api.openTabLayout({
+              //     name: 'navZhiboPlay',
+              //     url: 'widget://html/frame_play.html',
+              //     title: '直播中...',
+              //     hideNavigationBar: false,
+              //     pageParam: {
+              //         url: analysisUrl[0] + picUrl[ret.index],
+              //         type: 'yingshi'
+              //     },
+              //     navigationBar: {
+              //         background: '#f2f2f2',
+              //         leftButtons: [{
+              //             iconPath: 'widget://image/left.png',
+              //             fontSize: '14'
+              //         }]
+              //     }
+              // });
               // api.openWin({
               //   name: 'playWin',
               //   url: analysisUrl[0] + picUrl[ret.index]

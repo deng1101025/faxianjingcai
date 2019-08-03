@@ -63,6 +63,7 @@
 <script type="text/javascript" src="./../script/api.js"></script>
 <script type="text/javascript" src="./../script/util.js"></script>
 <script type="text/javascript" src="./../script/APICloud-rest.js"></script>
+<script type="text/javascript" src="./../script/common.js"></script>
 <script type="text/javascript" src="./../script/lib/weui.min.js"></script>
 <script type="text/javascript">
     var zhiboDataList = [];
@@ -78,6 +79,7 @@
       // });
       getModel("zhibo").query({
           filter:{
+              "where": {"status": '1'},
               "order": "hot DESC", // ASC DESC
               "limit": 100
           }
@@ -137,22 +139,37 @@
       //   name: 'navZhiboPlay',
       //   url: 'widget://html/frame_play.html'
       // });
-      api.openTabLayout({
-          name: 'navZhiboPlay',
-          url: 'widget://html/frame_play.html',
-          title: '直播中...',
-          hideNavigationBar: false,
-          pageParam: {
-              url: zhiboDataList[tab].addr
-          },
-          navigationBar: {
-              background: '#f2f2f2',
-              leftButtons: [{
-                  iconPath: 'widget://image/left.png',
-                  fontSize: '14'
-              }]
-          }
+      api.openWin({
+        name: 'frame_play',
+        url: 'widget://html/frame_play.html',
+        rect: {
+            x: 0,
+            y: 0,
+            w: 'auto',
+            h: 'auto'
+        },
+        pageParam: {
+            url: zhiboDataList[tab].addr,
+            title: zhiboDataList[tab].name,
+            type: 'zhibo'
+        }
       });
+      // api.openTabLayout({
+      //     name: 'navZhiboPlay',
+      //     url: 'widget://html/frame_play.html',
+      //     title: '直播中...',
+      //     hideNavigationBar: false,
+      //     pageParam: {
+      //         url: zhiboDataList[tab].addr
+      //     },
+      //     navigationBar: {
+      //         background: '#f2f2f2',
+      //         leftButtons: [{
+      //             iconPath: 'widget://image/left.png',
+      //             fontSize: '14'
+      //         }]
+      //     }
+      // });
       hotAdd(tab);
     }
 

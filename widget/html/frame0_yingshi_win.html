@@ -30,7 +30,7 @@
 <script type="text/javascript" src="./../script/common.js"></script>
 <script type="text/javascript" src="./../script/APICloud-rest.js"></script>
 <script type="text/javascript">
-  var playAddress = null;
+  var playAddress = {};
   var addrHistory = [];
   var accessToken = null;
   var pageList = [
@@ -72,19 +72,30 @@
     api.setFrameClient({
         frameName: 'frame0_yingshi_win_frame'
     }, function(ret, err) {
+      console.log("_____________:" + $api.jsonToStr(ret))
         switch (ret.state) {
             case 0:
+              // if(ret.url.indexOf("v.qq.com") > -1) {
+              //     // 移动端腾讯片源地址转  pc断片源地址
+              //     var url = "https://v.qq.com/x/cover/" + getQueryString(ret.url, "cid") +".html?ptag=qqbrowser";
+              //     console.log("getQueryString________:"+getQueryString(ret.url, "cid"))
+              //     addrHistory.push(url);
+              //     playAddress.url = url;
+              // } else {
+                  addrHistory.push(ret.url);
+                  playAddress.url = ret.url;
+              // }
               // alert("0###" + ret.url)
                 break;
             case 1:
             // alert("1###" + ret.url)
                 break;
             case 2:
-              addrHistory.push(ret.url);
-              playAddress = ret.url;
+
             // alert("2###" + ret.url)
                 break;
             case 3:
+            playAddress.title = ret.title
             // alert("3###" + ret.url)
                 break;
             case 4:
@@ -127,27 +138,63 @@
 
   function jumpPlayPgae() {
     console.log(pageList.toString());
-    console.log(pageList.toString().indexOf(playAddress));
-    if(playAddress && playAddress != ""&& pageList.toString().indexOf(playAddress) <0) {
+    console.log(pageList.toString().indexOf(playAddress.url));
+    if(playAddress && playAddress.url != ""&& pageList.toString().indexOf(playAddress.url) <0) {
         // console.log('http://api.5sys.cn/jx/?v=' + playAddress)
         // alert('http://api.5sys.cn/jx/?v=' + playAddress)
-        api.openTabLayout({
-            name: 'navZhiboPlay',
-            url: 'widget://html/frame_play.html',
-            title: '直播中...',
-            hideNavigationBar: false,
-            pageParam: {
-                url: 'http://www.sls6.top/VIP/gb.php?url=' + playAddress,
-                type: 'yingshi'
-            },
-            navigationBar: {
-                background: '#f2f2f2',
-                leftButtons: [{
-                    iconPath: 'widget://image/left.png',
-                    fontSize: '14'
-                }]
-            }
-        });
+        console.log(playAddress.url);
+        ajaxLoadm3u8(playAddress.url, function(resData) {
+            resData.type = 'yingshi';
+            api.openWin({
+              name: 'frame_play',
+              url: 'widget://html/frame_play.html',
+              rect: {
+                  x: 0,
+                  y: 0,
+                  w: 'auto',
+                  h: 'auto'
+              },
+              pageParam: resData
+            });
+        })
+
+        // 提交JSON数据
+        // api.ajax({
+        //     url: 'http://user.seakee.cn/system/api?uid=88880158&token=5518d3f0bd3e453ceabddfe5d2791840&url=' + playAddress.url,
+        //     method: 'get',
+        //     headers: {
+        //         'Content-Type': 'application/json;charset=utf-8'
+        //     }
+        // }, function(ret, err) {
+        //     if (ret) {
+          //         videoPlay(ret.url, playAddress.title);
+        //     } else {
+        //         api.toast({
+        //             msg: '亲！获取视频地址错误',
+        //             duration: 2000,
+        //             location: 'center'
+        //         });
+        //         // api.alert({ msg: JSON.stringify(err) });
+        //     }
+        // });
+
+        // api.openTabLayout({
+        //     name: 'navZhiboPlay',
+        //     url: 'widget://html/frame_play.html',
+        //     title: '直播中...',
+        //     hideNavigationBar: false,
+        //     pageParam: {
+        //         url: 'http://user.seakee.cn/system/api?uid=88880158&token=5518d3f0bd3e453ceabddfe5d2791840&url=' + playAddress,//'http://jx.hsx0713.top/jiexi/?url=' + playAddress,
+        //         type: 'yingshi'
+        //     },
+        //     navigationBar: {
+        //         background: '#f2f2f2',
+        //         leftButtons: [{
+        //             iconPath: 'widget://image/left.png',
+        //             fontSize: '14'
+        //         }]
+        //     }
+        // });
         // api.openWin({
         //   name: 'playWin',
         //   url: 'http://www.sls6.top/VIP/gb.php?url=' + playAddress,
@@ -187,17 +234,14 @@
           },
           bounces: true,
           useWKWebView: true,
-          historyGestureEnabled: true,
-          pageParam: {
-              name: 'test'
-          }
+          historyGestureEnabled: true
       });
     } else {
       api.closeToWin({
         name: 'root'
       });
     }
-    noFull()
+    // noFull()
   }
 
   function btnCLicked_return_shouye() {
@@ -208,7 +252,7 @@
         fullScreen: false,
         optNav: false
     });
-    noFull()
+    // noFull()
   }
 
   //获取解析视频地址的url列表

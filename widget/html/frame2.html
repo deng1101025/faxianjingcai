@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
     <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
-    <title>文档</title>
+    <title>发现</title>
     <link rel="stylesheet" type="text/css" href="../css/api.css"/>
     <link rel="stylesheet" type="text/css" href="../css/style.css"/>
     <style>
         .empty{ text-align: center; padding: 120px 0; }
         .item-bg {
             margin: 5px;
-            padding: 35px 10px;
+            padding: 10px 10px;
             background-color: #f7f7f7;
             height: 2.3em;
             line-height: 2.3em;
@@ -21,18 +21,131 @@
     </style>
 </head>
 <body>
-    <div class="empty">文档</div>
-    <!-- <div class="weui-flex">
-        <div class="weui-flex__item"><div class="item-bg" onclick="full()">全屏</div></div>
-        <div class="weui-flex__item"><div class="item-bg" onclick="noFull()">取消全屏</div></div>
-    </div> -->
+    <!-- <div class="empty">文档</div> -->
+    <div id="aaa" class="weui-flex">
+        <!-- <div class="weui-flex__item"><div class="item-bg" onclick="full()">全屏</div></div>
+        <div class="weui-flex__item"><div class="item-bg" onclick="noFull()">取消全屏</div></div> -->
+        <!-- <video src="http://jx.hsx0713.top/jiexi/?url=https://v.qq.com/x/cover/og0eputlxwet1cn.html?ptag=qqbrowser" controls="controls" autoplay>
+
+        </video> -->
+        <!-- <iframe id="oFrm" name="oFrm" src="http://jx.hsx0713.top/jiexi/?url=https://v.qq.com/x/cover/og0eputlxwet1cn.html?ptag=qqbrowser" width="320" height="280"></iframe> -->
+        <!-- <iframe id="oFrm" name="oFrm" width="320" height="580">
+
+
+        </iframe> -->
+    </div>
 </body>
 </html>
 <script type="text/javascript" src="./../script/api.js"></script>
 <script type="text/javascript" src="./../script/util.js"></script>
 <script type="text/javascript" src="./../script/APICloud-rest.js"></script>
 <script type="text/javascript">
+
     apiready = function() {
+      // var videoPlayer = api.require('videoPlayer');
+      // videoPlayer.play({
+      //     texts: {
+      //         head: {
+      //             title: ""
+      //         }
+      //     },
+      //     styles: {
+      //         head: {
+      //             bg: 'rgba(0.5,0.5,0.5,0.7)',
+      //             height: 22,
+      //             titleSize: 20,
+      //             titleColor: '#fff',
+      //             backSize: 22,
+      //             backImg: 'fs://img/back.png',
+      //             setSize: 22,
+      //             setImg: 'fs://img/set.png'
+      //         },
+      //         foot: {
+      //             bg: 'rgba(0.5,0.5,0.5,0.7)',
+      //             height: 44,
+      //             playSize: 22,
+      //             playImg: 'fs://img/back.png',
+      //             pauseImg: 'fs://img/back.png',
+      //             nextSize: 22,
+      //             nextImg: 'fs://img/back.png',
+      //             timeSize: 14,
+      //             timeColor: '#fff',
+      //             sliderImg: 'fs://img/slder.png',
+      //             progressColor: '#696969',
+      //             progressSelected: '#76EE00'
+      //         }
+      //     },
+      //     path: 'http://vod.hcs.cmvideo.cn:8088/depository_sjq/asset/zhengshi/5102/361/022/5102361022/media/5102361022_5005345697_56.mp4.m3u8?msisdn=D61F720E36C64FF467680AB6BB0CE8F4&mdspid=&spid=800033&netType=0&sid=5500864165&pid=2028597139&timestamp=20190803203530&Channel_ID=1004_&ProgramID=659459013&ParentNodeID=-99&assertID=5500864165&client_ip=183.136.206.212&SecurityKey=20190803203530&promotionId=&mvid=5102361022&mcid=1001&mpid=130000064316&encrypt=4bccfd2f66557cf4799066eaa0e7747c', //（可选项）字符串类型；文档的路径，支持网络和本地（fs://）路径；默认：未传值时不播放
+      //     //在 android 平台上不支持 widget://
+      //     autoPlay: true, //（可选项）布尔类型；打开时是否自动播放；默认：true（自动播放）
+      //     autorotation: false
+      // }, function(ret, err) {
+      //     if (ret) {
+      //         // alert(JSON.stringify(ret));
+      //     } else {
+      //         // alert(JSON.stringify(err));
+      //     }
+      // });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      // 提交JSON数据
+api.ajax({
+    url: 'http://api.5sys.cn/jx/api.php',
+    method: 'get',
+    // dataType: "html",
+    headers: {
+        'Content-Type': 'application/json;charset=utf-8',
+        // 'Referer': 'http://jx.hsx0713.top/jiexi/?url=https://v.qq.com/x/cover/og0eputlxwet1cn.html?ptag=qqbrowser',
+        // 'Origin': 'http://jx.hsx0713.top',
+        // 'Host': 'jx.hsx0713.top'
+    },
+    data: {
+        body: {
+            // url: 'https://v.qq.com/x/cover/og0eputlxwet1cn.html?ptag=qqbrowser',
+            // key: 'e7393ad300cac2fcb2b69938afdd3a40',
+            // key2: '6632ac54b5bae0c8c3cd0f81aca0ea76',
+            // time: 1564834189
+            url: encodeURIComponent('https://m.tv.sohu.com/u/vw/146146127.shtml?aid=9554130&channeled=1210010300&columnid=15'),
+            cb:  '',
+            _: '1564848281691'
+        }
+    }
+}, function(ret, err) {
+  console.log(JSON.stringify(ret))
+  console.log(JSON.stringify(err))
+    var decodeURIStr = decodeURI(decodeURI(err.body));
+    var sliceStr = decodeURIStr.slice(1, decodeURIStr.length-2);
+    var resData = JSON.parse(sliceStr);
+
+    if(resData.code == 200) {
+
+    } else {
+
+    }
+    if (ret) {
+        console.log(JSON.stringify(ret))
+    } else {
+      console.log(JSON.stringify(err))
+    }
+});
+
+
+
+
       // var module = api.require('easyVideoPlayer');
       //  var param = {
       //      msg : 'http://api.5sys.cn/jx/?v=https://v.qq.com/x/cover/og0eputlxwet1cn.html?ptag=qqbrowser'
@@ -62,6 +175,7 @@
 
 
     }
+
 
     function full() {
       api.setFullScreen({

@@ -238,7 +238,12 @@
   function login () {
     console.log("#####")
     console.log(qq)
+    api.showProgress({
+        title: '努力登录中...',
+        text: '先喝杯茶...'
+    });
     qq.login(function(retLogin, errLogin) {
+      api.hideProgress();
       console.log("#####")
       if (retLogin.status) {
         console.log("#####")

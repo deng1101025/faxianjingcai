@@ -36,10 +36,17 @@
 
 <body>
     <div id="container" class="container">
+      <!-- <div class="play-content">
+        <video id="playVideo" width="320" height="260" controls>
+            <source src="http://vipmp4i.vodfile.m1905.com/201908031902/dc2f98fe732c377a124e8d18caa0d8b2/movie/2019/01/30/m20190130901N67A9T60C8IFN/85355A47563F2F357FD1C424B.mp4" type="video/mp4">
+            您的浏览器不支持 video 标签。
+        </video>
+      </div> -->
       <div class="weui-flex play-nav-bar">
-          <div class="weui-flex__item"><div class="placeholder" onclick="">弹幕</div></div>
-          <div class="weui-flex__item"><div class="placeholder" onclick="">投屏</div></div>
-          <div class="weui-flex__item"><div class="placeholder" onclick="playFull()">全屏</div></div>
+          <!-- <div class="weui-flex__item"><div class="placeholder" onclick="">弹幕</div></div>
+          <div class="weui-flex__item"><div class="placeholder" onclick="touping()">投屏</div></div>
+          <div class="weui-flex__item"><div class="placeholder" onclick="stopDLNA()">取消投屏</div></div> -->
+          <!-- <div class="weui-flex__item"><div class="placeholder" onclick="playFull()">全屏</div></div> -->
       </div>
     </div>
 </body>
@@ -49,66 +56,38 @@
 <script type="text/javascript" src="./../script/util.js"></script>
 <script type="text/javascript" src="./../script/APICloud-rest.js"></script>
 <script type="text/javascript" src="./../script/lib/weui.min.js"></script>
+<script type="text/javascript" src="./../script/common.js"></script>
 <script type="text/javascript">
     var addrHistory = [];
     var pageParam = null;
+    var dlna = null;
+    var dlnaList = [];
+    var videoPlayer = null;
     apiready = function() {
+        videoPlayer = api.require('videoPlayer');
         pageParam = api.pageParam;
-        if(pageParam.type == "yingshi") {
-          //加载视频
-          playFull();
-        } else {
-            //加载直播
-            loadSmallVideo(api.winWidth, 225, 'ui_window')
-        }
-    }
-    function playFull() {
-      // api.openFrame({
-      //   name: 'zhiboPlayWin',
-      //   url: pageParam.url,
-      //   rect: {
-      //       x: 0,
-      //       y: 0,
-      //       w: 'auto',
-      //       h: 'auto'
-      //   }
-      // });
-      loadSmallVideo('auto','auto');
-      full();
-      if(pageParam.type != "yingshi") {
-          addrHistory.push('widget://html/frame_play.html');
-      }
-      api.addEventListener({
-          name: 'keyback'
-      }, function(ret, err) {
-          var addr = addrHistory.pop();
-          if(addr) {
-            api.closeFrame({
-                name: 'zhiboPlayWin'
-            });
-            //返回之后刷新播放进度
-            loadSmallVideo(api.winWidth, 225, 'ui_window');
-          } else {
-            api.closeWin({
-                name: 'navZhiboPlay'
-            });
-          }
-          noFull();
-      });
-    }
+        videoPlay(videoPlayer, pageParam.url, pageParam.title)
+        api.addEventListener({
+            name: 'keyback'
+        }, function(ret, err) {
+          console.log("返回键被点击了————————————————————")
+          videoPlayer.isFullscreen(function(ret){
+              console.log(ret.isFullscreen)
+              if(!ret.isFullscreen) {
+                  api.closeWin({
+                      name: 'frame_play'
+                  });
+              }
+          });
+          videoPlayer.onBack();
+        });
 
-    function loadSmallVideo(w, h, fixedOn) {
-      api.openFrame({
-          name: 'playPage',
-          url: pageParam.url,
-          rect: {
-              x: 0,
-              y: 0,
-              w: w,
-              h: h
-          },
-          fixedOn: fixedOn
-      });
+        dlna = api.require('dlna');
+        dlna.startSearch(function(ret, err) {
+          if(ret && ret.data && ret.data.length > 0) {
+            dlnaList = ret.data;
+          }
+        });
     }
 
     // 强制切换横屏
@@ -129,7 +108,59 @@
             optNav: true
         });
         api.setScreenOrientation({
-            orientation: 'portrait_down'
+            orientation: 'portrait_up'
         });
     }
+
+    function touping() {
+      api.actionSheet({
+          title: '设备列表',
+          cancelTitle: '关闭',
+          buttons: dlnaList
+      }, function(ret, err) {
+          var index = ret.buttonIndex;
+          startDLNA(ret.xh)
+      });
+    }
+    function startDLNA(index) {
+        dlna.startDLNA({
+            xh : index,
+            url : pageParam.url
+        }, function(ret, err) {
+          if(ret.status) {
+            api.toast({
+                msg: '投屏成功，请尽情欣赏',
+                duration: 2000,
+                location: 'top'
+            });
+          } else {
+            api.toast({
+                msg: '投屏失败!',
+                duration: 2000,
+                location: 'top'
+            });
+          }
+        });
+    }
+
+    function stopDLNA() {
+      dlna.stopDLNA({
+          bizToken : '',
+      },function(ret, err) {
+        if(ret.status) {
+          api.toast({
+              msg: '取消投屏成功！',
+              duration: 2000,
+              location: 'top'
+          });
+        } else {
+          api.toast({
+              msg: '取消投屏失败!',
+              duration: 2000,
+              location: 'top'
+          });
+        }
+      });
+    }
+
 </script>
