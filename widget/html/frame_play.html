@@ -10,13 +10,16 @@
     <link rel="stylesheet" type="text/css" href="../css/style.css" />
     <link rel="stylesheet" type="text/css" href="../css/weui.css" />
     <style>
-        .empty {
+        body {
+          background-color: #e5e5e5;
+        }
+        /*.empty {
             text-align: center;
             padding: 120px 0;
-        }
-        .container .play-nav-bar {
+        }*/
+        /*.container .play-nav-bar {
           margin-top: 230px
-        }
+        }*/
         .container .play-nav-bar .placeholder {
             margin: 5px;
             padding: 0 10px;
@@ -59,36 +62,157 @@
 <script type="text/javascript" src="./../script/common.js"></script>
 <script type="text/javascript">
     var addrHistory = [];
-    var pageParam = null;
-    var dlna = null;
-    var dlnaList = [];
-    var videoPlayer = null;
+    var pageData = null;
+    // var dlna = null;
+    // var dlnaList = [];
+    // var videoPlayer = null;
+    var browser = null;
     apiready = function() {
-        videoPlayer = api.require('videoPlayer');
-        pageParam = api.pageParam;
-        videoPlay(videoPlayer, pageParam.url, pageParam.title)
-        api.addEventListener({
-            name: 'keyback'
+        pageData = api.pageParam;
+        browser = api.require('webBrowser');
+        console.log("播放地址——————————————————————" + JSON.stringify(pageData));
+        browser.openView({
+            url: pageData.url,
+            rect: {
+                x: 0,
+                y: 45,
+                w: api.frameWidth,
+                h: 'auto',
+                marginLeft:0,    //相对父页面左外边距的距离，默认0
+                marginTop:0,     //相对父页面上外边距的距离，默认0
+                marginBottom:0,  //相对父页面下外边距的距离，默认0
+                marginRight:0    //相对父页面右外边距的距离，默认0
+            },
+            titleBar: {
+               visible: true,      //标题栏是否隐藏，只支持Android，布尔类型，默认值false
+              //  bg:           //标题栏背景颜色，支持 rgb，rgba，#fff等，默认值#393A3F
+              //  textColor:    //标题栏文字颜色，支持 rgb，rgba，#fff等，默认值#FFF
+            }
         }, function(ret, err) {
-          console.log("返回键被点击了————————————————————")
-          videoPlayer.isFullscreen(function(ret){
-              console.log(ret.isFullscreen)
-              if(!ret.isFullscreen) {
-                  api.closeWin({
-                      name: 'frame_play'
-                  });
-              }
-          });
-          videoPlayer.onBack();
+            switch (ret.state) {
+                case 0:
+                    break;
+                case 1:
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    break;
+                case 4:
+                    break;
+                default:
+                    break;
+            }
         });
+        api.addEventListener({
+    			name: 'navitembtn'
+    		}, function(ret, err) {
+            if(ret.type == 'left') {
+                api.closeWin();
+            } else if (ret.type == 'right') {
+                var buttons = [];
+                analysisUrlList.forEach(function (element, index) {
+                    buttons.push("vip线路" + (index + 1))
+                });
+                api.actionSheet({
+                    title: '线路选择',
+                    cancelTitle: '关闭',
+                    buttons: buttons
+                }, function(ret, err) {
+                    var index = ret.buttonIndex;
+                    browser.loadUrl({
+                        url: analysisUrlList[index - 1].attrVal + pageData.address
+                    });
+                    // alert('点击了'+index+'按钮');
+                });
+            }
+          // alert('点击了'+ret.type+'按钮');
+    		});
 
-        dlna = api.require('dlna');
-        dlna.startSearch(function(ret, err) {
-          if(ret && ret.data && ret.data.length > 0) {
-            dlnaList = ret.data;
-          }
-        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // videoPlayer = api.require('videoPlayer');
+        // pageParam = api.pageParam;
+        // videoPlay(videoPlayer, pageParam)
+        // api.addEventListener({
+        //     name: 'keyback'
+        // }, function(ret, err) {
+        //   console.log("返回键被点击了————————————————————")
+        //   // if(isFullscreenVideo) {
+        //   //     reloadVideoFoot(isFullscreenVideo)
+        //   // } else {
+        //   //     api.closeWin({
+        //   //         name: 'frame_play'
+        //   //     });
+        //   // }
+        //   videoPlayer.isFullscreen(function(ret){
+        //       console.log(ret.isFullscreen)
+        //       if(!ret.isFullscreen) {
+        //           api.closeWin({
+        //               name: 'frame_play'
+        //           });
+        //       }
+        //   });
+        //   videoPlayer.onBack();
+        // });
+
+        // dlna = api.require('dlna');
+        // dlna.startSearch(function(ret, err) {
+        //   if(ret && ret.data && ret.data.length > 0) {
+        //     dlnaList = ret.data;
+        //   }
+        // });
+        getAnalysisUrlList();
     }
+
+    // function reloadVideoPlayer(data) {
+    //   console.log("______________________________________")
+    //     console.log(data)
+    //     console.log("______________________________________")
+    //     videoPlayer.close();
+    //     videoPlayer.isFullscreen(function(ret){
+    //         videoPlay(videoPlayer, data, ret.isFullscreen)
+    //     });
+    // }
+
+
+
+    // var isFullscreenVideo = false;
+    // function reloadVideoFoot() {
+    //   isFullscreenVideo ? cancelFullScreenPlay() : fullScreenPlay();
+    //   closeDisplayFoot();
+    //   openDisplayFoot(pageParam, isFullscreenVideo);
+    //   isFullscreenVideo = !isFullscreenVideo;
+    // }
+    // function fullScreenPlay() {
+    //   videoPlayer.fullScreen({
+    //       orientation:'right'
+    //   });
+    // }
+    // function cancelFullScreenPlay() {
+    //   videoPlayer.cancelFullScreen();
+    // }
+
+
+
+
+
 
     // 强制切换横屏
     function full() {

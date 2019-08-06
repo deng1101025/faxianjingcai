@@ -10,10 +10,10 @@
     <link rel="stylesheet" type="text/css" href="../css/style.css" />
     <link rel="stylesheet" type="text/css" href="../css/weui.css" />
     <style>
-        .empty {
+        /*.empty {
             text-align: center;
             padding: 120px 0;
-        }
+        }*/
 
       	.container .weui-flex__item .item-bg{
       		background-image: url(../image/zhanwei.jpg);
@@ -21,6 +21,11 @@
           background-size: 100% 100%;
           -moz-background-size: 100% 100%;
       	}
+      	.weui-flex {
+		    display: -webkit-box;
+		    display: -webkit-flex;
+		    display: flex;
+		}
         .item-bg {
             margin: 5px;
             padding: 35px 10px;
@@ -30,6 +35,11 @@
             text-align: center;
             color: rgba(0, 0, 0, .3);
         }
+        .weui-flex__item {
+		    -webkit-box-flex: 1;
+		    -webkit-flex: 1;
+		    flex: 1;
+		}
         .item-title {
           text-align: center;
         }
@@ -40,7 +50,7 @@
 
   	<div id="container" class="container">
 
-      <!-- <div class="weui-flex">
+      <!--<div class="weui-flex">
           <div class="weui-flex__item" onclick="zhiboItenClick( this );">
               <div class="item-bg">weui</div>
               <div class="item-title">
@@ -53,7 +63,7 @@
                 电影直播
               </div>
           </div>
-      </div> -->
+      </div>-->
 
     </div>
 
@@ -69,7 +79,7 @@
     var zhiboDataList = [];
     apiready = function() {
 
-      loadZhiboList();
+         loadZhiboList();
     }
 
     function loadZhiboList() {
@@ -101,18 +111,35 @@
       var footDiv = '</div>'
       var onehangStr = '';
       var indexTemp = 1;
+
+
+      // <div class="weui-flex">
+      //     <div class="weui-flex__item" onclick="zhiboItenClick( this );">
+      //         <div class="item-bg">weui</div>
+      //         <div class="item-title">
+      //           电影直播
+      //         </div>
+      //     </div>
+      //     <div class="weui-flex__item" onclick="zhiboItenClick( this );">
+      //         <div class="item-bg">weui</div>
+      //         <div class="item-title">
+      //           电影直播
+      //         </div>
+      //     </div>
+      // </div>
+
       data.forEach(function (element, index) {
-        var flexItem = '<div class="weui-flex__item" onclick="zhiboItenClick( '+ index +' );">';
+        var flexItem = '<div class="weui-flex__item" tapmode onclick="zhiboItenClick( '+ index +' );">';
         var itemBg = '<div class="item-bg" style="background-image: url('+ element.img +');"></div>';
         var itemTitle = '<div class="item-title">';
         //拼接一行
         onehangStr = onehangStr + flexItem + itemBg + itemTitle + element.name + footDiv + footDiv;
-          indexTemp++;
+        indexTemp++;
         if(indexTemp > 2 || index == data.length - 1) {
-          var itemHtml = weuiFlexDiv + onehangStr + footDiv;
-          htmlStr = htmlStr + itemHtml;
-          indexTemp = 1;
-          onehangStr = '';
+            var itemHtml = weuiFlexDiv + onehangStr + footDiv;
+            htmlStr = htmlStr + itemHtml;
+            indexTemp = 1;
+            onehangStr = '';
         }
 
       });
@@ -139,21 +166,30 @@
       //   name: 'navZhiboPlay',
       //   url: 'widget://html/frame_play.html'
       // });
-      api.openWin({
-        name: 'frame_play',
-        url: 'widget://html/frame_play.html',
-        rect: {
-            x: 0,
-            y: 0,
-            w: 'auto',
-            h: 'auto'
-        },
-        pageParam: {
-            url: zhiboDataList[tab].addr,
-            title: zhiboDataList[tab].name,
-            type: 'zhibo'
-        }
-      });
+
+
+      videoPlayByX5({
+          url: zhiboDataList[tab].addr,
+          address: zhiboDataList[tab].addr,
+          type: 'zhibo'
+      })
+
+
+      // api.openWin({
+      //   name: 'frame_play',
+      //   url: 'widget://html/frame_play.html',
+      //   rect: {
+      //       x: 0,
+      //       y: 0,
+      //       w: 'auto',
+      //       h: 'auto'
+      //   },
+      //   pageParam: {
+      //       url: zhiboDataList[tab].addr,
+      //       title: zhiboDataList[tab].name,
+      //       type: 'zhibo'
+      //   }
+      // });
       // api.openTabLayout({
       //     name: 'navZhiboPlay',
       //     url: 'widget://html/frame_play.html',
@@ -176,10 +212,10 @@
     function hotAdd(tab) {
       var zhiboId = zhiboDataList[tab].id;
       getModel("zhibo").save({"_id": zhiboId},{"hot": parseInt(zhiboDataList[tab].hot) + 1}, function(ret,err){ // 更新用户状态
-        console.log("保存后zhibo对象：" + $api.jsonToStr(ret))
-        if(ret && ret.id){
-        } else{
-        }
+        // console.log("保存后zhibo对象：" + $api.jsonToStr(ret))
+        // if(ret && ret.id){
+        // } else{
+        // }
       });
     }
 

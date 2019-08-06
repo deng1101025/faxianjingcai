@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>播放</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../css/weui.css" />
+    <style>
+        html,body {
+          background-color: rgba(0,0,0,0.3);
+        }
+        /*.empty {
+            text-align: center;
+            padding: 120px 0;
+        }*/
+        /*.container .play-nav-bar {
+          margin-top: 230px
+        }*/
+        /*.container .play-nav-bar .placeholder {
+            margin: 5px;
+            padding: 0 10px;
+            background-color: #f7f7f7;
+            height: 2.3em;
+            line-height: 2.3em;
+            text-align: center;
+            /*color: rgba(0,0,0,.3);*/
+        }*/
+        .film-series-dialog {
+          padding: 0 30px 30px 30px;
+          color: #fff
+        }
+        .film-series-dialog ul {
+
+        }
+        .film-series-dialog ul li {
+    		  float: left;
+          background-color: #505050;
+          width: 40px;
+          height: 40px;
+          margin: 10px;
+          text-align: center;
+          line-height: 40px;
+        }
+        /*
+        .container .play-nav-bar ul li {
+          float: left;
+          border: 1px solid #e5e5e5;
+        }*/
+    </style>
+</head>
+
+<body>
+    <div id="container" class="container">
+    </div>
+    <div class="film-series-dialog">
+        <ul id="filmListUl" class="">
+          <!-- <li>1</li>
+          <li>2</li>
+          <li>3</li>
+          <li>4</li>
+          <li>5</li>
+          <li>6</li>
+          <li>7</li>
+          <li>8</li>
+          <li>9</li>
+          <li>10</li>
+          <li>11</li>
+          <li>12</li>
+          <li>13</li>
+          <li>14</li>
+          <li>15</li>
+          <li>16</li>
+          <li>17</li>
+          <li>18</li>
+          <li>19</li>
+          <li>20</li>
+          <li>21</li>
+          <li>22</li>
+          <li>23</li>
+          <li>24</li>
+          <li>25</li>
+          <li>26</li>
+          <li>27</li> -->
+        </ul>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="./../script/api.js"></script>
+<script type="text/javascript" src="./../script/util.js"></script>
+<script type="text/javascript" src="./../script/APICloud-rest.js"></script>
+<script type="text/javascript" src="./../script/lib/weui.min.js"></script>
+<script type="text/javascript" src="./../script/common.js"></script>
+<script type="text/javascript">
+    var pageParamData = null;
+    var videoPlayer = null;
+    apiready = function() {
+        pageParamData = api.pageParam;
+        videoPlayer = pageParamData.videoPlayer;
+        loadFilmList(pageParamData)
+    }
+
+    function loadFilmList(data) {
+      var rootDiv = $api.dom('#filmListUl')
+      var htmlStr = '';
+      if(data && data.info && data.info.length > 0 && data.info[0].video && data.info[0].video.length > 0) {
+          data.info[0].video.forEach(function (element, index) {
+              var listIndex = index + 1
+              var liItem = '<li onclick="filmItemClick( '+ index +' );">'+ listIndex +'</li>';
+              //拼接一行
+              htmlStr = htmlStr + liItem
+          });
+          $api.html(rootDiv, htmlStr);
+      } else {
+          $api.html(rootDiv, '<span>没有找到剧集列表</span>');
+      }
+
+    }
+
+    function filmItemClick(index) {
+      console.log(index)
+      console.log($api.jsonToStr(pageParamData.info));
+      console.log($api.jsonToStr(pageParamData.info[0].video[index]));
+      var $url = pageParamData.info[0].video[index];
+      pageParamData.url = $url.slice($url.indexOf('http'), $url.indexOf('$ckm3u8'));
+      // console.log(JSON.stringify(api.windows()));
+      // console.log(JSON.stringify(api.frames()));
+      api.execScript({
+        name: 'frame_play',
+        script: 'reloadVideoPlayer('+ $api.jsonToStr(pageParamData) +');'
+      });
+      api.closeFrame({
+          name: 'frame_play_film_list'
+      });
+
+      // videoPlay(pageParamData.videoPlayer, pageParamData)
+
+        // videoPlayer.src = pageParam.info[0].video.slice(pageParam.info[index].video.indexOf('http'))
+        // videoPlayer.setPath({
+        //   path: pageParam.info[0].video.slice(pageParam.info[0].video.indexOf('http')),
+        //   coverImg: ''
+        // });
+    }
+
+</script>

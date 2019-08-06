@@ -25,7 +25,7 @@
 </head>
 <body>
     <div class="container">
-      <div class="header">
+      <!-- <div class="header">
         支付
       </div>
       <div class="content">
@@ -45,7 +45,7 @@
             <input type="hidden" name="backPara" value="" />
             <input type="hidden" name="uuid" value="1" />
           </form>
-      </div>
+      </div> -->
     </div>
 </body>
 </html>
@@ -63,117 +63,59 @@
         sync: true,
         key: 'accessToken'
     });
+    pay();
 
   }
 
 
 
-  function pay() { //https://deng1101025.github.io/download/
-  //https://www.payelves.com/api/v1/pay/wap
-    api.openTabLayout({
-        name: 'navPay',
-        url: 'https://www.payelves.com/api/v1/pay/wap',
-        title: '支付',
-        hideNavigationBar: false,
-        navigationBar: {
-            background: '#f2f2f2',
-            leftButtons: [{
-                iconPath: 'widget://image/left.png',
-                fontSize: '14'
-            }]
-        }
-    });
+  function pay() {
+    // var str = 'money=0.01&name=haha&notify_url=https://deng1101025.github.io/download/&out_trade_no=20190731192043350&pid=830348&return_url=https://deng1101025.github.io/download/&sitename=heihei&type=alipaydxijpsvyj969cfhqp4v76inmkh1t2x67';//&830348=A8F4FF60DF8AD17F9C623658A2CE79BE'; //name  money  notify_url  out_trade_no  return_url  sitename  type
+    // // var str = '0.01hahahttps://deng1101025.github.io/download/20190730151343349pid830348https://deng1101025.github.io/download/heiheialipayA8F4FF60DF8AD17F9C623658A2CE79BE'; //name  money  notify_url  out_trade_no  return_url  sitename  type
+    // var sign = hexMD5(str); //.toUpperCase();
+    // console.log("########################################sign")
+    // console.log(sign)
+    // console.log("########################################sign")
+    // var httpStr = 'http://pay.azfpay.com/submit.php?pid=830348&type=alipay&out_trade_no=20190731192043350&notify_url=https://deng1101025.github.io/download/&return_url=https://deng1101025.github.io/download/&name=haha&money=0.01&sitename=heihei&sign='+ sign +'&sign_type=MD5';
+    // // var httpStr = 'http://pay.azfpay.com/submit.php?' + str + '&api_id=830348&out_trade_no=20190731151343349&return_url=https://deng1101025.github.io/download/&notify_url=https://deng1101025.github.io/download/&title=测试&money=0.01&sign=' + sign +'&sign_type=MD5';
+    // // var httpStr = 'http://pay.azfpay.com/submit.php?' + str + '&sign=' + sign +'&sign_type=MD5';
+    // console.log("########################################sign")
+    // console.log(httpStr)
+    // console.log("########################################sign")
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    // http://pay.azfpay.com/submit.php?pid=830348&type=wxpay&out_trade_no=20190730151343349&notify_url=https://deng1101025.github.io/download/&return_url=https://deng1101025.github.io/download/&name=会员充值&money=0.01&sitename=看你想看&sign=sign&sign_type=MD5
-
-    var str = 'money=0.01&name=haha&notify_url=https://deng1101025.github.io/download/&out_trade_no=20190731192043350&pid=830348&return_url=https://deng1101025.github.io/download/&sitename=heihei&type=alipaydxijpsvyj969cfhqp4v76inmkh1t2x67';//&830348=A8F4FF60DF8AD17F9C623658A2CE79BE'; //name  money  notify_url  out_trade_no  return_url  sitename  type
+    var str = 'money=0.04&name=haha&notify_url=https://deng1101025.github.io/download/&out_trade_no=20190731192043350&pid=830348&return_url=https://deng1101025.github.io/download/&sitename=heihei&type=alipayA8F4FF60DF8AD17F9C623658A2CE79BE';//&830348=A8F4FF60DF8AD17F9C623658A2CE79BE'; //name  money  notify_url  out_trade_no  return_url  sitename  type
     // var str = '0.01hahahttps://deng1101025.github.io/download/20190730151343349pid830348https://deng1101025.github.io/download/heiheialipayA8F4FF60DF8AD17F9C623658A2CE79BE'; //name  money  notify_url  out_trade_no  return_url  sitename  type
-    var sign = hexMD5(str);//.toUpperCase();
+    var sign = md5(str);//.toUpperCase();
     console.log("########################################sign")
     console.log(sign)
     console.log("########################################sign")
-    var httpStr = 'http://pay.azfpay.com/submit.php?pid=830348&type=alipay&out_trade_no=20190731192043350&notify_url=https://deng1101025.github.io/download/&return_url=https://deng1101025.github.io/download/&name=haha&money=0.01&sitename=heihei&sign='+ sign +'&sign_type=MD5';
+    var httpStr = 'http://pay.azfpay.com/submit.php?pid=830348&type=alipay&out_trade_no=20190731192043350&notify_url=https://deng1101025.github.io/download/&return_url=https://deng1101025.github.io/download/&name=haha&money=0.04&sitename=heihei&sign='+ sign +'&sign_type=MD5';
     // var httpStr = 'http://pay.azfpay.com/submit.php?' + str + '&api_id=830348&out_trade_no=20190731151343349&return_url=https://deng1101025.github.io/download/&notify_url=https://deng1101025.github.io/download/&title=测试&money=0.01&sign=' + sign +'&sign_type=MD5';
     // var httpStr = 'http://pay.azfpay.com/submit.php?' + str + '&sign=' + sign +'&sign_type=MD5';
     console.log("########################################sign")
     console.log(httpStr)
     console.log("########################################sign")
 
-    // http://mapi.alipay.com/gateway.do?body=testjsdzbody&subject=testjsdz&sign_type=MD5&notify_url=http://www.test.com/create_direct_pay_by_user-JAVA-UTF-8/notify_url.jsp&out_trade_no=9890879868657&return_url=http://www.baidu.com&sign=***&_input_charset=utf-8&total_fee=0.01&service=create_direct_pay_by_user&partner=2088000000000000&seller_id=2088000000000000&payment_type=1
-
-    api.openTabLayout({
-        name: 'navPay',
+    // 提交JSON数据
+    api.ajax({
         url: httpStr,
-        title: '支付',
-        hideNavigationBar: false,
-        navigationBar: {
-            background: '#f2f2f2',
-            leftButtons: [{
-                iconPath: 'widget://image/left.png',
-                fontSize: '14'
-            }]
+        method: 'post',
+        headers: {
+            'Content-Type': 'text/html;charset=utf-8'
+        },
+        data: {}
+    }, function(ret, err) {
+        if (ret) {
+            api.alert({ msg: JSON.stringify(ret) });
+        } else {
+            api.alert({ msg: JSON.stringify(err) });
         }
     });
-    // window.location = 'https://bufpay.com/api/pay/97975?name=haha&pay_type=alipay&price=1&order_id=20190731192043349&order_uid=332877552%40qq.com&notify_url=https%3A%2F%2Fdeng1101025.github.io%2Fdownload%2F&return_url=https%3A%2F%2Fdeng1101025.github.io%2Fdownload%2F&feedback_url=&sign=1F14032B6F2414522938A5798341A55D'
-    // 提交JSON数据
-    // api.ajax({
-    //     url: 'https://bufpay.com/api/pay/97975?format=json&name=haha&pay_type=alipay&price=1&order_id=20190731192043311&order_uid=332877552@qq.com&notify_url=https://deng1101025.github.io/download/&return_url=https://deng1101025.github.io/download/&feedback_url=&sign=09676C4185DC35B093CC98AA50397801',
-    //     method: 'post',
-    //     headers: {
-    //         'Content-Type': 'application/x-www-form-urlencoded'
-    //     },
-    //     data: {
-    //         // body: {
-    //             name: 'haha',
-    //             pay_type: 'alipay',
-    //             price: '0.01',
-    //             order_id: '20190731192043349',
-    //             order_uid: '332877552@qq.com',
-    //             notify_url: 'https://deng1101025.github.io/download/',
-    //             return_url: 'https://deng1101025.github.io/download/',
-    //             feedback_url: 'https://deng1101025.github.io/download/',
-    //             sign: '189E7F47440854E82117A0B68B7563A2'
-    //         // }
-    //     }
-    // }, function(ret, err) {
-    //     if (ret) {
-    //         api.alert({ msg: JSON.stringify(ret) });
-    //     } else {
-    //         api.alert({ msg: JSON.stringify(err) });
-    //     }
-    // });
 
 
-
-
-
-
-
-
-
-
-
-
-    //
-    // var signStr = 'shid=10542&bb=2.0&zftd=alipay&ddh=20190731192043349&je=1.00&ddmc=haha&ddbz=haha&ybtz=https://deng1101025.github.io/download/&tbtz=https://deng1101025.github.io/download/&商户KEY密匙'
-    // var httpsss = '  http://www.payxinyi.com/pay/api.php?bb=2.0&shid=10542&ddh=20190731192043349&je=1.00&zftd=alipay&ybtz=https://deng1101025.github.io/download/&tbtz=https://deng1101025.github.io/download/&ddmc=haha&ddbz=haha&sign=';
     // api.openTabLayout({
     //     name: 'navPay',
-    //     url: httpsss,
+    //     url: 'frame3_pay.html',
     //     title: '支付',
     //     hideNavigationBar: false,
     //     navigationBar: {
@@ -184,6 +126,7 @@
     //         }]
     //     }
     // });
+
   }
 
   function reloadFrame() {

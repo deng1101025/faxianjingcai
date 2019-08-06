@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>会员中心</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/weui.css"/>
+    <style>
+		      .container{ margin: auto 15px;}
+          /*.weui-gallery__img {
+              width: 300px;
+              height: 400px;
+              position: absolute;
+              top: constant(safe-area-inset-top);
+              top: env(safe-area-inset-top);
+              right: constant(safe-area-inset-right);
+              right: env(safe-area-inset-right);
+              bottom: calc(60px + constant(safe-area-inset-bottom));
+              bottom: calc(60px + env(safe-area-inset-bottom));
+              left: constant(safe-area-inset-left);
+              left: env(safe-area-inset-left);
+              background: center center no-repeat;
+              background-size: contain;
+          }*/
+          .weui-gallery {
+              display: block;
+              position: fixed;
+              top: 0;
+              right: 0;
+              bottom: 0;
+              left: 0;
+              background-color: '#fff';
+              z-index: 1000;
+          }
+          /*.container {
+              position: absolute;
+              top: 0;
+              right: 0;
+              bottom: 0;
+              left: 0;
+          }*/
+         .weui-gallery__opr {
+         	background-color: '#fff';
+         	color: '#000';
+         }
+         .weui-icon-delete:before {
+              content: "\EA11";
+         }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="weui-gallery">
+          <span class="weui-gallery__img" style="background-image: url(http://ad9115646e9053b381d1.test.upcdn.net/apicloud/9e5d50b045a6703f97313245b4bdc686.png);"></span>
+          <!-- <div class="weui-gallery__opr">
+              <a href="javascript:" class="weui-gallery__del">
+                  <i class="weui-icon-delete weui-icon_gallery-delete">保存图片</i>
+              </a>
+          </div> -->
+        </div>
+    </div>
+</body>
+</html>
+<script type="text/javascript" src="./../script/api.js"></script>
+<script type="text/javascript" src="./../script/util.js"></script>
+<script type="text/javascript" src="./../script/common.js"></script>
+<script type="text/javascript" src="./../script/APICloud-rest.js"></script>
+<script type="text/javascript" src="./../script/lib/weui.min.js"></script>
+<script type="text/javascript">
+  var accessToken = "";
+  apiready = function () {
+
+    //同步返回结果：
+    accessToken = api.getPrefs({
+        sync: true,
+        key: 'accessToken'
+    });
+    pay();
+    api.addEventListener({
+      name: 'navitembtn'
+    }, function(ret, err) {
+        api.closeWin();
+    });
+
+  }
+
+
+
+  function pay() {
+
+
+  }
+
+  function reloadFrame() {
+    api.setFrameGroupIndex({
+        name: 'group',
+        index: 2,
+        reload: true
+    });
+  }
+
+</script>

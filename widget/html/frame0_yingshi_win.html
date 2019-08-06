@@ -17,11 +17,11 @@
 </head>
 <body>
   <div class="container">
-      <div class="header">
+      <!-- <div class="header">
         <button class="btn-item btn-item-return" onclick="btnCLicked_return()">返回</button>
         <button class="btn-item btn-item-shouye" onclick="btnCLicked_return_shouye();">返回首页</button>
         <button class="btn-item btn-item-play"  onclick="btnClicked_play();">播放</button>
-      </div>
+      </div> -->
   </div>
 </body>
 </html>
@@ -50,24 +50,9 @@
     }, function(ret, err) {
         accessToken = ret.value;
     });
-    getAnalysisUrlList(); //获取解析视频地址的url列表
-
-    api.openFrame({
-        name: 'frame0_yingshi_win_frame',
-        url: pageList[api.pageParam.index], //https://m.v.qq.com
-        rect: {
-            x: 0,
-            y: 56,
-            w: 'auto',
-            h: 'auto'
-        },
-        bounces: true,
-        useWKWebView: true,
-        historyGestureEnabled: true,
-        pageParam: {
-            name: 'test'
-        }
-    });
+    // getAnalysisUrlList(); //获取解析视频地址的url列表
+    //打开平台网站
+    openFrame();
 
     api.setFrameClient({
         frameName: 'frame0_yingshi_win_frame'
@@ -105,6 +90,32 @@
                 break;
         }
     });
+
+    // 各平台影视浏览header的返回播放刷新按钮事件监听
+    headerBtnListen();
+  }
+
+  function openFrame() {
+      console.log("api.winHeight____" + api.winHeight);
+      console.log("api.frameHeight___" + api.frameHeight);
+      console.log("api.screenHeight___" + api.screenHeight);
+      api.openFrame({
+          name: 'frame0_yingshi_win_frame',
+          url: pageList[api.pageParam.index], //https://m.v.qq.com
+          rect: {
+              x: 0,
+              y: 45,
+              w: api.winWidth,
+              h: 'auto',
+              marginLeft: 0,    //相对父页面左外边距的距离，数字类型
+              marginTop: 5,     //相对父页面上外边距的距离，数字类型
+              marginBottom: 0,  //相对父页面下外边距的距离，数字类型
+              marginRight: 0    //相对父页面右外边距的距离，数字类型
+          },
+          bounces: true,
+          useWKWebView: true,
+          historyGestureEnabled: true
+      });
   }
 
   function btnClicked_play() {
@@ -143,20 +154,20 @@
         // console.log('http://api.5sys.cn/jx/?v=' + playAddress)
         // alert('http://api.5sys.cn/jx/?v=' + playAddress)
         console.log(playAddress.url);
-        ajaxLoadm3u8(playAddress.url, function(resData) {
-            resData.type = 'yingshi';
-            api.openWin({
-              name: 'frame_play',
-              url: 'widget://html/frame_play.html',
-              rect: {
-                  x: 0,
-                  y: 0,
-                  w: 'auto',
-                  h: 'auto'
-              },
-              pageParam: resData
-            });
-        })
+        // ajaxLoadm3u8(playAddress.url, function(resData) {
+        //     resData.type = 'yingshi';
+        //     api.openWin({
+        //       name: 'frame_play',
+        //       url: 'widget://html/frame_play.html',
+        //       rect: {
+        //           x: 0,
+        //           y: 0,
+        //           w: 'auto',
+        //           h: 'auto'
+        //       },
+        //       pageParam: resData
+        //     });
+        // })
 
         // 提交JSON数据
         // api.ajax({
@@ -195,9 +206,55 @@
         //         }]
         //     }
         // });
+        console.log(JSON.stringify('http://jx.hsx0713.top/jiexi/?url=' + playAddress.url));
+        videoPlayByX5({
+            url: 'http://jx.hsx0713.top/jiexi/?url=' + playAddress.url,
+            address: playAddress.url
+        })
+        // var browser = api.require('webBrowser');
+        // browser.openView({
+        //     url: 'http://jx.hsx0713.top/jiexi/?url=' + playAddress.url
+        // });
+        // var browser = api.require('webBrowser');
+        // browser.openView({
+        //     url: 'http://jx.hsx0713.top/jiexi/?url=' + playAddress.url,
+        //     rect: {
+        //         x: 0,
+        //         y: 64,
+        //         w: api.frameWidth,
+        //         h:api.frameHeight
+        //     },
+        //     titleBar: {
+        //        visible: true,      //标题栏是否隐藏，只支持Android，布尔类型，默认值false
+        //       //  bg:           //标题栏背景颜色，支持 rgb，rgba，#fff等，默认值#393A3F
+        //       //  textColor:    //标题栏文字颜色，支持 rgb，rgba，#fff等，默认值#FFF
+        //     }
+        // }, function(ret, err) {
+        //     switch (ret.state) {
+        //         case 0:
+        //             break;
+        //         case 1:
+        //             break;
+        //         case 2:
+        //             break;
+        //         case 3:
+        //             break;
+        //         case 4:
+        //             break;
+        //         default:
+        //             break;
+        //     }
+        // });
+        // browser.loadScript({
+        //     script: 'loadTitle();'
+        // });
+
         // api.openWin({
         //   name: 'playWin',
-        //   url: 'http://www.sls6.top/VIP/gb.php?url=' + playAddress,
+        //   url: 'http://jx.hsx0713.top/jiexi/?url=' + playAddress.url,
+        //   useWKWebView: true,
+        //   singleInstance: true,
+        //   hideHomeIndicator: true,
         //   rect: {
         //       x: 0,
         //       y: 0,
@@ -219,6 +276,50 @@
           location: 'center'
       });
     }
+  }
+
+  function headerBtnListen() {
+    api.addEventListener({
+      name: 'navitembtn'
+    }, function(ret, err) {
+        if(ret.type == 'left' && ret.index == 0) { //返回一步
+            // api.showProgress({
+        		//     title: '努力返回中...',
+        		//     text: '先喝杯茶...'
+        		// });
+            btnCLicked_return();
+            // api.hideProgress();
+        } else if(ret.type == 'left' && ret.index == 1) { //返回到首页
+            // api.showProgress({
+            //     title: '努力返回中...',
+            //     text: '先喝杯茶...'
+            // });
+            api.closeToWin({
+              name: 'root'
+            });
+            // api.hideProgress();
+        } else if (ret.type == 'right' && ret.index == 0) { // 播放按钮
+            btnClicked_play();
+        } else if (ret.type == 'right' && ret.index == 1) { // 刷新按钮
+            // api.showProgress({
+            //     title: '努力刷新中...',
+            //     text: '先喝杯茶...'
+            // });
+            btnClicked_refresh();
+            // api.hideProgress();
+       }
+      console.log('点击了'+JSON.stringify(ret)+'按钮');
+    });
+  }
+
+  // function loadTitle () {
+  //   setTimeout(function(){
+  //       document.title = '夜雨绸缪';
+  //   }, 1500);
+  // };
+
+  function btnClicked_refresh() {
+      openFrame()
   }
 
   function btnCLicked_return() {
@@ -255,26 +356,7 @@
     // noFull()
   }
 
-  //获取解析视频地址的url列表
-  function getAnalysisUrlList() {
-    getModel("config").query({
-        filter:{
-            "where":{"attrKey": 'analysisUrl'}
-        }
-    }, function(ret,err){
-      console.log("config对象：" + $api.jsonToStr(ret))
-      // console.log("config对象：" + $api.jsonToStr(err))
-      if(ret && ret[0]&& ret[0].id){// 存在此充值码
 
-      } else {
-        api.toast({
-            msg: '获取线路失败',
-            duration: 2000,
-            location: 'top'
-        });
-      }
-    })
-  }
 
   // 强制切换横屏
   function full() {

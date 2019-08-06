@@ -38,14 +38,15 @@
       </div>
       <div class="content">
         <ul class="flex-wrap-list">
-          <li class="flex-item" onclick="login()">QQ一键登录</li>
+          <li class="flex-item" tapmode onclick="login()">QQ一键登录</li>
           <!-- <li id="quiteSelect" class="flex-item has-loged" onclick="quit()">安全退出</li> -->
-          <li class="flex-item" onclick="deposit()">会员充值</li>
+          <li class="flex-item" tapmode onclick="deposit()">会员充值</li>
           <!-- <li class="flex-item" onclick="registe()">用户注册</li>
           <li class="flex-item" onclick="modifyMM()">修改密码</li> -->
-          <li class="flex-item" onclick="contactMe()">联系客服</li>
-          <li class="flex-item" onclick="aboutMe()">关于我们</li>
-          <li class="flex-item" onclick="pay()">捐赠1毛钱</li>
+          <li class="flex-item" tapmode onclick="contactMe()">联系客服</li>
+          <li class="flex-item" tapmode onclick="aboutMe()">关于我们</li>
+          <li class="flex-item" tapmode onclick="payCus()">捐赠点钱吧~~</li>
+          <!-- <li class="flex-item" tapmode onclick="pay()">捐赠1毛钱</li> -->
         </ul>
       </div>
     </div>
@@ -242,6 +243,13 @@
         title: '努力登录中...',
         text: '先喝杯茶...'
     });
+    //登录前清除缓存
+    api.removePrefs({
+        key: 'accessToken'
+    });
+    api.removePrefs({
+        key: 'userId'
+    });
     qq.login(function(retLogin, errLogin) {
       api.hideProgress();
       console.log("#####")
@@ -376,33 +384,36 @@
 			}
 		})
   }
+  //捐赠1块钱得一个月会员
+  function payCus() {
+      api.openTabLayout({
+          name: 'navHuodongPay',
+          url: 'widget://html/frame_huodong_pay.html',
+          title: '客官捐点钱...',
+          hideNavigationBar: false,
+          pageParam: {
+          },
+          navigationBar: {
+              background: '#ffffff',
+              shadow: '#ffffff',
+              color: '#000000',
+              leftButtons: [{
+                  iconPath: 'widget://image/back_black.png',
+                  fontSize: '14'
+              }]
+          }
+      });
+  }
 
-  function pay() { //https://deng1101025.github.io/download/
-    // var str21 = 'appKey=8735713425031173&backPara=1a&body=1个月会员&channel=xiaomi&clientVersion=3.3.0&dateTime=2019-07-31 15:19:50&openId=E0ARX4kUT&orderId=abc123&payType=1&price=1&subject=会员充值&userId=123abc&uuid=1c0c5be8535e04531a0f3c48999e953b9'
-    //
-    // var sign111 =  md5(str21)//'1dffb0f41a013aca6c9f2eaf445531c0';
-    // api.openTabLayout({
-    //     name: 'navPay',
-    //     url: 'https://www.payelves.com/api/v1/pay/wap?appKey=8735713425031173&backPara=1a&body=1个月会员&channel=xiaomi&clientVersion=3.3.0&dateTime=2019-07-31 15:19:50&openId=E0ARX4kUT&orderId=abc123&payType=1&price=1&subject=会员充值&userId=123abc&uuid=1&sign=' + sign111,
-    //     title: '支付',
-    //     hideNavigationBar: false,
-    //     navigationBar: {
-    //         background: '#f2f2f2',
-    //         leftButtons: [{
-    //             iconPath: 'widget://image/left.png',
-    //             fontSize: '14'
-    //         }]
-    //     }
-    // });
 
-
-    var str = 'money=0.1&name=haha&notify_url=https://deng1101025.github.io/download/&out_trade_no=20190731192043350&pid=830348&return_url=https://deng1101025.github.io/download/&sitename=heihei&type=alipayA8F4FF60DF8AD17F9C623658A2CE79BE';//&830348=A8F4FF60DF8AD17F9C623658A2CE79BE'; //name  money  notify_url  out_trade_no  return_url  sitename  type
+  function pay() {
+    var str = 'money=0.01&name=haha&notify_url=https://deng1101025.github.io/download/&out_trade_no=20190731192043350&pid=830348&return_url=https://deng1101025.github.io/download/&sitename=heihei&type=alipayA8F4FF60DF8AD17F9C623658A2CE79BE';//&830348=A8F4FF60DF8AD17F9C623658A2CE79BE'; //name  money  notify_url  out_trade_no  return_url  sitename  type
     // var str = '0.01hahahttps://deng1101025.github.io/download/20190730151343349pid830348https://deng1101025.github.io/download/heiheialipayA8F4FF60DF8AD17F9C623658A2CE79BE'; //name  money  notify_url  out_trade_no  return_url  sitename  type
     var sign = md5(str);//.toUpperCase();
     console.log("########################################sign")
     console.log(sign)
     console.log("########################################sign")
-    var httpStr = 'http://pay.azfpay.com/submit.php?pid=830348&type=alipay&out_trade_no=20190731192043350&notify_url=https://deng1101025.github.io/download/&return_url=https://deng1101025.github.io/download/&name=haha&money=0.1&sitename=heihei&sign='+ sign +'&sign_type=MD5';
+    var httpStr = 'http://pay.azfpay.com/submit.php?pid=830348&type=alipay&out_trade_no=20190731192043350&notify_url=https://deng1101025.github.io/download/&return_url=https://deng1101025.github.io/download/&name=haha&money=0.01&sitename=heihei&sign='+ sign +'&sign_type=MD5';
     // var httpStr = 'http://pay.azfpay.com/submit.php?' + str + '&api_id=830348&out_trade_no=20190731151343349&return_url=https://deng1101025.github.io/download/&notify_url=https://deng1101025.github.io/download/&title=测试&money=0.01&sign=' + sign +'&sign_type=MD5';
     // var httpStr = 'http://pay.azfpay.com/submit.php?' + str + '&sign=' + sign +'&sign_type=MD5';
     console.log("########################################sign")
@@ -411,7 +422,7 @@
 
     api.openTabLayout({
         name: 'navPay',
-        url: httpStr,
+        url: 'frame3_pay.html',
         title: '支付',
         hideNavigationBar: false,
         navigationBar: {

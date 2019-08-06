@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>播放</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <link rel="stylesheet" type="text/css" href="../css/style.css" />
+    <link rel="stylesheet" type="text/css" href="../css/weui.css" />
+    <style>
+        html,body {
+          background-color: rgba(0,0,0,0.3);
+        }
+
+
+    </style>
+</head>
+
+<body>
+    <div id="container" class="container">
+    </div>
+    <div class="film-series-dialog">
+        <ul id="filmListUl" class="">
+
+        </ul>
+    </div>
+</body>
+
+</html>
+<script type="text/javascript" src="./../script/api.js"></script>
+<script type="text/javascript" src="./../script/util.js"></script>
+<script type="text/javascript" src="./../script/APICloud-rest.js"></script>
+<script type="text/javascript" src="./../script/lib/weui.min.js"></script>
+<script type="text/javascript" src="./../script/common.js"></script>
+<script type="text/javascript">
+    var preData = null;
+    // var isFullscreen = false;
+    // var videoPlayer = null;
+    var button = null, uislider = null;
+    var slideId = 0;
+    apiready = function() {
+      preData = api.pageParam;
+      // videoPlayer = api.require('videoPlayer');
+      //初始化全屏按钮
+      uislider = api.require('UISlider');
+      button = api.require('UIButton');
+      // console.log("__________" + preData.videoPlayer);
+      loadSlide(); //加载进度条
+      loadFullScreenBtn(); //加载全屏按钮
+      loadPlayStopBtn(); // 加载播放暂停按钮
+      loadNextBtn(); //加载下一集按钮
+      loadXuanJiBtn(); //加载选集按钮
+    }
+
+    function loadSlide() {
+      console.log("preData.w+++++"+preData.w)
+      console.log("preData.h+++++"+preData.h)
+      console.log("preData.isFullScreen+++++"+preData.isFullScreen)
+      uislider.open({
+        animation: true,
+        orientation: 'horizontal',
+        rect: {
+            x: 80,
+            y: 25,
+            size: preData.first ? preData.w - 160 : preData.h - 160
+        },
+        fixedOn:'frame_play',
+        bubble: {
+            direction: 'top',
+            state: 'highlight',
+            w: 80,
+            h: 30,
+            size: 14,
+            color: '#888',
+            bg: 'widget://res/slider/bubble.png',
+            prefix: '温度：',
+            suffix: '摄氏度'
+        },
+        handler: {
+            w: 15,
+            h: 15,
+            bg: 'widget://image/handler.png'
+        },
+        bar: {
+            h: 4,
+            bg: '#CFCFCF', //'widget://res/slider/background.png',
+            active: '#CD853F',//'widget://res/slider/bar-active.png'
+        },
+        value: {
+            min: 0,
+            max: 100,
+            step: 0.1,
+            init: 26
+        },
+        isCorner: true,
+        radius: 0.5,
+        fixedOn: api.frameName,
+        fixed: false
+      }, function(ret, err) {
+        slideId = ret.id
+        console.log("___________");
+        if (ret) {
+
+          console.log(JSON.stringify(ret));
+            // alert(JSON.stringify(ret));
+        } else {
+          console.log("播放器进度条触发：" + JSON.stringify(err));
+            // alert(JSON.stringify(err));
+        }
+      });
+    }
+
+    function loadFullScreenBtn() {
+
+      button.open({
+          rect: {
+              x: preData.first ? preData.w - 35 : preData.h - 35,
+              y: 20,
+              w: 20,
+              h: 20
+          },
+          corner: 5,
+          bg: {
+              normal: 'widget://image/fullscreen.png',
+              // highlight: '#ff0000',
+              active: 'widget://image/fullscreen_off.png'
+          },
+          fixedOn: api.frameName
+      }, function(ret, err) {
+          if (ret) {
+              console.log(JSON.stringify(ret))
+              if(ret.eventType == 'click') {
+                  // console.log(JSON.stringify(isFullscreen))
+                  //当点击了全屏按钮，重置播放器的head和foot
+                  api.execScript({
+                    name: 'frame_play',
+                    script: 'reloadVideoFoot();'
+                  });
+              }
+              // alert(JSON.stringify(ret));
+          } else {
+              console.log("全屏播放按钮点击事件： " + JSON.stringify(err))
+              // alert(JSON.stringify(err));
+          }
+      });
+    }
+
+    // 加载播放暂停按钮
+    function loadPlayStopBtn() {
+      button.open({
+          rect: {
+              x: 10,
+              y: 20,
+              w: 20,
+              h: 20
+          },
+          corner: 5,
+          bg: {
+              normal: 'widget://image/play.png',
+              // highlight: '#ff0000',
+              active: 'widget://image/pause.png'
+          },
+          fixedOn: api.frameName
+      }, function(ret, err) {
+          if (ret) {
+              console.log(JSON.stringify(ret))
+              if(ret.eventType == 'click') {
+                button.setState({
+                  id: ret.id,
+                  state: 'active'
+                });
+              }
+              // alert(JSON.stringify(ret));
+          } else {
+              console.log("全屏播放按钮点击事件： " + JSON.stringify(err))
+              // alert(JSON.stringify(err));
+          }
+      });
+    }
+
+    var filmListDialogFrameStatus = false;
+    // 加载下一集按钮
+    function loadNextBtn() {
+      button.open({
+          rect: {
+              x: 40,
+              y: 20,
+              w: 20,
+              h: 20
+          },
+          corner: 5,
+          bg: {
+              normal: 'widget://image/next.png',
+              // highlight: '#ff0000',
+              active: 'widget://image/next.png'
+          },
+          fixedOn: api.frameName
+      }, function(ret, err) {
+          if (ret) {
+              console.log(JSON.stringify(ret))
+              //打开选集dialog
+              if(filmListDialogFrameStatus) {
+                    filmListDialogFrame(preData.param, api.frameWidth)
+              } else {
+                    closeDisplayFoot();
+              }
+              filmListDialogFrameStatus = !filmListDialogFrameStatus;
+              // alert(JSON.stringify(ret));
+          } else {
+              console.log("全屏播放按钮点击事件： " + JSON.stringify(err))
+              // alert(JSON.stringify(err));
+          }
+      });
+    }
+
+    // 加载选集按钮
+    function loadXuanJiBtn() {
+      button.open({
+          rect: {
+              x: 10,
+              y: 20,
+              w: 20,
+              h: 20
+          },
+          corner: 5,
+          bg: {
+              normal: 'widget://image/xuanji.png',
+              // highlight: '#ff0000',
+              active: 'widget://image/xuanji.png'
+          },
+          fixedOn: api.frameName
+      }, function(ret, err) {
+          if (ret) {
+              console.log(JSON.stringify(ret))
+              if(ret.eventType == 'click') {
+
+              }
+              // alert(JSON.stringify(ret));
+          } else {
+              console.log("全屏播放按钮点击事件： " + JSON.stringify(err))
+              // alert(JSON.stringify(err));
+          }
+      });
+    }
+</script>

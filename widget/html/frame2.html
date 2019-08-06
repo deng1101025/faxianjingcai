@@ -18,6 +18,7 @@
             text-align: center;
             color: rgba(0, 0, 0, .3);
         }
+
     </style>
 </head>
 <body>
@@ -34,14 +35,18 @@
 
         </iframe> -->
     </div>
+
 </body>
 </html>
 <script type="text/javascript" src="./../script/api.js"></script>
 <script type="text/javascript" src="./../script/util.js"></script>
 <script type="text/javascript" src="./../script/APICloud-rest.js"></script>
+<script type="text/javascript" src="./../script/common.js"></script>
 <script type="text/javascript">
 
     apiready = function() {
+
+      // videoPlayCus({})
       // var videoPlayer = api.require('videoPlayer');
       // videoPlayer.play({
       //     texts: {
@@ -103,45 +108,45 @@
 
 
       // 提交JSON数据
-api.ajax({
-    url: 'http://api.5sys.cn/jx/api.php',
-    method: 'get',
-    // dataType: "html",
-    headers: {
-        'Content-Type': 'application/json;charset=utf-8',
-        // 'Referer': 'http://jx.hsx0713.top/jiexi/?url=https://v.qq.com/x/cover/og0eputlxwet1cn.html?ptag=qqbrowser',
-        // 'Origin': 'http://jx.hsx0713.top',
-        // 'Host': 'jx.hsx0713.top'
-    },
-    data: {
-        body: {
-            // url: 'https://v.qq.com/x/cover/og0eputlxwet1cn.html?ptag=qqbrowser',
-            // key: 'e7393ad300cac2fcb2b69938afdd3a40',
-            // key2: '6632ac54b5bae0c8c3cd0f81aca0ea76',
-            // time: 1564834189
-            url: encodeURIComponent('https://m.tv.sohu.com/u/vw/146146127.shtml?aid=9554130&channeled=1210010300&columnid=15'),
-            cb:  '',
-            _: '1564848281691'
-        }
-    }
-}, function(ret, err) {
-  console.log(JSON.stringify(ret))
-  console.log(JSON.stringify(err))
-    var decodeURIStr = decodeURI(decodeURI(err.body));
-    var sliceStr = decodeURIStr.slice(1, decodeURIStr.length-2);
-    var resData = JSON.parse(sliceStr);
-
-    if(resData.code == 200) {
-
-    } else {
-
-    }
-    if (ret) {
-        console.log(JSON.stringify(ret))
-    } else {
-      console.log(JSON.stringify(err))
-    }
-});
+// api.ajax({
+//     url: 'http://api.5sys.cn/jx/api.php',
+//     method: 'get',
+//     // dataType: "html",
+//     headers: {
+//         'Content-Type': 'application/json;charset=utf-8',
+//         // 'Referer': 'http://jx.hsx0713.top/jiexi/?url=https://v.qq.com/x/cover/og0eputlxwet1cn.html?ptag=qqbrowser',
+//         // 'Origin': 'http://jx.hsx0713.top',
+//         // 'Host': 'jx.hsx0713.top'
+//     },
+//     data: {
+//         body: {
+//             // url: 'https://v.qq.com/x/cover/og0eputlxwet1cn.html?ptag=qqbrowser',
+//             // key: 'e7393ad300cac2fcb2b69938afdd3a40',
+//             // key2: '6632ac54b5bae0c8c3cd0f81aca0ea76',
+//             // time: 1564834189
+//             url: encodeURIComponent('https://m.tv.sohu.com/u/vw/146146127.shtml?aid=9554130&channeled=1210010300&columnid=15'),
+//             cb:  '',
+//             _: '1564848281691'
+//         }
+//     }
+// }, function(ret, err) {
+//   console.log(JSON.stringify(ret))
+//   console.log(JSON.stringify(err))
+//     var decodeURIStr = decodeURI(decodeURI(err.body));
+//     var sliceStr = decodeURIStr.slice(1, decodeURIStr.length-2);
+//     var resData = JSON.parse(sliceStr);
+//
+//     if(resData.code == 200) {
+//
+//     } else {
+//
+//     }
+//     if (ret) {
+//         console.log(JSON.stringify(ret))
+//     } else {
+//       console.log(JSON.stringify(err))
+//     }
+// });
 
 
 

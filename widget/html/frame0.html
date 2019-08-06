@@ -117,24 +117,24 @@
         <div class="search-area">
         	<div id="">
         		<input class="searvh-input" type="text" name="search" id="search" placeholder="搜索" value="" />
-        		<button class="btn-item btn-item-return" onclick="btnSearch()">搜索</button>
+        		<button class="btn-item btn-item-return" tapmode onclick="btnSearch()">搜索</button>
 
         	</div>
         </div>
         <div class="vedio-list list-iten1">
             <ul class="flex-wrap">
-                <li tapmode="hover" onclick="btnCLicked(0);" class="flex-con">腾讯</li>
-                <li tapmode="hover" onclick="btnCLicked(1);" class="flex-con">爱奇艺</li>
-                <li tapmode="hover" onclick="btnCLicked(2);" class="flex-con">优酷</li>
-                <li tapmode="hover" onclick="btnCLicked(3);" class="flex-con">哔哩哔哩</li>
+                <li tapmode="hover" onclick="btnCLicked(0);" tapmode class="flex-con">腾讯</li>
+                <li tapmode="hover" onclick="btnCLicked(1);" tapmode class="flex-con">爱奇艺</li>
+                <li tapmode="hover" onclick="btnCLicked(2);" tapmode class="flex-con">优酷</li>
+                <li tapmode="hover" onclick="btnCLicked(3);" tapmode class="flex-con">哔哩哔哩</li>
             </ul>
         </div>
         <div class="vedio-list list-iten2">
             <ul class="flex-wrap">
-                <li tapmode="hover" onclick="btnCLicked(4);" class="flex-con">芒果tv</li>
-                <li tapmode="hover" onclick="btnCLicked(5);" class="flex-con">咪咕</li>
-                <li tapmode="hover" onclick="btnCLicked(6);" class="flex-con">韩剧</li>
-                <li tapmode="hover" onclick="btnCLicked(7);" class="flex-con">搜狐</li>
+                <li tapmode="hover" onclick="btnCLicked(4);" tapmode class="flex-con">芒果tv</li>
+                <li tapmode="hover" onclick="btnCLicked(5);" tapmode class="flex-con">咪咕</li>
+                <li tapmode="hover" onclick="btnCLicked(6);" tapmode class="flex-con">韩剧</li>
+                <li tapmode="hover" onclick="btnCLicked(7);" tapmode class="flex-con">搜狐</li>
             </ul>
         </div>
     </div>
@@ -227,21 +227,26 @@
           if (ret && ret.status) {
             if(ret.eventType == 'click') {
               // console.log("点击的url：" + picUrl[ret.index])
-              console.log("当前解析服务器——————————————————————————————：" + analysisUrl[0])
-              ajaxLoadm3u8(picUrl[ret.index].url, function(resData) {
-                  resData.type = 'yingshi';
-                  api.openWin({
-                    name: 'frame_play',
-                    url: 'widget://html/frame_play.html',
-                    rect: {
-                        x: 0,
-                        y: 0,
-                        w: 'auto',
-                        h: 'auto'
-                    },
-                    pageParam: resData
-                  });
+              videoPlayByX5({
+                url: 'http://jx.hsx0713.top/jiexi/?url=' + picUrl[ret.index].url,
+                address: picUrl[ret.index].url
               })
+              console.log("当前解析服务器——————————————————————————————：" + analysisUrl[0])
+              // ajaxLoadm3u8(picUrl[ret.index].url, function(resData) {
+              //     resData.type = 'yingshi';
+              //
+              //     api.openWin({
+              //       name: 'frame_play',
+              //       url: 'widget://html/frame_play.html',
+              //       rect: {
+              //           x: 0,
+              //           y: 0,
+              //           w: 'auto',
+              //           h: 'auto'
+              //       },
+              //       pageParam: resData
+              //     });
+              // })
               // api.openTabLayout({
               //     name: 'navZhiboPlay',
               //     url: 'widget://html/frame_play.html',
@@ -276,32 +281,68 @@
     }
 
     function openWindow(num) {
-        api.openWin({
+        api.openTabLayout({
             name: 'frame0_yingshi_win',
-            url: './frame0_yingshi_win.html',
-            progress: 'default',
-            bounces: true,
-            slidBackType: 'edge',
-            singleInstance: false,
-            useWKWebView: true,
-            historyGestureEnabled: true,
+            url: 'widget://html/frame0_yingshi_win.html',
+            title: '平台',
+            hideNavigationBar: false,
             pageParam: {
                 index: num
+            },
+            navigationBar: {
+                background: '#ffffff',
+                shadow: '#ffffff',
+                color: '#000000',
+                leftButtons: [{
+                    iconPath: 'widget://image/back_black.png',
+                    fontSize: '14'
+                },{
+                    iconPath: 'widget://image/close_red.png',
+                    fontSize: '14'
+                }],
+                rightButtons:[{
+                    text: '播放',                //（可选项）按钮标题文字，可以和icon同时存在，字符串类型
+                    color: '#d81e06',        //（可选项）按钮标题文字颜色，默认值#000，字符串类型
+                    // fontSize:             //（可选项）按钮标题字体大小。默认值17，数字类型
+                    iconPath: 'widget://image/play_black_100.png'   //（可选项）按钮icon图标路径，可以和text同时存在，图片尺寸需要为4倍图，例如设备上面期望显示的图标尺寸为25*25，则图片实际尺寸需要为100*100，字符串类型
+                },{
+                    // text: '切换线路',                //（可选项）按钮标题文字，可以和icon同时存在，字符串类型
+                    // color: '#fff',        //（可选项）按钮标题文字颜色，默认值#000，字符串类型
+                    // fontSize:             //（可选项）按钮标题字体大小。默认值17，数字类型
+                    iconPath: 'widget://image/refresh_black_64.png'   //（可选项）按钮icon图标路径，可以和text同时存在，图片尺寸需要为4倍图，例如设备上面期望显示的图标尺寸为25*25，则图片实际尺寸需要为100*100，字符串类型
+                }]
             }
         });
+
+        // api.openWin({
+        //     name: 'frame0_yingshi_win',
+        //     url: './frame0_yingshi_win.html',
+        //     progress: 'default',
+        //     bounces: true,
+        //     slidBackType: 'edge',
+        //     singleInstance: false,
+        //     useWKWebView: true,
+        //     historyGestureEnabled: true,
+        //     pageParam: {
+        //         index: num
+        //     }
+        // });
     }
 
     function btnSearch() {
     	var searchVal = $api.val($api.byId('search'));
-    	api.openWin({
-            name: 'seachWin',
-            url: 'https://api.smq1.com/?url=' + searchVal,
-            progress: 'default',
-            bounces: true,
-            slidBackType: 'edge',
-            singleInstance: false,
-            useWKWebView: true,
-            historyGestureEnabled: true
-        });
+      videoPlayByX5({
+        url: 'https://api.smq1.com/?url=' + searchVal
+      })
+    	// api.openWin({
+      //       name: 'seachWin',
+      //       url: 'https://api.smq1.com/?url=' + searchVal,
+      //       progress: 'default',
+      //       bounces: true,
+      //       slidBackType: 'edge',
+      //       singleInstance: false,
+      //       useWKWebView: true,
+      //       historyGestureEnabled: true
+      //   });
     }
 </script>
