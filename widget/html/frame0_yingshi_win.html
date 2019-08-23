@@ -45,6 +45,7 @@
   ]
   var analysisUrlList = null;
   apiready = function () {
+    console.log(JSON.stringify(api.windows()));
     api.getPrefs({
         key: 'accessToken'
     }, function(ret, err) {
@@ -108,7 +109,7 @@
               w: api.winWidth,
               h: 'auto',
               marginLeft: 0,    //相对父页面左外边距的距离，数字类型
-              marginTop: 5,     //相对父页面上外边距的距离，数字类型
+              marginTop: 10,     //相对父页面上外边距的距离，数字类型
               marginBottom: 0,  //相对父页面下外边距的距离，数字类型
               marginRight: 0    //相对父页面右外边距的距离，数字类型
           },

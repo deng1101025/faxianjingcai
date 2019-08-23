@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>书城</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/weui.css"/>
+    <style>
+        html,body {
+          /*background-color: rgba(0,0,0,0.3);*/
+        }
+        #footer{  background-color: #f5f5f7; } /*选中图标颜色   */
+        #footer ul li{color: #707070; padding-top: 25px; padding-bottom: 3px; margin-top: 5px;background: url() no-repeat center 2px; background-size: auto 20px; text-align: center; font-size: 10px}
+        /*#footer ul li.active{ color: #6ab494; }*/
+        #footer ul li:nth-child(1){ background-image: url(./image/home-unselect.png); }
+        #footer ul li:nth-child(2){ background-image: url(./image/zhibo-unselect.png); }
+        #footer ul li:nth-child(3){ background-image: url(./image/shujia-unselect.png); }
+        #footer ul li:nth-child(4){ background-image: url(./image/me-unselect.png); }
+        #footer ul li:nth-child(1).active{ background-image: url(./image/home-select.png); }
+        #footer ul li:nth-child(2).active{ background-image: url(./image/zhibo-select.png); }
+        #footer ul li:nth-child(3).active{ background-image: url(./image/shujia-select.png); }
+        #footer ul li:nth-child(4).active{ background-image: url(./image/me-select.png); }
+        .flex-con{
+          overflow: auto
+        }
+    </style>
+</head>
+<body>
+    <div id="container" class="container">
+        <!-- book信息  start-->
+        <div id="footer" class="border-t">
+            <ul class="flex-wrap" >
+                <li tapmode="hover" onclick="randomSwitchBtn( this );" class="flex-con active" >目录</li>
+                <li tapmode="hover" onclick="randomSwitchBtn( this );" class="flex-con" >直播</li>
+                <li tapmode="hover" onclick="randomSwitchBtn( this );" class="flex-con" >设置</li>
+                <!-- <li tapmode="hover" onclick="randomSwitchBtn( this );" class="flex-con" >开发</li> -->
+                <li tapmode="hover" onclick="randomSwitchBtn( this );" class="flex-con" >加入书架</li>
+            </ul>
+        </div>
+        <!-- book信息  end-->
+    </div>
+</body>
+</html>
+<script type="text/javascript" src="./../script/api.js"></script>
+<script type="text/javascript" src="./../script/util.js"></script>
+<script type="text/javascript" src="./../script/APICloud-rest.js"></script>
+<script type="text/javascript" src="./../script/common.js"></script>
+<script type="text/javascript" src="./../script/novel.js"></script>
+<script type="text/javascript">
+    var pageData = null;
+    apiready = function() {
+        pageData = api.pageParam;
+      
+    }
+    function randomSwitchBtn() {
+        api.openTabLayout({
+            name: 'frame2_book_read_chapter',
+            url: 'widget://html/frame2_book_read_chapter.html',
+            title: "目录",
+            hideNavigationBar: false,
+            pageParam: pageData,
+            navigationBar: {
+                background: '#000000',
+                shadow: '#000000',
+                color: '#ffffff',
+                leftButtons: [{
+                    iconPath: 'widget://image/back.png',
+                    fontSize: '14'
+                }],
+                rightButtons:[{
+                    text: '切换线路',                //（可选项）按钮标题文字，可以和icon同时存在，字符串类型
+                    color: '#fff',        //（可选项）按钮标题文字颜色，默认值#000，字符串类型
+                    // fontSize:             //（可选项）按钮标题字体大小。默认值17，数字类型
+                    iconPath: 'widget://image/refresh.png'   //（可选项）按钮icon图标路径，可以和text同时存在，图片尺寸需要为4倍图，例如设备上面期望显示的图标尺寸为25*25，则图片实际尺寸需要为100*100，字符串类型
+                }]
+            }
+        });
+    }
+
+
+</script>

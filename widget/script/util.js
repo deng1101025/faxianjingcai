@@ -1,4 +1,4 @@
-const formatTime = date => {
+function formatTime(date) {
   const year = date.getFullYear()
   const month = date.getMonth() + 1
   const day = date.getDate()
@@ -8,7 +8,7 @@ const formatTime = date => {
 
   return [year, month, day].map(formatNumber).join('/') + ' ' + [hour, minute, second].map(formatNumber).join(':')
 }
-const formatTimeYMD = date => {
+function formatTimeYMD(date) {
   const year = date.getFullYear()
   const month = date.getMonth() + 1
   const day = date.getDate()
@@ -19,7 +19,7 @@ const formatTimeYMD = date => {
   return [year, month, day].map(formatNumber).join('-')
 }
 
-const formatNumber = n => {
+function formatNumber(n) {
   n = n.toString()
   return n[1] ? n : '0' + n
 }
@@ -209,43 +209,6 @@ function getModel(tableName) {
   var Model = client.Factory(tableName);
   return Model;
 }
-
-function wxRequestData(params) {
-  var now = Date.now();
-  var appId = "A6017476383128";
-  var appKey = "60014238-4978-3038-8A04-10CA8BB4E662";
-  var appCode = SHA1(appId + "UZ" + appKey + "UZ" + now) + "." + now;
-  var id = params.id ? "/" + params.id : "";
-  var filter = params.filter || {
-    limit: 666
-  }
-  // wx.request({
-  //   url: "https://d.apicloud.com/mcm/api/" + params.table + id + "?filter=" + encodeURIComponent(JSON.stringify(filter)),    // 使用小白接口的域名，或者PHP代理域名
-  //   // data: ,   // 如果直接调用小白接口，需要在小程序里生成签名
-  //   method: params.method || "GET",                     // 通常情况下都可使用POST方式请求小白接口
-  //   cache: params.cache || false,
-  //   header: {
-  //     "X-APICloud-AppId": appId,
-  //     "X-APICloud-AppKey": appCode
-  //   }, // 大坑：如果使用的是POST请求，一定要设置这个header，不然参数无法POST
-  //   data: params.data,
-  //   success: function (wxRes) {
-  //     params.success && params.success(wxRes);
-  //     // let res = wxRes.data
-  //   },
-  //   fail: function(wxRes) {
-  //     params.fail && params.fail(wxRes);
-  //   }
-  // })
-}
-
-
-function getQueryString(url, name) {
-  var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
-  var r = url.substr(29).match(reg);
-  if (r != null) return unescape(r[2]); return "";
- }
-
 
 // module.exports = {
 //   formatTime: formatTime,

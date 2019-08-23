@@ -425,3 +425,48 @@ function getAnalysisUrlList() {
     }
   })
 }
+
+//基于原生的http请求封装
+function getNovelHttp(obj) {
+    var httpRequest = new XMLHttpRequest();
+    httpRequest.open('GET', obj.url, true); //第二步：打开连接  将请求参数写在url中  ps:"./Ptest.php?name=test&nameone=testone"
+    httpRequest.overrideMimeType("text/html; charset=" + obj.charset);//设定以gb2312编码识别数据
+    httpRequest.send(); //第三步：发送请求  将请求参数写在URL中
+    //获取数据后的处理程序
+    console.log(obj.url);
+    httpRequest.onreadystatechange = function () {
+          // console.log(httpRequest.responseText);
+        if (httpRequest.readyState == 4 && httpRequest.status == 200) {
+            var json = httpRequest.responseText; //获取到json字符串，还需解析
+            console.log(json);
+            obj && obj.success && obj.success(json)
+        }
+    };
+
+}
+
+function getNovelAjax(obj) {
+  console.log("searchAction*************************getNovelAjax")
+  // var obj = obj ? obj : {};
+  api.ajax({
+      url: obj.url,
+      method: obj.method || 'get',
+      timeout: obj.timeout || 30,
+      dataType: obj.dataType || 'jsonp',
+      returnAll: obj.returnAll || true,
+      charset: obj.charset || 'utf-8',
+      data: obj.data || {}
+  },function(ret, err){
+    console.log("searchAction*************************getNovelAjax   callback")
+
+      if (ret) {
+          obj.success && obj.success(ret)
+          console.log("解析——————————————搜索小说成功！" + ret)
+      }else {
+          obj.fail && obj.fail(err)
+          console.log("解析——————————————搜索小说失败！" + err)
+      };
+  },function() {
+      console.log("_________________________________")
+  });
+}

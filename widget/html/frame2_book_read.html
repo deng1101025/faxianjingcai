@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>书城</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/weui.css"/>
+    <style>
+      	.section1 {
+      	    margin: 20px;
+      	}
+      	.section1 ul.left-right li.li-left-right{
+    			  float: left;
+    		}
+      	.section1 ul.left-right img.read-book-item{
+      			width: 100px;
+      			height: 150px;
+    		}
+
+
+
+    		.section2 {
+    			  background-color: #f8f8fa;
+    		}
+        .section2 .book-info-detail2 {
+
+        }
+    </style>
+</head>
+<body>
+    <div id="container" class="container">
+        <!-- book信息  start-->
+        <div class="section section1">
+            <ul class="up-down">
+                <li>
+                    <div class="book-info-detail1">
+                        <ul class="left-right">
+                            <li class="li-left-right">
+                                <div class="">
+                                    <img id="bookInfoImg" class="read-book-item" src="">
+                                </div>
+                            </li>
+                            <li lass="li-left-right">
+                                <div class="">
+                                    <ul class="up-down-book-info">
+                                        <li id="bookInfoName">11</li>
+                                        <li id="bookInfoAuthor">17225s</li>
+                                        <li id="bookInfoLastUpdateDate">33</li>
+                                        <li><a id="bookInfoLastUpdateChapterName" href="javascript:void(0)">11111</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li>
+                    <div class="book-info-detail">
+						            <p id="contentSummary"></p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <!-- book信息  end-->
+
+        <!-- 开始阅读书的内容  start  595A60-->
+        <div class="section section2">
+      	    <div class="">
+                <div id="updateUpChapter" class="">
+                    上一章
+                </div>
+                <div id="chapterContent" class="chapter-content">
+
+                </div>
+                <div id="updateNextChapter" class="">
+                    下一章
+                </div>
+      	    </div>
+        </div>
+        <!-- 开始阅读书的内容  end-->
+
+    </div>
+</body>
+</html>
+<script type="text/javascript" src="./../script/api.js"></script>
+<script type="text/javascript" src="./../script/util.js"></script>
+<script type="text/javascript" src="./../script/APICloud-rest.js"></script>
+<script type="text/javascript" src="./../script/common.js"></script>
+<script type="text/javascript" src="./../script/novel.js"></script>
+<script type="text/javascript">
+    var pageData = null;
+    var book = null;
+    apiready = function() {
+        pageData = api.pageParam;
+        getNovelInfoDetail(pageData.address, function() {
+            showNovelInfo(book)
+        });
+        // 绑定屏幕点击事件
+        var footMenu = false;
+        api.addEventListener({
+            name:'tap'
+        }, function(ret, err){
+            if(!footMenu) {
+                api.openFrame({
+                    name: 'frame2_novel_read_down_menu',
+                    url: './frame2_novel_read_down_menu.html',
+                    rect: {
+                        x: 0,             //左上角x坐标，数字类型
+                        y: api.frameHeight - 10,             //左上角y坐标，数字类型
+                        w: api.frameWidth,             //宽度，若传'auto'，页面从x位置开始自动充满父页面宽度，数字或固定值'auto'
+                        h: 'auto',             //高度，若传'auto'，页面从y位置开始自动充满父页面高度，数字或固定值'auto'
+                        // marginLeft:0,    //相对父页面左外边距的距离，数字类型
+                        // marginTop:,     //相对父页面上外边距的距离，数字类型
+                        // marginBottom:0,  //相对父页面下外边距的距离，数字类型
+                        // marginRight:0    //相对父页面右外边距的距离，数字类型
+                    },
+                    animation: {
+                        type: "movein",                //动画类型（详见动画类型常量）
+                        subType: "from_bottom",       //动画子类型（详见动画子类型常量）
+                        duration: 200                //动画过渡时间，默认300毫秒
+                    },
+                    pageParam: book
+                });
+            } else {
+              api.closeFrame({
+                  name: 'frame2_novel_read_down_menu'
+              });
+            }
+            footMenu = !footMenu;
+            console.log('点击了页面');
+        });
+
+        // 绑定页面滑到底展示下一章节内容事件
+        api.addEventListener({
+            name:'scrolltobottom',
+            extra:{
+                threshold: 200            //设置距离底部多少距离时触发，默认值为0，数字类型
+            }
+        }, function(ret, err){
+            updateNextChapterContent()
+            console.log('小说已滚动到底部');
+        });
+
+        // 绑定顶部菜单事件
+        api.addEventListener({
+    			name: 'navitembtn'
+    		}, function(ret, err) {
+            if(ret.type == 'left') {
+                api.closeWin();
+            } else if (ret.type == 'right') {
+                var buttons = [];
+                analysisUrlList.forEach(function (element, index) {
+                    buttons.push("vip线路" + (index + 1))
+                });
+                api.actionSheet({
+                    title: '线路选择',
+                    cancelTitle: '关闭',
+                    buttons: buttons
+                }, function(ret, err) {
+                    var index = ret.buttonIndex;
+                    browser.loadUrl({
+                        url: analysisUrlList[index - 1].attrVal + pageData.address
+                    });
+                    // alert('点击了'+index+'按钮');
+                });
+            }
+          // alert('点击了'+ret.type+'按钮');
+    		});
+
+    }
+
+
+</script>

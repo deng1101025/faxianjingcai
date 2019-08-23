@@ -1,4 +1,7 @@
 html,body {  font-size:14px; height:100%;  }
+* {
+  overflow: auto;
+}
 .hover{ opacity: .8; }
 
 .flex-wrap{ display: -webkit-box;	display: -webkit-flex;	display: flex; }

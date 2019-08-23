@@ -4,183 +4,165 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
     <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
-    <title>发现</title>
+    <title>书城</title>
     <link rel="stylesheet" type="text/css" href="../css/api.css"/>
     <link rel="stylesheet" type="text/css" href="../css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/weui.css"/>
     <style>
-        .empty{ text-align: center; padding: 120px 0; }
-        .item-bg {
-            margin: 5px;
-            padding: 10px 10px;
-            background-color: #f7f7f7;
-            height: 2.3em;
-            line-height: 2.3em;
-            text-align: center;
-            color: rgba(0, 0, 0, .3);
-        }
+    	.section {
+    		margin-bottom: 30px;
+    	}
 
+
+		.section2 .last-read-list {
+			margin: auto;
+			background-color: #595a60;
+			width: 90%;
+			height: 180px;
+			border-radius: 1.5em;
+		}
+
+		.section2 .last-read-list ul li {
+			float: left;
+			margin-left: 20px;
+
+		}
+		.section2 .read-user-img {
+			width: 30px;
+		}
+		.section2 .read-book-item {
+			width: 70px;
+			height: 100px;
+		}
     </style>
 </head>
 <body>
-    <!-- <div class="empty">文档</div> -->
-    <div id="aaa" class="weui-flex">
-        <!-- <div class="weui-flex__item"><div class="item-bg" onclick="full()">全屏</div></div>
-        <div class="weui-flex__item"><div class="item-bg" onclick="noFull()">取消全屏</div></div> -->
-        <!-- <video src="http://jx.hsx0713.top/jiexi/?url=https://v.qq.com/x/cover/og0eputlxwet1cn.html?ptag=qqbrowser" controls="controls" autoplay>
+    <div id="container" class="container">
+        <!-- 搜索dom  start-->
+        <!-- <div class="section section1">
+        	<div class="weui-search-bar" id="search_bar">
+	            <form class="weui-search-bar__form">
+	                <div class="weui-search-bar__box">
+	                    <i class="weui-icon-search"></i>
+	                    <input type="search" class="weui-search-bar__input" id="search_input" onclick="searchCLicked()" placeholder="搜索" />
+	                    <a href="javascript:" class="weui-icon-clear" id="search_clear"></a>
+	                </div>
+	                <label for="search_input" class="weui-search-bar__label" id="search_text">
+	                    <i class="weui-icon-search"></i>
+	                    <span>搜索</span>
+	                </label>
+	            </form>
+	            <a href="javascript:" class="weui-search-bar__cancel-btn" id="search_cancel">取消</a>
+	        </div>
+        </div>
+        <div class="section section2">
+        	<div class="last-read-list">
+	            <div class="read-owner-info">
+					<ul>
+						<li><img id="userimg" class="read-user-img" src="../icon/icon150x150.png"></li>
+						<li><span id="username">
+							呵呵
+						</span></li>
+					</ul>
+	            </div>
+	            <div id="last-read-book-list">
+	            	<ul>
+	            		<li onclick="gotoBook(0)"><img class="read-book-item" src="https://www.biqukan.com/files/article/image/67/67006/67006s.jpg"></li>
+	            		<li onclick="gotoBook(1)"><img class="read-book-item" src="https://www.biqukan.com/files/article/image/67/67006/67006s.jpg"></li>
+	            		<li onclick="gotoBook(2)"><img class="read-book-item" src="https://www.biqukan.com/files/article/image/67/67006/67006s.jpg"></li>
+	            		<li onclick="gotoShujia()"><span id="btn_shujia" class="">
+	            			书架
+	            		</span></li>
+	            	</ul>
+	            </div>
+	        </div>
+        </div> -->
+        <!-- 搜索dom  end-->
 
-        </video> -->
-        <!-- <iframe id="oFrm" name="oFrm" src="http://jx.hsx0713.top/jiexi/?url=https://v.qq.com/x/cover/og0eputlxwet1cn.html?ptag=qqbrowser" width="320" height="280"></iframe> -->
-        <!-- <iframe id="oFrm" name="oFrm" width="320" height="580">
-
-
-        </iframe> -->
     </div>
-
 </body>
 </html>
 <script type="text/javascript" src="./../script/api.js"></script>
 <script type="text/javascript" src="./../script/util.js"></script>
 <script type="text/javascript" src="./../script/APICloud-rest.js"></script>
 <script type="text/javascript" src="./../script/common.js"></script>
+<!-- <script type="text/javascript" src="http://res.wx.qq.com/open/libs/weuijs/1.2.1/weui.min.js"></script> -->
 <script type="text/javascript">
-
+// weui.searchBar('#search_bar');
+    var browser = null;
+    var readHistoryList = null;
     apiready = function() {
-
-      // videoPlayCus({})
-      // var videoPlayer = api.require('videoPlayer');
-      // videoPlayer.play({
-      //     texts: {
-      //         head: {
-      //             title: ""
-      //         }
-      //     },
-      //     styles: {
-      //         head: {
-      //             bg: 'rgba(0.5,0.5,0.5,0.7)',
-      //             height: 22,
-      //             titleSize: 20,
-      //             titleColor: '#fff',
-      //             backSize: 22,
-      //             backImg: 'fs://img/back.png',
-      //             setSize: 22,
-      //             setImg: 'fs://img/set.png'
-      //         },
-      //         foot: {
-      //             bg: 'rgba(0.5,0.5,0.5,0.7)',
-      //             height: 44,
-      //             playSize: 22,
-      //             playImg: 'fs://img/back.png',
-      //             pauseImg: 'fs://img/back.png',
-      //             nextSize: 22,
-      //             nextImg: 'fs://img/back.png',
-      //             timeSize: 14,
-      //             timeColor: '#fff',
-      //             sliderImg: 'fs://img/slder.png',
-      //             progressColor: '#696969',
-      //             progressSelected: '#76EE00'
-      //         }
-      //     },
-      //     path: 'http://vod.hcs.cmvideo.cn:8088/depository_sjq/asset/zhengshi/5102/361/022/5102361022/media/5102361022_5005345697_56.mp4.m3u8?msisdn=D61F720E36C64FF467680AB6BB0CE8F4&mdspid=&spid=800033&netType=0&sid=5500864165&pid=2028597139&timestamp=20190803203530&Channel_ID=1004_&ProgramID=659459013&ParentNodeID=-99&assertID=5500864165&client_ip=183.136.206.212&SecurityKey=20190803203530&promotionId=&mvid=5102361022&mcid=1001&mpid=130000064316&encrypt=4bccfd2f66557cf4799066eaa0e7747c', //（可选项）字符串类型；文档的路径，支持网络和本地（fs://）路径；默认：未传值时不播放
-      //     //在 android 平台上不支持 widget://
-      //     autoPlay: true, //（可选项）布尔类型；打开时是否自动播放；默认：true（自动播放）
-      //     autorotation: false
-      // }, function(ret, err) {
-      //     if (ret) {
-      //         // alert(JSON.stringify(ret));
-      //     } else {
-      //         // alert(JSON.stringify(err));
-      //     }
-      // });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      // 提交JSON数据
-// api.ajax({
-//     url: 'http://api.5sys.cn/jx/api.php',
-//     method: 'get',
-//     // dataType: "html",
-//     headers: {
-//         'Content-Type': 'application/json;charset=utf-8',
-//         // 'Referer': 'http://jx.hsx0713.top/jiexi/?url=https://v.qq.com/x/cover/og0eputlxwet1cn.html?ptag=qqbrowser',
-//         // 'Origin': 'http://jx.hsx0713.top',
-//         // 'Host': 'jx.hsx0713.top'
-//     },
-//     data: {
-//         body: {
-//             // url: 'https://v.qq.com/x/cover/og0eputlxwet1cn.html?ptag=qqbrowser',
-//             // key: 'e7393ad300cac2fcb2b69938afdd3a40',
-//             // key2: '6632ac54b5bae0c8c3cd0f81aca0ea76',
-//             // time: 1564834189
-//             url: encodeURIComponent('https://m.tv.sohu.com/u/vw/146146127.shtml?aid=9554130&channeled=1210010300&columnid=15'),
-//             cb:  '',
-//             _: '1564848281691'
-//         }
-//     }
-// }, function(ret, err) {
-//   console.log(JSON.stringify(ret))
-//   console.log(JSON.stringify(err))
-//     var decodeURIStr = decodeURI(decodeURI(err.body));
-//     var sliceStr = decodeURIStr.slice(1, decodeURIStr.length-2);
-//     var resData = JSON.parse(sliceStr);
-//
-//     if(resData.code == 200) {
-//
-//     } else {
-//
-//     }
-//     if (ret) {
-//         console.log(JSON.stringify(ret))
-//     } else {
-//       console.log(JSON.stringify(err))
-//     }
+      // getNovelHttp({
+      //   url: 'https://smartbox.html5.qq.com/novel/detail?q=%E5%89%8D%E4%BB%BB%E6%97%A0%E5%8F%8C&b=1125444718%2C113%2C3&e=sogou%2Dhttps&qbid=1185e839014cc27e'
+      // })
+//       api.setMenuItems({
+//     customItems: ['菜单1', '菜单2'],
+//     systemItems: []
+// }, function(ret, err){
+//     var index = ret.index;
 // });
-
-
-
-
-      // var module = api.require('easyVideoPlayer');
-      //  var param = {
-      //      msg : 'http://api.5sys.cn/jx/?v=https://v.qq.com/x/cover/og0eputlxwet1cn.html?ptag=qqbrowser'
-      //  };
-      //  module.playVideo(param);
-
-//https://youku.cdn2-youku.com/20180710/12991_efbabf56/index.m3u8
-
-    //   var obj = api.require('playModule');
-    //     obj.play({
-    //         rect:
-    //         {    x: 0,
-    //             y : 0,
-    //             w : 320,
-    //             h: 250
-    //         },
-    //         fixedOn: api.frameName,
-    //         title: 'test',
-    //         url: 'http://api.5sys.cn/jx/player/?url=cDJwLWRwbGF5ZXIvP2xpdmU9MSZhdXRvcGxheT0xJnVybD1odHRwcyUzQSUyRiUyRnR4Lmhscy5odXlhLmNvbSUyRmh1eWFsaXZlJTJGOTQ1MjUyMjQtMjQ2MDY4NTMxMy0xMDU2ODU2Mjk0NTA4MjUyMzY0OC0yNzg5Mjc0NTI0LTEwMDU3LUEtMC0xLm0zdTgmbG9nb19vZmY9MCZsb2dvX3N0eWxlPWJHVm1kRG93Y0hnN0lIUnZjRG8xTUhCNE8yMWhlQzEzYVdSMGFEb3hNREJ3ZUR0dFlYZ3RhR1ZwWjJoME9qRXdNSEI0JnZlcj14JnAycGluZm89MSZwb3N0ZXJyPTEmc2Vla3RpbWU9MSZkYW5tYWt1PTA=',
-    //         defaultBtn: true,
-    //         enableFull : false,
-    //          isTopView : false
-    //     }, function(ret, err) {
-    //
-    //     });
-
-
-
+//         api.setPrefs({
+//             key: 'readHistoryList',
+//             value: [{
+//                 name: "前任无双",
+//                 img: "https://www.biqukan.com/files/article/image/67/67006/67006s.jpg",
+//                 address: "https://wap.biqukan.com/67/67006/"
+//             },{
+//                 name: "牧神记",
+//                 img: "https://www.biqukan.com/files/article/image/17/17225/17225s.jpg",
+//                 address: "https://wap.biqukan.com/17/17225/"
+//             },{
+//                 name: "牧神记",
+//                 img: "https://www.biqukan.com/files/article/image/17/17225/17225s.jpg",
+//                 address: "https://wap.biqukan.com/17/17225/"
+//             }]
+//         });
+//         //异步返回结果：
+//         api.getPrefs({
+//             key: 'readHistoryList'
+//         }, function(ret, err) {
+//             readHistoryList = ret.value;
+//             console.log(readHistoryList);
+//         });
     }
 
+    function gotoBook(index) {
+      console.log($api.strToJson(readHistoryList))
+        api.openTabLayout({
+            name: 'frame2_book_read',
+            url: 'widget://html/frame2_book_read.html',
+            title: readHistoryList[index].name,
+            hideNavigationBar: false,
+            pageParam: ($api.strToJson(readHistoryList))[index],
+            navigationBar: {
+                background: '#000000',
+                shadow: '#000000',
+                color: '#ffffff',
+                leftButtons: [{
+                    iconPath: 'widget://image/back.png',
+                    fontSize: '14'
+                }],
+                rightButtons:[{
+                    text: '切换线路',                //（可选项）按钮标题文字，可以和icon同时存在，字符串类型
+                    color: '#fff',        //（可选项）按钮标题文字颜色，默认值#000，字符串类型
+                    // fontSize:             //（可选项）按钮标题字体大小。默认值17，数字类型
+                    iconPath: 'widget://image/refresh.png'   //（可选项）按钮icon图标路径，可以和text同时存在，图片尺寸需要为4倍图，例如设备上面期望显示的图标尺寸为25*25，则图片实际尺寸需要为100*100，字符串类型
+                }]
+            }
+        });
+    }
+
+    function searchCLicked() {
+        api.openWin({
+            name: 'push',
+            url: './frame2_novel_search.html',
+            animation: {
+                type:"movein",                //动画类型（详见动画类型常量）
+                subType:"from_top",       //动画子类型（详见动画子类型常量）
+                duration:300                //动画过渡时间，默认300毫秒
+            }
+        });
+    }
 
     function full() {
       api.setFullScreen({

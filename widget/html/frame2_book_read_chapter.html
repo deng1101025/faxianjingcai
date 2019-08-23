@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>书城</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/weui.css"/>
+    <style>
+        .section2 .book-chapter-list li {
+            border-bottom: 1px solid #e5e5e5;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="container" class="container">
+        <!-- book信息  start-->
+        <div class="section section1">
+            <ul>
+              <li id="bookInfoName"></li>
+              <li id="bookInfoAuthor"></li>
+            </ul>
+        </div>
+        <div class="section section2">
+            <ul id="ulBookChapterList" class="book-chapter-list">
+
+            </ul>
+        </div>
+        <!-- book信息  end-->
+    </div>
+</body>
+</html>
+<script type="text/javascript" src="./../script/api.js"></script>
+<script type="text/javascript" src="./../script/util.js"></script>
+<script type="text/javascript" src="./../script/APICloud-rest.js"></script>
+<script type="text/javascript" src="./../script/common.js"></script>
+<script type="text/javascript" src="./../script/novel.js"></script>
+<script type="text/javascript">
+    var pageData = null;
+    var bookChapter = null;
+    apiready = function() {
+        pageData = api.pageParam;
+        bookChapter = pageData.bookChapterFristPage;
+        loadChapterList(bookChapter, true);
+        // 绑定顶部菜单事件
+        api.addEventListener({
+    			name: 'navitembtn'
+    		}, function(ret, err) {
+            if(ret.type == 'left') {
+                api.closeWin();
+            } else if (ret.type == 'right') {
+                var buttons = [];
+                analysisUrlList.forEach(function (element, index) {
+                    buttons.push("vip线路" + (index + 1))
+                });
+                api.actionSheet({
+                    title: '线路选择',
+                    cancelTitle: '关闭',
+                    buttons: buttons
+                }, function(ret, err) {
+                    var index = ret.buttonIndex;
+                    browser.loadUrl({
+                        url: analysisUrlList[index - 1].attrVal + pageData.address
+                    });
+                    // alert('点击了'+index+'按钮');
+                });
+            }
+          // alert('点击了'+ret.type+'按钮');
+    		});
+        // 绑定页面滑到底展示下一章节内容事件
+        api.addEventListener({
+            name:'scrolltobottom',
+            extra:{
+                threshold: 200            //设置距离底部多少距离时触发，默认值为0，数字类型
+            }
+        }, function(ret, err){
+            getChapterList()
+            console.log('目录已滚动到底部');
+        });
+
+    }
+
+
+
+</script>

@@ -16,8 +16,7 @@
 	<preference name="fullScreen" value="false"/>
 	<preference name="autoUpdate" value="true" />
 	<preference name="smartUpdate" value="true" />
-	<preference name="debug" value="false"/>	<preference name="appCertificateVerify" value="false"/>
-	<!-- <preference name="statusBarAppearance" value="true"/> -->
+	<preference name="debug" value="false"/>	<preference name="appCertificateVerify" value="false"/>  <preference name="querySchemes" value="mqq,mqqapi"/>	<!-- <preference name="statusBarAppearance" value="true"/> -->
 	<permission name="readPhoneState" />
 	<permission name="camera" />
 	<permission name="record" />
@@ -31,6 +30,6 @@
      <param name="urlScheme" value="tencent1108903770" />
      <param name="apiKey" value="1108903770" />
   </feature>
-    <preference name="querySchemes" value="mqq,mqqapi"/>
+
   <!-- <preference name="querySchemes" value="weixin,wechat,mqq,alipay,alipays,cmbmobilebank" /> -->
 </widget>

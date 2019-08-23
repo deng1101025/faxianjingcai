@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>发现</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/weui.css"/>
+    <style>
+        .empty{ text-align: center; padding: 120px 0; }
+
+    </style>
+</head>
+<body>
+    <div id="container" class="container">
+          <div class="weui-cells weui-cells_access search_show" id="search_show">
+            <div class="weui-cell">
+                <div class="weui-cell__bd weui-cell_primary">
+                    <p>实时搜索文本</p>
+                </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__bd weui-cell_primary">
+                    <p>实时搜索文本</p>
+                </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__bd weui-cell_primary">
+                    <p>实时搜索文本</p>
+                </div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__bd weui-cell_primary">
+                    <p>实时搜索文本</p>
+                </div>
+            </div>
+          </div>
+    </div>
+</body>
+</html>
+<script type="text/javascript" src="./../script/api.js"></script>
+<script type="text/javascript" src="./../script/util.js"></script>
+<script type="text/javascript" src="./../script/APICloud-rest.js"></script>
+<script type="text/javascript" src="./../script/novel.js"></script>
+<script type="text/javascript" src="./../script/common.js"></script>
+<script type="text/javascript" src="./../script/lib/weui.min.js"></script>
+
+
+<script type="text/javascript">
+    weui.searchBar('#search_bar');
+    var pageData = null;
+    apiready = function() {
+        // var xhr = new XMLHttpRequest();
+        pageData = api.pageParam;
+
+        getNovelSearchList({url:'https://so.biqusoso.com/s.php?ie=gbk&siteid=biqukan.com&s=2758772450457967865&q=' + pageData.name});
+    }
+
+
+    function full() {
+      api.setFullScreen({
+          fullScreen: true,
+          optNav: true
+      });
+      api.setScreenOrientation({
+          orientation: 'landscape_left'
+      });
+    }
+
+    function noFull() {
+      api.setFullScreen({
+          fullScreen: false,
+          optNav: true
+      });
+      api.setScreenOrientation({
+          orientation: 'portrait_down'
+      });
+    }
+</script>

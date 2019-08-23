@@ -9,19 +9,19 @@
     <link rel="stylesheet" type="text/css" href="./css/style.css"/>
     <style>
         header{ background-color: #f2f2f2; }
-        header ul li { height: 28px; line-height: 13px; text-align: center; display: none; color: #323237; position: relative;font-size: 18px;  }
+        header ul li { height: 28px; line-height: 17px; text-align: center; display: none; color: #323237; position: relative;font-size: 18px;  }
         header ul li.active{ display: block; }
-        #footer{  background-color: #f2f2f2; }
-        #footer ul li{  padding-top: 30px; padding-bottom: 4px; background: url() no-repeat center 2px; background-size: auto 27px; text-align: center; font-size: 12px}
+        #footer{  background-color: #f5f5f7; } /*选中图标颜色   */
+        #footer ul li{color: #707070; padding-top: 25px; padding-bottom: 3px; margin-top: 5px;background: url() no-repeat center 2px; background-size: auto 20px; text-align: center; font-size: 10px}
         /*#footer ul li.active{ color: #6ab494; }*/
-        #footer ul li:nth-child(1){ background-image: url(./image/bottombtn0101.png); }
-        #footer ul li:nth-child(2){ background-image: url(./image/bottombtn0401.png); }
-        #footer ul li:nth-child(3){ background-image: url(./image/bottombtn0301.png); }
-        #footer ul li:nth-child(4){ background-image: url(./image/bottombtn0201.png); }
-        #footer ul li:nth-child(1).active{ background-image: url(./image/bottombtn0102.png); }
-        #footer ul li:nth-child(2).active{ background-image: url(./image/bottombtn0402.png); }
-        #footer ul li:nth-child(3).active{ background-image: url(./image/bottombtn0302.png); }
-        #footer ul li:nth-child(4).active{ background-image: url(./image/bottombtn0202.png); }
+        #footer ul li:nth-child(1){ background-image: url(./image/home-unselect.png); }
+        #footer ul li:nth-child(2){ background-image: url(./image/zhibo-unselect.png); }
+        #footer ul li:nth-child(3){ background-image: url(./image/shujia-unselect.png); }
+        #footer ul li:nth-child(4){ background-image: url(./image/me-unselect.png); }
+        #footer ul li:nth-child(1).active{ background-image: url(./image/home-select.png); }
+        #footer ul li:nth-child(2).active{ background-image: url(./image/zhibo-select.png); }
+        #footer ul li:nth-child(3).active{ background-image: url(./image/shujia-select.png); }
+        #footer ul li:nth-child(4).active{ background-image: url(./image/me-select.png); }
         .flex-con{
           overflow: auto
         }
@@ -33,7 +33,7 @@
         <ul>
             <li class="border-b active" >看你想看</li>
             <li class="border-b" >直播</li>
-            <li class="border-b" >大厅</li>
+            <li class="border-b" >书城</li>
             <li class="border-b" >我的</li>
         </ul>
     </header>
@@ -44,7 +44,7 @@
         <ul class="flex-wrap" >
             <li tapmode="hover" onclick="randomSwitchBtn( this );" class="flex-con active" >首页</li>
             <li tapmode="hover" onclick="randomSwitchBtn( this );" class="flex-con" >直播</li>
-            <li tapmode="hover" onclick="randomSwitchBtn( this );" class="flex-con" >大厅</li>
+            <li tapmode="hover" onclick="randomSwitchBtn( this );" class="flex-con" >书城</li>
             <!-- <li tapmode="hover" onclick="randomSwitchBtn( this );" class="flex-con" >开发</li> -->
             <li tapmode="hover" onclick="randomSwitchBtn( this );" class="flex-con" >我的</li>
         </ul>
@@ -56,6 +56,8 @@
 <script type="text/javascript">
 	// debugger
     apiready = function () {
+      // console.log(api.winHeight);
+      // console.log(api.frameHeight);
         $api.fixStatusBar( $api.dom('header') );
         api.setStatusBarStyle({
             style: '#fff',
@@ -71,8 +73,8 @@
                 frames.push( {
                     name: 'frame'+i,
                     url: './html/frame'+i+'.html',
-                    bgColor : 'rgba(0,0,0,.2)',
-                    bounces:true
+                    bgColor : 'rgba(0,0,0,.2)'
+                    // bounces:true
                 } )
         }
         // console.log($api.jsonToStr(frames))

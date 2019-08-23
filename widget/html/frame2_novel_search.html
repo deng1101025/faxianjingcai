@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>发现</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="../css/weui.css"/>
+    <style>
+        .empty{ text-align: center; padding: 120px 0; }
+
+    </style>
+</head>
+<body>
+    <div id="container" class="container">
+        <div class="weui-search-bar" id="search_bar">
+            <form class="weui-search-bar__form" onkeydown="if(event.keyCode==13) reloadListFrame();">
+                <div class="weui-search-bar__box">
+                    <i class="weui-icon-search"></i>
+                    <input type="search" class="weui-search-bar__input" id="search_input" placeholder="搜索" />
+                    <a href="javascript:" class="weui-icon-clear" id="search_clear"></a>
+                </div>
+                <label for="search_input" class="weui-search-bar__label" id="search_text">
+                    <i class="weui-icon-search"></i>
+                    <span>搜索</span>
+                </label>
+            </form>
+            <a href="javascript:" class="weui-search-bar__cancel-btn" id="search_cancel">取消</a>
+          </div>
+          <div class="weui-cells weui-cells_access search_show" id="search_show">
+              <!-- <div class="weui-cell">
+                  <div class="weui-cell__bd weui-cell_primary">
+                      <p>实时搜索文本</p>
+                  </div>
+              </div>
+              <div class="weui-cell">
+                  <div class="weui-cell__bd weui-cell_primary">
+                      <p>实时搜索文本</p>
+                  </div>
+              </div>
+              <div class="weui-cell">
+                  <div class="weui-cell__bd weui-cell_primary">
+                      <p>实时搜索文本</p>
+                  </div>
+              </div>
+              <div class="weui-cell">
+                  <div class="weui-cell__bd weui-cell_primary">
+                      <p>实时搜索文本</p>
+                  </div>
+              </div> -->
+          </div>
+    </div>
+</body>
+</html>
+<script type="text/javascript" src="./../script/api.js"></script>
+<script type="text/javascript" src="./../script/util.js"></script>
+<script type="text/javascript" src="./../script/APICloud-rest.js"></script>
+<script type="text/javascript" src="./../script/novel.js"></script>
+<script type="text/javascript" src="./../script/common.js"></script>
+<script type="text/javascript" src="./../script/lib/weui.min.js"></script>
+
+
+<script type="text/javascript">
+    weui.searchBar('#search_bar');
+    var pageData = null;
+    apiready = function() {
+        pageData = api.pageParam;
+        if(pageData.name) {
+            getNovelSearchList({searchName: pageData.name, domId: 'search_show'});
+        }
+    }
+
+    function reloadListFrame() {
+        var search_input = $api.val($api.byId('search_input'));
+        api.openWin({
+            name: 'frame2_novel_search',
+            url: './frame2_novel_search.html',
+            relad: true,
+            pageParam: {
+                name: search_input
+            },
+            animation: {
+                type:"none",                //动画类型（详见动画类型常量）
+                subType:"from_top",       //动画子类型（详见动画子类型常量）
+                duration:300                //动画过渡时间，默认300毫秒
+            }
+        });
+    }
+
+    function searchAction() { //https://sou.xanbhx.com/search?q=%E7%89%A7%E7%A5%9E%E8%AE%B0&siteid=qula
+      // var xhr = new XMLHttpRequest();
+        var search_input = $api.val($api.byId('search_input'));
+        getNovelSearchList({url:'http://m.qushuba.com/modules/article/search.php?searchtype=keywords&searchkey=%B5%C0%BE%FD'})
+    }
+
+
+    function full() {
+      api.setFullScreen({
+          fullScreen: true,
+          optNav: true
+      });
+      api.setScreenOrientation({
+          orientation: 'landscape_left'
+      });
+    }
+
+    function noFull() {
+      api.setFullScreen({
+          fullScreen: false,
+          optNav: true
+      });
+      api.setScreenOrientation({
+          orientation: 'portrait_down'
+      });
+    }
+</script>

@@ -9,11 +9,9 @@
     <link rel="stylesheet" type="text/css" href="../css/api.css" />
     <link rel="stylesheet" type="text/css" href="../css/style.css" />
     <style>
-        .empty {
-            text-align: center;
-            padding: 120px 0;
-        }
-
+        body {
+          background-color: #F5F6F9;
+		}
         .btn-item {
             width: 80px;
             height: 35px;
@@ -35,6 +33,7 @@
             background: url() no-repeat center 23px;
             background-size: auto 30px;
             text-align: center;
+            background-color: #fefeff;
         }
 
         .list-iten1 ul li:nth-child(1) {
@@ -112,7 +111,7 @@
 
     <div class="container">
         <div class="notice">
-          公告： 限时特惠出售充值码，加微信：13717866249
+          公告： 限时特惠出售充值码，加微信：deng1101025
         </div>
         <div class="search-area">
         	<div id="">
@@ -147,6 +146,7 @@
 <script type="text/javascript" src="./../script/common.js"></script>
 <script type="text/javascript">
     apiready = function() {
+      // console.log(api.winHeight);
       getModel("config").query({
           filter:{
               "where":{"attrParam4": 'common'},

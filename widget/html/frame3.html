@@ -62,9 +62,6 @@
   var qq;
   apiready = function () {
     qq = api.require('QQPlus');
-    // console.log("winName: " +api.winName)
-    // console.log("frameName: " +api.frameName)
-
     //同步返回结果：
     accessToken = api.getPrefs({
         sync: true,
@@ -119,6 +116,7 @@
               name: 'navDeposit',
               url: 'widget://html/frame3_deposit.html',
               title: '会员充值',
+              allowEdit: true,
               hideNavigationBar: false,
               navigationBar: {
                   background: '#f2f2f2',
@@ -213,7 +211,7 @@
   function contactMe() {
     api.alert({
         title: '联系客服',
-        msg: '客服微信：13717866249',
+        msg: '客服微信：deng1101025',
     }, function(ret, err) {
 
     });
